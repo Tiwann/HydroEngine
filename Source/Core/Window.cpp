@@ -123,8 +123,6 @@ namespace Hydro
     {
         #if defined(HYDRO_PLATFORM_OPENGL)
             glfwMakeContextCurrent(m_Handle);
-        #else
-            #error "Cannot make context current if not using OpenGL!"
         #endif
     }
 
