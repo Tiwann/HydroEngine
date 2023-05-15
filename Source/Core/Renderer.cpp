@@ -1,7 +1,6 @@
 ﻿#include "HydroPCH.h"
 #include "Renderer.h"
-
-#include "Platform/OpenGL/OpenGLDevice.h"
+#include "Platform/PlatformDevice.h"
 
 
 namespace Hydro
@@ -19,27 +18,26 @@ namespace Hydro
     void Renderer::Clear() const
     {
         #if defined(HYDRO_PLATFORM_DIRECTX)
-        if(DirectXDevice* Device = (DirectXDevice*)m_Device.get())
+        if(DirectXDevice* Device = dynamic_cast<DirectXDevice*>(m_Device))
         {
             Device->Clear();
         }
         #elif defined(HYDRO_PLATFORM_VULKAN)
-        if(VulkanDevice* Device = (VulkanDevice*)m_Device.get())
+        if(VulkanDevice* Device = dynamic_cast<VulkanDevice*>(m_Device))
         {
             Device->Clear();
         }
         #elif defined(HYDRO_PLATFORM_OPENGL)
         if(OpenGLDevice* Device = dynamic_cast<OpenGLDevice*>(m_Device))
         {
-            Device->Clear();
+            Device->ClearDepthBuffer();
         }
         #endif
-        
     }
 
     void Renderer::Clear(Color color) const
     {
-        m_Device->Clear(color);
+        m_Device->ClearColor(color);
     }
 
     void Renderer::SwapBuffers() const
