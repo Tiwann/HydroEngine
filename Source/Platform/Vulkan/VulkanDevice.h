@@ -1,7 +1,4 @@
 ﻿#pragma once
-#include <stdexcept>
-#include <vector>
-
 #include "HydroPCH.h"
 #include "Platform/GraphicsDevice.h"
 #include "Core/Application.h"
@@ -71,6 +68,21 @@ namespace Hydro
             
             //vkCreateDevice(m_PhysicalDevice, )
             delete[] availablePhysicalDevices;
+        }
+
+        void ClearDepthBuffer() override
+        {
+            
+        }
+        
+        void ClearColor(Color color) override
+        {
+            
+        }
+        
+        void SwapBuffers() override
+        {
+            
         }
 
     private:

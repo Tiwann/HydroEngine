@@ -12,9 +12,9 @@ namespace Hydro
         virtual ~GraphicsDevice() = default;
         static GraphicsDevice* Create(Application& Application);
 
-        virtual void Clear() { }
-        virtual void Clear(Color color) { }
-        virtual void SwapBuffers() {}
+        virtual void ClearDepthBuffer() = 0;
+        virtual void ClearColor(Color color) = 0;
+        virtual void SwapBuffers() = 0;
 
     protected:
         Handle m_Handle{0};

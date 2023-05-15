@@ -1,8 +1,6 @@
 ﻿#include "HydroPCH.h"
 #include "GraphicsDevice.h"
-#include "DirectX/DirectXDevice.h"
-#include "OpenGL/OpenGLDevice.h"
-#include "Vulkan/VulkanDevice.h"
+#include "PlatformDevice.h"
 
 namespace Hydro
 {
@@ -14,9 +12,9 @@ namespace Hydro
     GraphicsDevice* GraphicsDevice::Create(Application& Application)
     {
         #if defined(HYDRO_PLATFORM_DIRECTX)
-                return DirectXDevice(Application);
+                return new DirectXDevice(Application);
         #elif defined(HYDRO_PLATFORM_VULKAN)
-                return VulkanDevice(Application);
+                return new VulkanDevice(Application);
         #elif defined(HYDRO_PLATFORM_OPENGL)
                 return new OpenGLDevice(Application);
         #endif

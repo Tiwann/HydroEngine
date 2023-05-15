@@ -24,14 +24,17 @@ namespace Hydro
             });
             
             glDebugMessageCallback(Callback, nullptr);
+
+            m_Handle = (Handle)wglGetCurrentContext();
         }
 
-        void Clear() override
+        void ClearDepthBuffer() override
+        {
+            glClear(GL_DEPTH_BUFFER_BIT);
+        }
+        void ClearColor(Color color) override
         {
             glClear(GL_COLOR_BUFFER_BIT);
-        }
-        void Clear(Color color) override
-        {
             glClearColor(color.r, color.g, color.b, color.a);
         }
 

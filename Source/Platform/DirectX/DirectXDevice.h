@@ -17,5 +17,20 @@ namespace Hydro
             }
             m_Handle = (Handle)device;
         }
+
+        void ClearDepthBuffer() override
+        {
+            
+        }
+
+        void ClearColor(Color color) override
+        {
+            
+        }
+        
+        void SwapBuffers() override
+        {
+            
+        }
     };
 }
