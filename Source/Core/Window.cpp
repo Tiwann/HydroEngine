@@ -7,16 +7,16 @@
 
 namespace Hydro
 {
-    Ref<Window> Window::Create(const String& name, uint32_t width, uint32_t height)
+    Ref<Window> Window::Create(const String& name, uint32_t width, uint32_t height, bool resizable)
     {
-        return CreateRef<Window>(name, width, height);
+        return CreateRef<Window>(name, width, height, resizable);
     }
     
-    Window::Window(const String& name, uint32_t width, uint32_t height)
-        : m_Width(width), m_Height(height), m_Name(name)
+    Window::Window(const String& name, uint32_t width, uint32_t height, bool resizable)
+        : m_Width(width), m_Height(height), m_Name(name), m_Resizable(resizable)
     {
         
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, m_Resizable);
 
         #if defined(HYDRO_PLATFORM_OPENGL)
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -119,11 +119,9 @@ namespace Hydro
         glfwSetWindowIcon(m_Handle, (int)glfwImages.size(), glfwImages.data());
     }
 
-    void Window::MakeOpenGLContextCurrent() const
+    bool Window::IsResizable() const
     {
-        #if defined(HYDRO_PLATFORM_OPENGL)
-            glfwMakeContextCurrent(m_Handle);
-        #endif
+        return m_Resizable;
     }
 
 #if defined(HYDRO_PLATFORM_WINDOWS)

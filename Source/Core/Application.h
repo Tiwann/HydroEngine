@@ -16,6 +16,7 @@ namespace Hydro
         virtual ~Application();
         void Run();
         virtual void OnInit();
+        virtual void OnExit();
         virtual void OnUpdate(float delta);
         virtual std::vector<Ref<Image>> LoadWindowIcons() = 0;
         virtual ApplicationSpecs CreateSpecifications() = 0;
@@ -25,10 +26,12 @@ namespace Hydro
         const ApplicationSpecs& GetSpecifications() const;
         const Window& GetWindow() const;
         Window& GetWindow();
-
+        void RequireExit(bool Restart = true);
+        static Application& GetCurrentApplication();
     private:
         Ref<Window> m_Window;
         Ref<Renderer> m_Renderer;
+        static Application* instance;
         ApplicationSpecs m_Specifications;
         bool m_IsRunnning = true;
         float m_FrameStartTime = 0.0f;

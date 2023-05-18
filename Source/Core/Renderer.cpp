@@ -20,12 +20,12 @@ namespace Hydro
         #if defined(HYDRO_PLATFORM_DIRECTX)
         if(DirectXDevice* Device = dynamic_cast<DirectXDevice*>(m_Device))
         {
-            Device->Clear();
+            Device->ClearDepthBuffer();
         }
         #elif defined(HYDRO_PLATFORM_VULKAN)
         if(VulkanDevice* Device = dynamic_cast<VulkanDevice*>(m_Device))
         {
-            Device->Clear();
+            Device->ClearDepthBuffer();
         }
         #elif defined(HYDRO_PLATFORM_OPENGL)
         if(OpenGLDevice* Device = dynamic_cast<OpenGLDevice*>(m_Device))

@@ -73,6 +73,17 @@
 #include <glad/gl.h>
 
 
+#define HYDRO_STORE_DEVICE_HANDLE(name) m_Handle = (Handle)name
+
+#define HYDRO_CREATE_DX_DEVICE(name) ID3D12Device* name = nullptr
+#define HYDRO_RETRIEVE_DX_DEVICE_HANDLE(name) ID3D12Device* name = (ID3D12Device*)m_Handle
+
+#define HYDRO_CREATE_VK_DEVICE(name) VkDevice name = nullptr;
+#define HYDRO_RETRIEVE_VK_DEVICE_HANDLE(name) VkDevice name = (VkDevice)m_Handle
+
+
+
+
 ///
 /// Include std headers
 ///
@@ -88,6 +99,10 @@
 #include <stdexcept>
 #include <filesystem>
 #include <iostream>
+
+
+#include <glm/glm.hpp>
+#include <glm/matrix.hpp>
 
 
 using Handle = uint64_t;

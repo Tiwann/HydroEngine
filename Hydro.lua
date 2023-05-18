@@ -37,39 +37,24 @@ project "Hydro"
 	}
 
 	filter "Platforms:Vulkan"
-		links "vulkan-1"
+		links { "vulkan-1" }
 		libdirs "%{libs.Vulkan}/Lib"
-		defines 
-		{
-			"HYDRO_PLATFORM_VULKAN",
-			"GLFW_INCLUDE_VULKAN",
-		}
+		defines { "HYDRO_PLATFORM_VULKAN", "GLFW_INCLUDE_VULKAN" }
 
 	filter "Platforms:DirectX"
-		links {
-			"d3d12",
-			"dxgi",
-			"d3dcompiler"
-		}
+		links { "d3d12", "dxgi", "d3dcompiler" }
 		defines "HYDRO_PLATFORM_DIRECTX"
 	
 	filter "Platforms:OpenGL"
-	    links { "glad", "opengl32"}
+	    links { "glad", "opengl32" }
 	    defines "HYDRO_PLATFORM_OPENGL"
 	
 
 	filter "System:Windows"
-		defines 
-		{
-			"GLFW_EXPOSE_NATIVE_WIN32",
-			"HYDRO_PLATFORM_WINDOWS"
-		}
+		defines { "GLFW_EXPOSE_NATIVE_WIN32", "HYDRO_PLATFORM_WINDOWS" }
 
 	filter "System:Linux"
-		defines
-		{
-			"HYDRO_PLATFORM_UNIX"
-		}
+		defines { "HYDRO_PLATFORM_UNIX" }
 		
 
 	filter "Configurations:Debug"

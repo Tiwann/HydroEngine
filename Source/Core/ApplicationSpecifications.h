@@ -16,6 +16,7 @@ namespace Hydro
         uint32_t WindowWidth{};
         uint32_t WindowHeight{};
         bool StartFullscreen = false;
+        bool WindowResizable = false;
         bool ShowGraphicsAPIName = false;
         bool ShowConfiguration = false;
         bool ShowOSName = false;

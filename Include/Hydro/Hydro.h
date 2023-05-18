@@ -11,3 +11,4 @@
 #include "Core/Array.h"
 #include "Core/Buffer.h"
 #include "Core/Renderer.h"
+#include "Core/Vertex.h"

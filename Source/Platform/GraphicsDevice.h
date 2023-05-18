@@ -8,16 +8,17 @@ namespace Hydro
     class HYDRO_API GraphicsDevice
     {
     public:
-        GraphicsDevice(Application& application);
+        GraphicsDevice() = default;
         virtual ~GraphicsDevice() = default;
-        static GraphicsDevice* Create(Application& Application);
+        static GraphicsDevice* Create();
 
         virtual void ClearDepthBuffer() = 0;
         virtual void ClearColor(Color color) = 0;
         virtual void SwapBuffers() = 0;
+        virtual void DrawIndexed() = 0;
+        //virtual VertexBuffer* CreateVertexBuffer();
 
     protected:
         Handle m_Handle{0};
-        Application& m_Application;
     };
 }

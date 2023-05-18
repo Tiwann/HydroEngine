@@ -16,10 +16,10 @@ namespace Hydro
     public:
         friend class Application;
         
-        Window(const String& name, uint32_t width, uint32_t height);
+        Window(const String& name, uint32_t width, uint32_t height, bool resizable);
         ~Window();
         
-        static Ref<Window> Create(const String& name, uint32_t width, uint32_t height);
+        static Ref<Window> Create(const String& name, uint32_t width, uint32_t height, bool resizable);
         const GLFWwindow* GetNativeWindow() const;
         GLFWwindow* GetNativeWindow();
 
@@ -38,8 +38,7 @@ namespace Hydro
         void SetIcon(const String& filepath)const;
         void SetIcon(const Image& image) const;
         void SetIcons(const std::vector<Ref<Image>>& images);
-
-        void MakeOpenGLContextCurrent() const;
+        bool IsResizable() const;
 
 #if defined(HYDRO_PLATFORM_WINDOWS)
         HWND GetWindowsNativeWindow() const;
@@ -52,6 +51,7 @@ namespace Hydro
         GLFWwindow* m_Handle = nullptr;
         uint32_t m_Width{0}, m_Height{0}, m_PositionX{0}, m_PositionY{0};
         String m_Name;
+        bool m_Resizable{false};
         bool m_HasFocus{false};
         bool m_Maximized{false};
         bool m_Minimized{false};

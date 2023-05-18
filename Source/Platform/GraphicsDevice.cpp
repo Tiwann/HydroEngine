@@ -4,22 +4,15 @@
 
 namespace Hydro
 {
-    GraphicsDevice::GraphicsDevice(Application& application) :
-        m_Application(application)
-    {
-    }
-
-    GraphicsDevice* GraphicsDevice::Create(Application& Application)
+    GraphicsDevice* GraphicsDevice::Create()
     {
         #if defined(HYDRO_PLATFORM_DIRECTX)
-                return new DirectXDevice(Application);
+                return new DirectXDevice();
         #elif defined(HYDRO_PLATFORM_VULKAN)
-                return new VulkanDevice(Application);
+                return new VulkanDevice();
         #elif defined(HYDRO_PLATFORM_OPENGL)
-                return new OpenGLDevice(Application);
+                return new OpenGLDevice();
         #endif
     }
-
-    
 }
 

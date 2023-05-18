@@ -12,14 +12,18 @@ namespace Hydro
     }
 
     Color::Color(uint32_t color)
-    : r(color >> 24 & 0xFF), g(color >> 16 & 0xFF), b(color >> 8 & 0xFF), a(color & 0xFF)
+    : r((color >> 24 & 0xFF) / 255.0f), g((color >> 16 & 0xFF) / 255.0f), b((color >> 8 & 0xFF) / 255.0f), a((color & 0xFF) / 255.0f)
     {
-
     }
 
     Color::Color(float red, float green, float blue, float alpha)
     : r(red), g(green), b(blue), a(alpha)
     {
+    }
+
+    Color::operator glm::vec4() const
+    {
+        return {r, g, b, a};
     }
 
     Color Color::FromHSL(float hue, float saturation, float lightness, float alpha)

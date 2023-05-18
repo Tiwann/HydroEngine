@@ -12,6 +12,8 @@ namespace Hydro
         Color(uint32_t color);
         Color(float red, float gren, float blue, float alpha);
 
+        operator glm::vec4() const;
+
         static Color FromHSL(float hue, float saturation, float lightness, float alpha);
         Color WithHue(float hue);
         Color WithSturation(float saturation);

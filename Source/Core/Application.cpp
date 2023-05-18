@@ -3,14 +3,18 @@
 #include "StringFormat.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
-
 #include "Image.h"
 
 namespace Hydro
 {
     extern bool g_ApplicationRunning;
 
-    Application::Application() = default;
+    Application* Application::instance = nullptr;
+
+    Application::Application()
+    {
+        instance = this;
+    }
 
     Application::~Application()
     {
@@ -24,31 +28,38 @@ namespace Hydro
             std::cerr << "Failed to init core!\n";
             return;
         }
-
-        
         
         OnInit();
         
         while(m_IsRunnning)
         {
             m_FrameStartTime = (float)glfwGetTime();
-            OnUpdate(m_DeltaTime);
-            glfwPollEvents();
 
+            // Clear the back color
             m_Renderer->Clear();
             m_Renderer->Clear(Color::Black);
+            
+            OnUpdate(m_DeltaTime);
+            glfwPollEvents();
             m_Renderer->SwapBuffers();
             m_FrameEndTime = (float)glfwGetTime();
             m_DeltaTime = m_FrameEndTime - m_FrameStartTime;
         }
-        
+
+
+        OnExit();
         m_Window->Destroy();
         glfwTerminate();
     }
 
     void Application::OnInit()
     {
-    
+        
+    }
+
+    void Application::OnExit()
+    {
+        
     }
 
     void Application::OnUpdate(float delta)
@@ -86,8 +97,6 @@ namespace Hydro
                 UpdateWindowName();
             }
         }
-
-        
     }
 
     const ApplicationSpecs& Application::GetSpecifications() const
@@ -105,6 +114,18 @@ namespace Hydro
         return *m_Window;
     }
 
+    void Application::RequireExit(bool Restart)
+    {
+        std::cout << "Exit Required. Cleaning...\n";
+        m_IsRunnning = false;
+        g_ApplicationRunning = Restart;
+    }
+
+    Application& Application::GetCurrentApplication()
+    {
+        return *instance;
+    }
+
     bool Application::InitCore()
     {
         // Init GLFW
@@ -119,7 +140,7 @@ namespace Hydro
         if(m_Specifications.ShowGraphicsAPIName) m_Specifications.AppName = Format("%s | %s", *m_Specifications.AppName, HYDRO_RHI_NAME);
         if(m_Specifications.ShowOSName) m_Specifications.AppName = Format("%s %s", *m_Specifications.AppName, HYDRO_OS_NAME);
         if(m_Specifications.ShowConfiguration) m_Specifications.AppName = Format("%s %s", *m_Specifications.AppName, HYDRO_CONFIG_NAME);
-        m_Window = Window::Create(m_Specifications.AppName, m_Specifications.WindowWidth, m_Specifications.WindowHeight);
+        m_Window = Window::Create(m_Specifications.AppName, m_Specifications.WindowWidth, m_Specifications.WindowHeight, m_Specifications.WindowResizable);
         glfwSetWindowUserPointer(m_Window->GetNativeWindow(), this);
 
         // Set window claabacks
@@ -150,7 +171,12 @@ namespace Hydro
             Application* application = (Application*)glfwGetWindowUserPointer(window);
             application->m_Window->m_Width = width;
             application->m_Window->m_Height = height;
+            #if defined(HYDRO_PLATFORM_OPENGL)
+            glViewport(0, 0, width, height);
+            #endif
         }));
+
+        
 
         
         const std::vector<Ref<Image>> Icons = LoadWindowIcons();
@@ -164,7 +190,7 @@ namespace Hydro
             return false;
         }
 
-        m_Renderer = CreateRef<Renderer>(GraphicsDevice::Create(*this));
+        m_Renderer = CreateRef<Renderer>(GraphicsDevice::Create());
         return true;
     }
     
