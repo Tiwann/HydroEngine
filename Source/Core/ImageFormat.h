@@ -1,6 +1,6 @@
 #pragma once
 
-enum class ImageFormat
+enum class HYDRO_API ImageFormat
 {
 	RGB8,
 	RGBA8,

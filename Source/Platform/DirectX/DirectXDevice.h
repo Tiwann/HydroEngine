@@ -1,36 +1,26 @@
 ﻿#pragma once
 #include "HydroPCH.h"
-#include "Platform/GraphicsDevice.h"
+#include "Platform/RendererDevice.h"
+using Microsoft::WRL::ComPtr;
 
 namespace Hydro
 {
-    class HYDRO_API DirectXDevice : public GraphicsDevice
+    class HYDRO_API DirectXDevice : public RendererDevice
     {
     public:
-        DirectXDevice() : GraphicsDevice()
-        {
-            HYDRO_CREATE_DX_DEVICE(Device);
-            HRESULT result = D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_12_1, IID_PPV_ARGS(&Device));
-            if(FAILED(result))
-            {
-                throw std::runtime_error("Failed to create DirectX device!");
-            }
-            HYDRO_STORE_DEVICE_HANDLE(Device);
-        }
-
-        void ClearDepthBuffer() override
-        {
-            HYDRO_RETRIEVE_DX_DEVICE_HANDLE(Device);
-        }
-
-        void ClearColor(Color color) override
-        {
-            
-        }
+        DirectXDevice();
+        ~DirectXDevice() override;
         
-        void SwapBuffers() override
-        {
-            
-        }
+        void ClearDepthBuffer() override;
+        void ClearColor(Color color) override;
+        void SwapBuffers() override;
+        void DrawIndexed() override;
+
+    private:
+        
+        ComPtr<IDXGIFactory7>   m_Factory{nullptr};
+        ComPtr<IDXGIAdapter4>   m_Adapter{nullptr};
+        ComPtr<ID3D12Device>    m_Device{nullptr};
+        ComPtr<IDXGISwapChain1> m_Swapchain{nullptr};
     };
 }

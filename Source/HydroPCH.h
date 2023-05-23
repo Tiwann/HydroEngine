@@ -64,22 +64,17 @@
 	#include <unistd.h>
 #endif
 
+#define HYDRO_NULL_MACRO (void)0
+
 ///
 /// Include RHI headers
 ///
 #include <d3d12.h>
 #include <dxgi.h>
-#include <vulkan/vulkan.h>
+#include <dxgi1_6.h>
+#include <wrl/client.h>
+#include <vulkan/vulkan.hpp>
 #include <glad/gl.h>
-
-
-#define HYDRO_STORE_DEVICE_HANDLE(name) m_Handle = (Handle)name
-
-#define HYDRO_CREATE_DX_DEVICE(name) ID3D12Device* name = nullptr
-#define HYDRO_RETRIEVE_DX_DEVICE_HANDLE(name) ID3D12Device* name = (ID3D12Device*)m_Handle
-
-#define HYDRO_CREATE_VK_DEVICE(name) VkDevice name = nullptr;
-#define HYDRO_RETRIEVE_VK_DEVICE_HANDLE(name) VkDevice name = (VkDevice)m_Handle
 
 
 
@@ -87,10 +82,14 @@
 ///
 /// Include std headers
 ///
+///
+///
 #include <cstring>
 #include <cassert>
 #include <vector>
+#include <array>
 #include <cstdlib>
+#include <cstdio>
 #include <cmath>
 #include <exception>
 #include <memory>
@@ -99,11 +98,11 @@
 #include <stdexcept>
 #include <filesystem>
 #include <iostream>
+#include <string>
 
 
 #include <glm/glm.hpp>
 #include <glm/matrix.hpp>
-
-
 using Handle = uint64_t;
+
 

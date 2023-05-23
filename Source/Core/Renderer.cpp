@@ -5,7 +5,7 @@
 
 namespace Hydro
 {
-    Renderer::Renderer(GraphicsDevice* device)
+    Renderer::Renderer(RendererDevice* device)
         : m_Device(device)
     {
     }
@@ -43,5 +43,10 @@ namespace Hydro
     void Renderer::SwapBuffers() const
     {
         m_Device->SwapBuffers();
+    }
+
+    bool Renderer::IsReady() const
+    {
+        return m_Device->IsReady();
     }
 }

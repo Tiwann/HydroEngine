@@ -1,3 +1,4 @@
+group "HydroFramework"
 project "Hydro"
 	kind "StaticLib"
 	staticruntime "On"
@@ -12,9 +13,8 @@ project "Hydro"
 		"Source/**.h",
 		"Source/**.cpp",
 		"Include/**.h",
-		"External/**.h",
-		"External/**.cpp",
-		"External/**.c",
+		"External/spdlog/**.h",
+		"External/spdlog/**.cpp",
 		"Hydro.lua"
 	}
 	
@@ -27,7 +27,9 @@ project "Hydro"
 		"%{libs.glfw}/include",
 		"%{libs.stb}/include",
 		"%{libs.Vulkan}/Include",
-		"%{libs.glad}/include"
+		"%{libs.glad}/include",
+		"%{libs.spdlog}/include",
+		"%{libs.libshaderc_util}/include"
 	}
 	
 	links
@@ -35,6 +37,8 @@ project "Hydro"
 		"glfw",
 		"stb",
 	}
+
+	defines { "SPDLOG_COMPILED_LIB", "HYDRO_CORE" }
 
 	filter "Platforms:Vulkan"
 		links { "vulkan-1" }
@@ -51,7 +55,7 @@ project "Hydro"
 	
 
 	filter "System:Windows"
-		defines { "GLFW_EXPOSE_NATIVE_WIN32", "HYDRO_PLATFORM_WINDOWS" }
+		defines { "GLFW_EXPOSE_NATIVE_WIN32", "HYDRO_PLATFORM_WINDOWS", "_CRT_SECURE_NO_WARNINGS" }
 
 	filter "System:Linux"
 		defines { "HYDRO_PLATFORM_UNIX" }

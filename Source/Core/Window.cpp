@@ -25,9 +25,7 @@ namespace Hydro
         #else
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); 
         #endif
-        
         m_Handle = glfwCreateWindow(width, height, *name, nullptr, nullptr);
-        HYDRO_ASSERT(m_Handle != nullptr, "Failed to create window!");
     }
     
     Window::~Window()
@@ -80,10 +78,30 @@ namespace Hydro
     {
         glfwSetWindowMaximizeCallback(m_Handle, function.GetRawPointer());
     }
-    
+
+    void Window::SetIconifyCallback(Function<void, GLFWwindow*, int> function) const
+    {
+        glfwSetWindowIconifyCallback(m_Handle, function.GetRawPointer());
+    }
+
+    void Window::SetKeyCallback(Function<void, GLFWwindow*, int, int, int, int> function) const
+    {
+        glfwSetKeyCallback(m_Handle, function.GetRawPointer());
+    }
+
     bool Window::ShouldClose() const
     {
         return glfwWindowShouldClose(m_Handle);
+    }
+
+    uint32_t Window::GetWidth() const
+    {
+        return m_Width;
+    }
+
+    uint32_t Window::GetHeight() const
+    {
+        return m_Height;
     }
 
     const String& Window::GetName() const
@@ -123,13 +141,6 @@ namespace Hydro
     {
         return m_Resizable;
     }
-
-#if defined(HYDRO_PLATFORM_WINDOWS)
-    HWND Window::GetWindowsNativeWindow() const
-    {
-        return glfwGetWin32Window(m_Handle);
-    }
-#endif
     
     void Window::SetName(String name)
     {

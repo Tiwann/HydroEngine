@@ -2,6 +2,11 @@
 #include "Application.h"
 
 
+#define HYDRO_DEFINE_APPLICATION_CLASS(ApplicationClass) Application* Hydro::CreateApplication() \
+    { \
+    return new ApplicationClass(); \
+    } \
+
 namespace Hydro
 {
     extern Application* CreateApplication();

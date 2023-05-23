@@ -1,12 +1,9 @@
 #pragma once
 #include "HydroPCH.h"
-#include <cstring>
-#include <cstdint>
-#include <ostream>
 #include "Assertion.h"
 
 namespace Hydro {
-    template<class Type>
+    template<typename Type>
     class HYDRO_API StringBase
     {
     private:

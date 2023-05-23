@@ -48,7 +48,7 @@ namespace Hydro
 
     Image::Image(const Buffer<uint8_t>& buffer) : m_Pixels(nullptr)
     {
-        m_Pixels = stbi_load_from_memory(buffer.GetData(), buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+        m_Pixels = stbi_load_from_memory(buffer.GetData(), (int)buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
     }
 
     Image::Image(const uint8_t* buffer, size_t size) : m_Pixels(nullptr)

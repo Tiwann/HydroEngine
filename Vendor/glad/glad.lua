@@ -1,3 +1,4 @@
+group "HydroFramework"
 project "glad"
 	kind "StaticLib"
 	language "C"

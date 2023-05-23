@@ -1,11 +1,10 @@
 ﻿#pragma once
 #include "HydroPCH.h"
-#include "Core/Application.h"
-#include "Platform/GraphicsDevice.h"
+#include "Platform/RendererDevice.h"
 
 namespace Hydro
 {
-    class HYDRO_API OpenGLDevice : public GraphicsDevice
+    class HYDRO_API OpenGLDevice : public RendererDevice
     {
     public:
         OpenGLDevice();

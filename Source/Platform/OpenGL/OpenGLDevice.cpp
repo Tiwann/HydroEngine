@@ -1,27 +1,34 @@
 #include "HydroPCH.h"
 #include "OpenGLDevice.h"
+#include "Core/Application.h"
+#include "Core/Log.h"
 
 namespace Hydro
 {
-    OpenGLDevice::OpenGLDevice() : GraphicsDevice()
+    OpenGLDevice::OpenGLDevice() : RendererDevice()
     {
         Application& application = Application::GetCurrentApplication();
+        HYDRO_LOG_TRACE("[OPENGL] Creating OpenGL context");
         glfwMakeContextCurrent(application.GetWindow().GetNativeWindow());
+        glfwSwapInterval(true);
 
         if(!gladLoadGL(glfwGetProcAddress))
         {
-            std::cerr << "Failed to retrieve OpenGL function pointers!\n";
-            throw std::runtime_error("Failed to retrieve OpenGL function pointers!");
+            HYDRO_LOG_ERROR("[OPENGL] Failed to retrieve OpenGL function pointers!");
+            application.RequireExit(false);
+            return;
         }
         
         const auto Callback = [](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
         {
-            std::cerr << "[OPENGL] ERROR: " << message << '\n';
+            HYDRO_LOG_ERROR("[OPENGL] Error:\n{}", message);
         };
-            
         glDebugMessageCallback(Callback, nullptr);
-
-        m_Handle = (Handle)wglGetCurrentContext();
+        glEnable(GL_FRAMEBUFFER_SRGB);
+        
+        HYDRO_LOG_INFO("[OPENGL] Using OpenGL 4.6");
+        HYDRO_LOG_INFO("[OPENGL] Using GPU: {}", glGetString(GL_RENDERER));
+        m_IsReady = true;
     }
 
     void OpenGLDevice::ClearDepthBuffer()

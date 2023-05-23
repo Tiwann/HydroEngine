@@ -1,3 +1,4 @@
+group "HydroFramework"
 project "glfw"
 	kind "StaticLib"
 	language "C"

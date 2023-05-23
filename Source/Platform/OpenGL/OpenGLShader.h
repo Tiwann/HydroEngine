@@ -1,17 +1,22 @@
 ﻿#pragma once
 #include "HydroPCH.h"
+
+#include "Core/SharedPointer.h"
 #include "Core/String.h"
+
 
 namespace Hydro
 {
     class OpenGLShader
     {
     public:
-        OpenGLShader(const String& filepath);
+        OpenGLShader(const struct ShaderSource& sources);
         bool Compile();
         bool Link();
         bool Validate();
         void UseProgram() const;
+
+        static Ref<OpenGLShader> FromFiles(const String& vertexSourcePath, const String& fragmentSourcePath);
     
     private:
         String m_Filepath{};

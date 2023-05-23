@@ -1,24 +1,20 @@
 ﻿#pragma once
-#include "HydroPCH.h"
-
 #include "Color.h"
-#include "SharedPointer.h"
-#include "Platform/GraphicsDevice.h"
+#include "Platform/RendererDevice.h"
 
 namespace Hydro
 {
-    class Renderer
+    class HYDRO_API Renderer
     {
     public:
-        Renderer(GraphicsDevice* device);
+        Renderer(RendererDevice* device);
         ~Renderer();
         void Clear() const;
         void Clear(Color color) const;
         void SwapBuffers() const;
-        
-        
-    
+
+        bool IsReady() const;
     private:
-        GraphicsDevice* m_Device;
+        RendererDevice* m_Device;
     };
 }

@@ -1,7 +1,5 @@
 ﻿#pragma once
-#include <vector>
 #include <GLFW/glfw3.h>
-#include "HydroPCH.h"
 #include "Function.h"
 #include "String.h"
 #include "SharedPointer.h"
@@ -10,7 +8,6 @@ namespace Hydro
 {
     class Image;
     
-
     class HYDRO_API Window
     {
     public:
@@ -19,6 +16,7 @@ namespace Hydro
         Window(const String& name, uint32_t width, uint32_t height, bool resizable);
         ~Window();
         
+
         static Ref<Window> Create(const String& name, uint32_t width, uint32_t height, bool resizable);
         const GLFWwindow* GetNativeWindow() const;
         GLFWwindow* GetNativeWindow();
@@ -29,8 +27,12 @@ namespace Hydro
         void SetPositionCallback(Function<void, GLFWwindow*, int, int> function) const;
         void SetFocusCallback(Function<void, GLFWwindow*, int> function) const;
         void SetMaximizeCallback(Function<void, GLFWwindow*, int> function) const;
+        void SetIconifyCallback(Function<void, GLFWwindow*, int> function) const;
+        void SetKeyCallback(Function<void, GLFWwindow*, int, int, int, int> function) const;
         bool ShouldClose() const;
 
+        uint32_t GetWidth() const;
+        uint32_t GetHeight() const;
         const String& GetName() const;
         void SetName(String name);
         void SetNameTemp(const String& name) const;
@@ -39,10 +41,6 @@ namespace Hydro
         void SetIcon(const Image& image) const;
         void SetIcons(const std::vector<Ref<Image>>& images);
         bool IsResizable() const;
-
-#if defined(HYDRO_PLATFORM_WINDOWS)
-        HWND GetWindowsNativeWindow() const;
-#endif
 
         void Destroy() const;
         bool IsValid() const;
