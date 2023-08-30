@@ -1,5 +1,6 @@
 ﻿#include "HydroPCH.h"
 #include "EntryPoint.h"
+#include "Application.h"
 
 namespace Hydro
 {
