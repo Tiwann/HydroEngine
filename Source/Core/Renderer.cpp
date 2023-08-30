@@ -1,6 +1,7 @@
 ﻿#include "HydroPCH.h"
 #include "Renderer.h"
 #include "Platform/PlatformDevice.h"
+#include "Color.h"
 
 
 namespace Hydro
@@ -35,7 +36,7 @@ namespace Hydro
         #endif
     }
 
-    void Renderer::Clear(Color color) const
+    void Renderer::Clear(const Color& color) const
     {
         m_Device->ClearColor(color);
     }
