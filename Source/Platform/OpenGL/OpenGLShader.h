@@ -1,33 +1,24 @@
 ﻿#pragma once
-#include "HydroPCH.h"
-
-#include "Core/SharedPointer.h"
-#include "Core/String.h"
-
+#include "Core/Shader.h"
+#include "Core/ShaderSourceLanguage.h"
+#include "shaderc/shaderc.h"
 
 namespace Hydro
 {
-    class OpenGLShader
+    class OpenGLShader : public Shader
     {
     public:
-        OpenGLShader(const struct ShaderSource& sources);
-        bool Compile();
-        bool Link();
-        bool Validate();
-        void UseProgram() const;
-
-        static Ref<OpenGLShader> FromFiles(const String& vertexSourcePath, const String& fragmentSourcePath);
-    
+        OpenGLShader(Path Filepath, ShaderSourceLanguage Language);
+        bool Compile() override;
+        bool Link() override;
+        bool Validate() override;
+        bool UseProgram() override;
+    protected:
+        uint32_t m_Program;
+        uint32_t m_VertexHandle;
+        uint32_t m_FragmentHandle;
     private:
-        String m_Filepath{};
-        String m_VertexSource{};
-        String m_FragSource{};
-        bool m_Compiled{false};
-        bool m_Linked{false};
-        bool m_Validated{false};
-
-        Handle m_VertexShaderHandle{0};
-        Handle m_FragShaderHandle{0};
-        Handle m_ProgramHandle{0};
+        static uint32_t ShadercToOpenGL(shaderc_shader_kind Kind);
+        static shaderc_shader_kind OpenGLToShaderc(uint32_t Type);
     };
 }

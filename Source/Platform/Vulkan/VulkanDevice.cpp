@@ -1,13 +1,15 @@
 #include "HydroPCH.h"
 #include "VulkanDevice.h"
-
 #include "Core/Log.h"
+#include "Core/Application.h"
+#include "Core/LogVerbosity.h"
+#include <GLFW/glfw3.h>
 
 namespace Hydro
 {
-    VulkanDevice::VulkanDevice(): RendererDevice()
+    VulkanDevice::VulkanDevice() : RendererDevice()
     {
-        HYDRO_LOG_TRACE("Initializing Vulkan...");
+        HYDRO_LOG(Vulkan, Trace, "Initializing Vulkan...");
         if(!CreateInstance()) return;
         if(!SelectPhysicalDevice()) return;
         if(!CreateWindowSurface()) return;
@@ -15,17 +17,24 @@ namespace Hydro
         if(!CreateSwapchain()) return;
         
         vk::PhysicalDeviceProperties2 properties = m_PhysicalDevice.getProperties2();
-        HYDRO_LOG_TRACE("[VULKAN] Using Vulkan 1.1");
-        const String DeviceTypeString = GetGPUTypeString(properties.properties.deviceType);
-        HYDRO_LOG_TRACE("[VULKAN] Using: {}; GPU Type: {}", properties.properties.deviceName, *DeviceTypeString);
+        HYDRO_LOG(Vulkan, Trace, "Using Vulkan 1.3");
+        const std::string DeviceTypeString = GetGPUTypeString(properties.properties.deviceType);
+        HYDRO_LOG(Vulkan, Trace, "Using: {}; GPU Type: {}", properties.properties.deviceName, DeviceTypeString);
         m_IsReady = true;
     }
 
     VulkanDevice::~VulkanDevice()
     {
-        m_Device.destroySwapchainKHR();
+        HYDRO_LOG(Vulkan, Trace, "Destroying swapchain...");
+        m_Device.destroySwapchainKHR(m_Swapchain);
+
+        HYDRO_LOG(Vulkan, Trace, "Destroying logical device...");
         m_Device.destroy();
-        m_instance.destroySurfaceKHR();
+
+        HYDRO_LOG(Vulkan, Trace, "Destroying Window surface...");
+        m_instance.destroySurfaceKHR(m_Surface);
+
+        HYDRO_LOG(Vulkan, Trace, "Destroying Vulkan instance...");
         m_instance.destroy();
     }
 
@@ -34,7 +43,7 @@ namespace Hydro
         
     }
 
-    void VulkanDevice::ClearColor(Color color)
+    void VulkanDevice::ClearColor(const Color& color)
     {
             
     }
@@ -60,9 +69,8 @@ namespace Hydro
 
         vk::ApplicationInfo applicationInfo;
         applicationInfo.setApiVersion(VK_VERSION_1_3);
-        applicationInfo.setApplicationVersion(VK_MAKE_VERSION(1, 0, 0));
-        applicationInfo.setEngineVersion(VK_MAKE_VERSION(0, 0, 1));
-        applicationInfo.setPApplicationName(*application.GetConfiguration().AppName);
+        applicationInfo.setEngineVersion(VK_MAKE_VERSION((HYDRO_VERSION_MAJ), (HYDRO_VERSION_MIN), 0));
+        applicationInfo.setPApplicationName(application.GetConfiguration().AppName.c_str());
         
         vk::InstanceCreateInfo instanceCreateInfo;
         instanceCreateInfo.setPApplicationInfo(&applicationInfo);
@@ -72,11 +80,11 @@ namespace Hydro
         const vk::Result result = vk::createInstance(&instanceCreateInfo, nullptr, &m_instance);
         if(result != vk::Result::eSuccess)
         {
-            HYDRO_LOG_ERROR("[VULKAN] Failed to create Vulkan Intsance!");
+            HYDRO_LOG(Vulkan, Error, "Failed to create Vulkan Intsance!");
             application.RequireExit(false);
             return false;
         }
-        HYDRO_LOG_INFO("[VULKAN] Vulkan instance created!");
+        HYDRO_LOG(Vulkan, Info, "Vulkan instance created!");
         return true;
     }
 
@@ -85,7 +93,7 @@ namespace Hydro
         std::vector<vk::PhysicalDevice> availableDevices = m_instance.enumeratePhysicalDevices();
         if(availableDevices.empty())
         {
-            HYDRO_LOG_ERROR("[VULKAN] No compatible physical devices found!");
+            HYDRO_LOG(Vulkan, Error, "No compatible physical devices found!");
             Application::GetCurrentApplication().RequireExit(false);
             return false;
         }
@@ -109,7 +117,7 @@ namespace Hydro
                 m_PhysicalDevice = physicalDevice;
             }
         }
-        HYDRO_LOG_INFO("[VULKAN] Physical device selected!");
+        HYDRO_LOG(Vulkan, Info, "Physical device selected!");
         return true;
     }
 
@@ -119,12 +127,12 @@ namespace Hydro
         const VkResult result = glfwCreateWindowSurface(m_instance, Application::GetCurrentApplication().GetWindow().GetNativeWindow(), nullptr, &surface);
         if(result != VK_SUCCESS)
         {
-            HYDRO_LOG_ERROR("[VULKAN] Failed to create window surface");
+            HYDRO_LOG(Vulkan, Error, "Failed to create window surface");
             Application::GetCurrentApplication().RequireExit(false);
             return false;
         }
         m_Surface = surface;
-        HYDRO_LOG_INFO("[VULKAN] Window surface created!");
+        HYDRO_LOG(Vulkan, Info, "Window surface created!");
         return true;
     }
 
@@ -149,13 +157,13 @@ namespace Hydro
         }
         
         if (!m_GraphicsQueueIndex.has_value()) {
-            HYDRO_LOG_ERROR("Failed to find a graphics queue family!");
+            HYDRO_LOG(Vulkan, Error, "Failed to find a graphics queue family!");
             Application::GetCurrentApplication().RequireExit(false);
             return false;
         }
 
         if (!m_PresentQueueIndex.has_value()) {
-            HYDRO_LOG_ERROR("Failed to find a present queue family!");
+            HYDRO_LOG(Vulkan, Error, "Failed to find a present queue family!");
             Application::GetCurrentApplication().RequireExit(false);
             return false;
         }
@@ -197,25 +205,25 @@ namespace Hydro
         m_Device = m_PhysicalDevice.createDevice(deviceCreateInfo);
         if(!m_Device)
         {
-            HYDRO_LOG_ERROR("[VULKAN] Failed to create logical device!");
+            HYDRO_LOG(Vulkan, Error, "Failed to create logical device!");
             return false;
         }
         
         m_GraphicsQueue = m_Device.getQueue(m_GraphicsQueueIndex.value(), 0);
         if(!m_GraphicsQueue)
         {
-            HYDRO_LOG_ERROR("[VULKAN] Failed to retrieve Graphics Queue!");
+            HYDRO_LOG(Vulkan, Error, "Failed to retrieve Graphics Queue!");
             return false;
         }
         
         m_PresentQueue = m_Device.getQueue(m_PresentQueueIndex.value(), 0);
         if(!m_PresentQueue)
         {
-            HYDRO_LOG_ERROR("[VULKAN] Failed to retrieve Present Queue!");
+            HYDRO_LOG(Vulkan, Error, "Failed to retrieve Present Queue!");
             return false;
         }
         
-        HYDRO_LOG_INFO("[VULKAN] Logical device created!");
+        HYDRO_LOG(Vulkan, Info, "Logical device created!");
         return true;
     }
 
@@ -226,16 +234,17 @@ namespace Hydro
         const auto presentModes = m_PhysicalDevice.getSurfacePresentModesKHR(m_Surface);
         const auto capabilities = m_PhysicalDevice.getSurfaceCapabilities2KHR(surfaceInfo);
         const Application& application = Application::GetCurrentApplication();
+        const GraphicsSettings& applicationGraphicsSettings = application.GetGraphicsSettings();
         
         vk::SwapchainCreateInfoKHR swapchainCreateInfo;
         swapchainCreateInfo.setSurface(m_Surface);
-        swapchainCreateInfo.setImageFormat(formats[0].surfaceFormat.format);
+        swapchainCreateInfo.setImageFormat(m_Format = formats[0].surfaceFormat.format);
         swapchainCreateInfo.setImageColorSpace(formats[0].surfaceFormat.colorSpace);
         swapchainCreateInfo.setPresentMode(m_PresentMode = vk::PresentModeKHR::eFifo);
         swapchainCreateInfo.setClipped(true);
         swapchainCreateInfo.setCompositeAlpha(vk::CompositeAlphaFlagBitsKHR::eOpaque);
         swapchainCreateInfo.setImageExtent(vk::Extent2D(application.GetWindow().GetWidth(), application.GetWindow().GetHeight()));
-        swapchainCreateInfo.setMinImageCount((uint32_t)application.GetConfiguration().GraphicsSettings.BufferType);
+        swapchainCreateInfo.setMinImageCount(applicationGraphicsSettings.BufferType);
         swapchainCreateInfo.setImageArrayLayers(1);
         swapchainCreateInfo.setImageUsage(vk::ImageUsageFlagBits::eColorAttachment);
         swapchainCreateInfo.setOldSwapchain(nullptr);
@@ -245,7 +254,7 @@ namespace Hydro
         
         if (sameQueueFamilies) {
             swapchainCreateInfo.setImageSharingMode(vk::SharingMode::eConcurrent);
-            swapchainCreateInfo.queueFamilyIndexCount = queueFamilyIndices.size();
+            swapchainCreateInfo.queueFamilyIndexCount = (uint32_t)queueFamilyIndices.size();
             swapchainCreateInfo.pQueueFamilyIndices = queueFamilyIndices.data();
         } else {
             swapchainCreateInfo.setImageSharingMode(vk::SharingMode::eExclusive);
@@ -254,16 +263,26 @@ namespace Hydro
         }
 
         m_Swapchain = m_Device.createSwapchainKHR(swapchainCreateInfo);
+
         if(!m_Swapchain)
         {
-            HYDRO_LOG_ERROR("[VULKAN] Failed to create swapchain!");
+            HYDRO_LOG(Vulkan, Error, "Failed to create swapchain!");
             return false;
         }
-        HYDRO_LOG_INFO("[VULKAN] Swapchain created!");
+        HYDRO_LOG(Vulkan, Info, "Swapchain created!");
+        
+        uint32_t SwapchainImageCount;
+        vk::Result result = m_Device.getSwapchainImagesKHR(m_Swapchain, &SwapchainImageCount, nullptr);
+        HYDRO_CHECK_VK_RESULT(result, "Failed to query swapchain images count");
+        
+        m_SwapchainImages.resize(SwapchainImageCount);
+        result = m_Device.getSwapchainImagesKHR(m_Swapchain, &SwapchainImageCount, m_SwapchainImages.data());
+        HYDRO_CHECK_VK_RESULT(result, "Failed to retrieve swapchain images");
         return true;
     }
+    
 
-    String VulkanDevice::GetGPUTypeString(const vk::PhysicalDeviceType& DeviceType) const
+    std::string VulkanDevice::GetGPUTypeString(const vk::PhysicalDeviceType& DeviceType) const
     {
         switch (DeviceType)
         {
@@ -272,7 +291,7 @@ namespace Hydro
         case vk::PhysicalDeviceType::eIntegratedGpu:    return "Integrated GPU";
         case vk::PhysicalDeviceType::eDiscreteGpu:      return "Discrete GPU";
         case vk::PhysicalDeviceType::eVirtualGpu:       return "Virtual GPU";
-        default:                                        return "Unknown";
         }
+        return "Unknown";
     }
 }

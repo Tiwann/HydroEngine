@@ -1,7 +1,31 @@
 ﻿#pragma once
-#include "HydroPCH.h"
+#include "Macros.h"
 #include "Platform/RendererDevice.h"
-#include "Core/Application.h"
+#include "Core/LogCategory.h"
+
+HYDRO_DECLARE_LOG_CATEGORY_STATIC(Vulkan, "VULKAN");
+
+#define VK_FAILED(Res) (((vk::Result)(Res)) != vk::Result::eSuccess)
+
+#define HYDRO_CHECK_VK_RESULT(Result, Message) \
+    if(VK_FAILED(Result)) \
+    { \
+        HYDRO_LOG(Vulkan, Error, Message); \
+        return false; \
+    } ((void)0)
+   
+
+namespace vk
+{
+    class Instance;
+    class PhysicalDevice;
+    class SurfaceKHR;
+    class Device;
+    class Queue;
+    enum class PresentModeKHR;
+    class SwapchainKHR;
+    class Image;
+}
 
 namespace Hydro
 {
@@ -13,7 +37,7 @@ namespace Hydro
         ~VulkanDevice() override;
 
         void ClearDepthBuffer() override;
-        void ClearColor(Color color) override;
+        void ClearColor(const Color& color) override;
         void SwapBuffers() override;
         void DrawIndexed() override;
     
@@ -30,8 +54,10 @@ namespace Hydro
         std::optional<uint32_t>  m_GraphicsQueueIndex;
         std::optional<uint32_t>  m_PresentQueueIndex;
         vk::PresentModeKHR       m_PresentMode{vk::PresentModeKHR::eFifo};
+        vk::Format               m_Format{vk::Format::eUndefined};
         vk::SwapchainKHR         m_Swapchain{nullptr};
         std::vector<vk::Image>   m_SwapchainImages;
+        std::vector<vk::ImageView> m_SwapchainImagesViews;
 
     private:
         bool CreateInstance();
@@ -39,8 +65,7 @@ namespace Hydro
         bool CreateWindowSurface();
         bool CreateDevice();
         bool CreateSwapchain();
-
-        String GetGPUTypeString(const vk::PhysicalDeviceType& DeviceType) const;
+        std::string GetGPUTypeString(const vk::PhysicalDeviceType& DeviceType) const;
 
     protected:
         using Super = RendererDevice;

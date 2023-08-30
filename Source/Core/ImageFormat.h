@@ -1,4 +1,5 @@
 #pragma once
+#include "Macros.h"
 
 enum class HYDRO_API ImageFormat
 {

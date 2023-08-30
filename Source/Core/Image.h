@@ -10,7 +10,7 @@ namespace Hydro {
 	public:
 		Image();
 		explicit Image(const std::filesystem::path& filepath);
-		explicit Image(const std::filesystem::path& filepath, ImageFormat format);
+		Image(const std::filesystem::path& filepath, ImageFormat format);
 		explicit Image(const Buffer<uint8_t>& buffer);
 		Image(const uint8_t* buffer, size_t size);
 		Image(const uint8_t* buffer, size_t size, ImageFormat format);

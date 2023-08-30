@@ -1,6 +1,5 @@
 ﻿#include "HydroPCH.h"
 #include "Application.h"
-#include "StringFormat.h"
 #include <GLFW/glfw3.h>
 
 
@@ -8,16 +7,23 @@
 #include "Input.h"
 #include "Log.h"
 #include "Time.h"
+#include "Color.h"
+#include "Platform/RendererDevice.h"
+
+#include <spdlog/fmt/fmt.h>
+#include <GLFW/glfw3native.h>
+
+#include "LogVerbosity.h"
 
 namespace Hydro
 {
     extern bool g_ApplicationRunning;
 
-    Application* Application::instance = nullptr;
+    Application* Application::s_Instance = nullptr;
 
     Application::Application()
     {
-        instance = this;
+        s_Instance = this;
     }
 
     Application::~Application()
@@ -27,22 +33,25 @@ namespace Hydro
 
     void Application::Run()
     {
+        HYDRO_LOG(Application, Verbosity::Trace, "This is a test log");
         if(!InitCore())
         {
-            HYDRO_LOG_ERROR("Failed to init Hydro Framework Core!");
+            HYDRO_LOG(Application, Verbosity::Error, "Failed to init Hydro Framework Core!");
             return;
         }
         
         OnInit();
+        HYDRO_ASSERT(m_OnInit, "An error occured. Did you call Super::OnInit ?");
         
         while(m_IsRunnning)
         {
             Time::m_Time = (float)glfwGetTime();
             m_FrameStartTime = (float)glfwGetTime();
+            Input::Reset();
 
             // Clear the back color
             m_Renderer->Clear();
-            m_Renderer->Clear(Color::Black);
+            m_Renderer->Clear(m_ClearColor);
             
             OnUpdate(m_DeltaTime);
             glfwPollEvents();
@@ -59,7 +68,8 @@ namespace Hydro
 
     void Application::OnInit()
     {
-        
+        m_OnInit = true;
+        m_Window->Show();
     }
 
     void Application::OnExit()
@@ -71,16 +81,16 @@ namespace Hydro
     {
         const auto UpdateWindowName = [&delta, this]
         {
-            String NewWindowName = m_Window->GetName();
+            std::string NewWindowName = m_Window->GetName();
             if(m_Configuration.ShowDeltaTime)
             {
-                NewWindowName.Append(Format(" | DeltaTime: %f", delta));
+                NewWindowName.append(fmt::format(" | DeltaTime: {}", delta));
             }
 
             if(m_Configuration.ShowFPS)
             {
                 const uint32_t FPS = (uint32_t)((float)1 / delta);
-                NewWindowName.Append(Format(" FPS: %d", FPS));
+                NewWindowName.append(fmt::format(" FPS: {}", FPS));
             }
             m_Window->SetNameTemp(NewWindowName);
         };
@@ -109,6 +119,11 @@ namespace Hydro
         return m_Configuration;
     }
 
+    const GraphicsSettings& Application::GetGraphicsSettings() const
+    {
+        return m_Configuration.GraphicsSettings;
+    }
+
     const Window& Application::GetWindow() const
     {
         return *m_Window;
@@ -118,18 +133,32 @@ namespace Hydro
     {
         return *m_Window;
     }
+    
 
     void Application::RequireExit(bool Restart)
     {
-        HYDRO_LOG_WARNING("Exit required. Cleaning...");
-        if(Restart) HYDRO_LOG_WARNING("Application will restart.");
+        HYDRO_LOG(Application, Warning, "Exit required. Cleaning...");
+        if(Restart)
+        {
+            HYDRO_LOG(Application, Warning, "Application will restart.");
+        }
         m_IsRunnning = false;
         g_ApplicationRunning = Restart;
     }
 
     Application& Application::GetCurrentApplication()
     {
-        return *instance;
+        return *s_Instance;
+    }
+
+    void Application::SetClearColor(const Color& color)
+    {
+        m_ClearColor = color;
+    }
+
+    Renderer& Application::GetRenderer() const
+    {
+        return *m_Renderer;
     }
 
     bool Application::InitCore()
@@ -141,107 +170,104 @@ namespace Hydro
         // Init GLFW
         if(!glfwInit())
         {
-            HYDRO_LOG_ERROR("Failed to initilaize glfw!");
+            HYDRO_LOG(Application, Error, "Failed to initilaize glfw!");
             return false;
         }
-        HYDRO_LOG_INFO("Using GLFW version {}.{}.{}", GLFW_VERSION_MAJOR, GLFW_VERSION_MINOR, GLFW_VERSION_REVISION);
+        HYDRO_LOG(Application, Info, "Using GLFW version {}.{}.{}", GLFW_VERSION_MAJOR, GLFW_VERSION_MINOR, GLFW_VERSION_REVISION);
 
         glfwSetErrorCallback([](int code, const char* message)
         {
-            HYDRO_LOG_WARNING("[GLFW] Error {}: {}", code, message);
+            HYDRO_LOG(Application, Warning, "[GLFW] Error {}: {}", code, message);
         });
         
         // Create Window, set its close callback
-        HYDRO_LOG_TRACE("Creating window...\n");
+        HYDRO_LOG(Application, Trace, "Creating window...\n");
         m_Configuration = CreateConfiguration();
-        if(m_Configuration.ShowGraphicsAPIName) m_Configuration.AppName = Format("%s | %s", *m_Configuration.AppName, HYDRO_RHI_NAME);
-        if(m_Configuration.ShowOSName) m_Configuration.AppName = Format("%s %s", *m_Configuration.AppName, HYDRO_OS_NAME);
-        if(m_Configuration.ShowConfiguration) m_Configuration.AppName = Format("%s %s", *m_Configuration.AppName, HYDRO_CONFIG_NAME);
+        if(m_Configuration.ShowGraphicsAPIName) m_Configuration.AppName = fmt::format("{} | {}", m_Configuration.AppName, HYDRO_RHI_NAME);
+        if(m_Configuration.ShowOSName) m_Configuration.AppName = fmt::format("{} {}", m_Configuration.AppName, HYDRO_OS_NAME);
+        if(m_Configuration.ShowConfiguration) m_Configuration.AppName = fmt::format("{}", m_Configuration.AppName, HYDRO_CONFIG_NAME);
         m_Window = Window::Create(m_Configuration.AppName, m_Configuration.WindowWidth, m_Configuration.WindowHeight, m_Configuration.WindowResizable);
+        
         glfwSetWindowUserPointer(m_Window->GetNativeWindow(), this);
         // Set window callbacks
         m_Window->SetCloseCallback(Function<void, GLFWwindow*>([](GLFWwindow* window)
         {
-            Application* application = (Application*)glfwGetWindowUserPointer(window);
             GetCurrentApplication().RequireExit(false);
         }));
 
-        m_Window->SetFocusCallback(Function<void, GLFWwindow*, int>([](GLFWwindow* window, int focus){
+        m_Window->SetFocusCallback([](GLFWwindow* window, int focus){
             Application* application = (Application*)glfwGetWindowUserPointer(window);
             application->m_Window->m_HasFocus = (bool)focus;
-            const String message = focus ? "Window focused" : "Window unfocused";
-            HYDRO_LOG_TRACE("[WINDOW] {}", *message);
-        }));
+            const std::string message = focus ? "Window focused" : "Window unfocused";
+            HYDRO_LOG(Application, Trace, "[WINDOW] {}", message);
+        });
 
-        m_Window->SetMaximizeCallback(Function<void, GLFWwindow*, int>([](GLFWwindow* window, int maximized){
+        m_Window->SetMaximizeCallback([](GLFWwindow* window, int maximized){
             Application* application = (Application*)glfwGetWindowUserPointer(window);
             application->m_Window->m_Maximized = (bool)maximized;
-            if(maximized) HYDRO_LOG_TRACE("[WINDOW] maximized");
-        }));
+            if(maximized) HYDRO_LOG(Application, Trace, "[WINDOW] maximized");
+        });
 
-        m_Window->SetPositionCallback(Function<void, GLFWwindow*, int, int>([](GLFWwindow* window, int x, int y){
+        m_Window->SetPositionCallback([](GLFWwindow* window, int x, int y){
             Application* application = (Application*)glfwGetWindowUserPointer(window);
             application->m_Window->m_PositionX = x;
             application->m_Window->m_PositionY = y;
-        }));
+        });
 
-        m_Window->SetResizeCallback(Function<void, GLFWwindow*, int, int>([](GLFWwindow* window, int width, int height){
+        m_Window->SetResizeCallback([](GLFWwindow* window, int width, int height){
             Application* application = (Application*)glfwGetWindowUserPointer(window);
             application->m_Window->m_Width = width;
             application->m_Window->m_Height = height;
             #if defined(HYDRO_PLATFORM_OPENGL)
             glViewport(0, 0, width, height);
             #endif
-        }));
+        });
 
-        m_Window->SetIconifyCallback(Function<void, GLFWwindow*, int>([](GLFWwindow* window, int iconified)
+        m_Window->SetIconifyCallback([](GLFWwindow* window, int iconified)
         {
             Application* application = (Application*)glfwGetWindowUserPointer(window);
             application->m_Window->m_Minimized = (bool)iconified;
-            if(iconified) HYDRO_LOG_TRACE("[WINDOW] minimized");
-        }));
+            if(iconified) HYDRO_LOG(Application, Trace, "[WINDOW] minimized");
+        });
 
 
 
         //TODO: Create an event system to handle window input
-        m_Window->SetKeyCallback(Function<void, GLFWwindow*, int, int, int, int>([](GLFWwindow* window, int key, int scancode, int action, int mod)
+        m_Window->SetKeyCallback([](GLFWwindow* window, int key, int scancode, int action, int mod)
         {
-            //HYDRO_LOG_TRACE("KeyCallback:\n\tKey: {}\n\tScancode: {}\n\tAction: {}\n\tMod: {}", key, scancode, action, mod);
+            HYDRO_LOG(Application, Trace, "KeyCallback:  Key: {} Scancode: {} Action: {} Mod: {}", key, scancode, action, mod);
             if(action == GLFW_PRESS)
             {
-                Input::m_Keys[key] = true;
+                Input::m_KeyStates[key].Pressed = true;
             } else if(action == GLFW_RELEASE)
             {
-                Input::m_Keys[key] = false;
+                Input::m_KeyStates[key].Up = true;
             }
-            //HYDRO_LOG_TRACE("KeyCallback: {}", Input::m_Keys[scancode]);
-        }));
+        });
         
         
-        HYDRO_LOG_INFO("Window successfully created!");
+        HYDRO_LOG(Application, Info, "Window successfully created!");
 
-        HYDRO_LOG_TRACE("Loading window icon(s)...");
+        HYDRO_LOG(Application, Trace, "Loading window icon(s)...");
         const std::vector<Ref<Image>> Icons = LoadWindowIcons();
         m_Window->SetIcons(Icons);
-        HYDRO_LOG_INFO("Successfully loaded window icon(s)");
+        HYDRO_LOG(Application, Info, "Successfully loaded window icon(s)");
 
         
         if(!m_Window->IsValid())
         {
-            HYDRO_LOG_ERROR("Failed to create window!");
+            HYDRO_LOG(Application, Error, "Failed to create window!");
             return false;
         }
 
-        HYDRO_LOG_TRACE("Creating Renderer...");
+        HYDRO_LOG(Application, Trace, "Creating Renderer...");
         m_Renderer = CreateRef<Renderer>(RendererDevice::Create());
         if(!m_Renderer->IsReady())
         {
-            HYDRO_LOG_ERROR("Failed to create renderer!");
+            HYDRO_LOG(Application, Error, "Failed to create renderer!");
             return false;
         }
-        HYDRO_LOG_INFO("Renderer created!");
+        HYDRO_LOG(Application, Info, "Renderer created!");
         return true;
     }
 }
-
-

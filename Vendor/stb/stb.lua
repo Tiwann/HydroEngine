@@ -3,7 +3,7 @@ project "stb"
 	kind "StaticLib"
 	staticruntime "On"
 	language "C"
-
+	
 	targetdir(binaries)
 	objdir(intermediate)
 
@@ -34,6 +34,5 @@ project "stb"
 		runtime "Release"
 		optimize "On"
 		symbols "Off"
-
 
 

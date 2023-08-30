@@ -6,7 +6,7 @@ project "glfw"
 	targetdir (binaries)
 	objdir (intermediate)
 	flags "MultiProcessorCompile"
-
+	
 	files {
 		"glfw.lua",
 		"%{prj.location}/include/GLFW/glfw3.h",

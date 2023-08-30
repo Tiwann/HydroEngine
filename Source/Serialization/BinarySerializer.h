@@ -7,7 +7,7 @@ namespace Hydro
     class BinarySerializer : public Serializer<T>
     {
     public:
-        explicit BinarySerializer(String&& filepath);
+        explicit BinarySerializer(std::string&& filepath);
     private:
         using Super = Serializer<T>;
     };

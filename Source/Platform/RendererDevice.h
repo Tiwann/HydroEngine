@@ -1,10 +1,11 @@
 ﻿#pragma once
-#include "HydroPCH.h"
-#include "Core/Color.h"
+#include "Macros.h"
 
 namespace Hydro
 {
     class Application;
+    class Color;
+    
     class HYDRO_API RendererDevice
     {
     public:
@@ -13,7 +14,7 @@ namespace Hydro
 
         virtual ~RendererDevice() = default;
         virtual void ClearDepthBuffer() = 0;
-        virtual void ClearColor(Color color) = 0;
+        virtual void ClearColor(const Color& color) = 0;
         virtual void SwapBuffers() = 0;
         virtual void DrawIndexed() = 0;
 

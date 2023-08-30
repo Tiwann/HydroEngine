@@ -1,5 +1,7 @@
 ﻿#pragma once
 #include "Assertion.h"
+#include "Macros.h"
+#include <utility>
 
 namespace Hydro
 {
@@ -10,11 +12,14 @@ namespace Hydro
     public:
         Function() = default;
         explicit Function(FuncPtr FunctionPointer) : m_FunctionPointer(FunctionPointer){}
+        Function(auto FunctionPointer) : m_FunctionPointer(FunctionPointer){}
         
         bool IsBound() const { return m_FunctionPointer; }
         FuncPtr GetRawPointer() const { return m_FunctionPointer; }
 
         operator FuncPtr() const { return m_FunctionPointer; }
+        operator FuncPtr() { return m_FunctionPointer; }
+        
         
         RetType operator()(Params... params) const
         {

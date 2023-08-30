@@ -126,7 +126,7 @@
 
 namespace Hydro
 {
-    enum class KeyCode
+    using KeyCode = enum KeyCode
     {
         UNKNOWN       = HYDRO_KEY_UNKNOWN,
         SPACE         = HYDRO_KEY_SPACE,

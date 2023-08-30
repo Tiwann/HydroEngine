@@ -4,7 +4,7 @@ project "glad"
 	language "C"
 	staticruntime "On"
 	flags "MultiProcessorCompile"
-
+	
 	targetdir(binaries)
 	objdir(intermediate)
 

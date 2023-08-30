@@ -1,23 +1,30 @@
 ﻿#pragma once
-#include <GLFW/glfw3.h>
 #include "Function.h"
-#include "String.h"
 #include "SharedPointer.h"
+#include "LogCategory.h"
+
+#include <vector>
+#include <string>
+
+
+
+struct GLFWwindow;
 
 namespace Hydro
 {
     class Image;
+
+    HYDRO_DECLARE_LOG_CATEGORY_STATIC(Input, "INPUT")
     
     class HYDRO_API Window
     {
     public:
         friend class Application;
         
-        Window(const String& name, uint32_t width, uint32_t height, bool resizable);
+        Window(const std::string& name, uint32_t width, uint32_t height, bool resizable);
         ~Window();
         
-
-        static Ref<Window> Create(const String& name, uint32_t width, uint32_t height, bool resizable);
+        static Ref<Window> Create(const std::string& name, uint32_t width, uint32_t height, bool resizable);
         const GLFWwindow* GetNativeWindow() const;
         GLFWwindow* GetNativeWindow();
 
@@ -30,25 +37,27 @@ namespace Hydro
         void SetIconifyCallback(Function<void, GLFWwindow*, int> function) const;
         void SetKeyCallback(Function<void, GLFWwindow*, int, int, int, int> function) const;
         bool ShouldClose() const;
+        bool IsValid() const;
 
         uint32_t GetWidth() const;
         uint32_t GetHeight() const;
-        const String& GetName() const;
-        void SetName(String name);
-        void SetNameTemp(const String& name) const;
+        const std::string& GetName() const;
+        void SetName(std::string name);
+        void SetNameTemp(const std::string& name) const;
         void ResetName() const;
-        void SetIcon(const String& filepath)const;
+        void SetIcon(const std::string& filepath)const;
         void SetIcon(const Image& image) const;
         void SetIcons(const std::vector<Ref<Image>>& images);
         bool IsResizable() const;
+        void Destroy();
 
-        void Destroy() const;
-        bool IsValid() const;
+        void Show() const;
+        void Hide() const;
     
     private:
         GLFWwindow* m_Handle = nullptr;
         uint32_t m_Width{0}, m_Height{0}, m_PositionX{0}, m_PositionY{0};
-        String m_Name;
+        std::string m_Name;
         bool m_Resizable{false};
         bool m_HasFocus{false};
         bool m_Maximized{false};

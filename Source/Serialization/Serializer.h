@@ -1,7 +1,8 @@
 ﻿#pragma once
-#include "Core/Filesystem.h"
 #include "Core/Log.h"
+#include <fstream>
 
+#include "Core/Filesystem.h"
 
 namespace Hydro
 {
@@ -9,14 +10,14 @@ namespace Hydro
     class Serializer
     {
     public:
-        explicit Serializer(String&& filepath);
+        explicit Serializer(Path Filepath);
         virtual ~Serializer();
 
         virtual bool Serialize(const T&) = 0;
         virtual bool Deserialize(T&) = 0;
 
     protected:
-        const String m_Filepath;
-        FILE* m_File{nullptr};
+        Path m_Filepath;
+        std::fstream m_Stream;
     };
 }
