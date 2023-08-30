@@ -1,15 +1,16 @@
 #pragma once
-#include "Application.h"
+#include <type_traits>
 
 
-#define HYDRO_DEFINE_APPLICATION_CLASS(ApplicationClass) Application* Hydro::CreateApplication() \
+#define HYDRO_DEFINE_APPLICATION_CLASS(ApplicationClass) Hydro::Application* Hydro::CreateApplication() \
     { \
-    return new ApplicationClass(); \
+    static_assert(std::is_base_of_v<Application, ApplicationClass>, #ApplicationClass" isn't derived from Application");\
+    return new (ApplicationClass)(); \
     } \
 
 namespace Hydro
 {
-    extern Application* CreateApplication();
+    extern class Application* CreateApplication();
     inline bool g_ApplicationRunning = true;
     int Main(int argc, char** argv);
 }
