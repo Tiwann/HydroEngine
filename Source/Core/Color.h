@@ -1,15 +1,17 @@
 ﻿#pragma once
+#include <glm/vec4.hpp>
+#include "Macros.h"
 
 namespace Hydro
 {
-    class Color
+    class HYDRO_API Color
     {
     public:
         float r{0.0f}, g{0.0f}, b{0.0f}, a{0.0f};
 
         Color();
         Color(uint32_t color);
-        Color(float red, float gren, float blue, float alpha);
+        Color(float red, float green, float blue, float alpha);
 
         operator glm::vec4() const;
 

@@ -4,7 +4,6 @@
 
 namespace Hydro
 {
-    
     Color::Color()
     {
         r = g = b = 0.0f;
@@ -43,7 +42,7 @@ namespace Hydro
 
     Color Color::WithLightness(float lightness)
     {
-        return 0;
+        return { r * lightness, g * lightness, b * lightness, a };
     }
 
     Color Color::WithOpacity(float opacity)
