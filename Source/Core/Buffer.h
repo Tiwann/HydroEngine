@@ -1,10 +1,10 @@
 ﻿#pragma once
-#include "HydroPCH.h"
+#include "Macros.h"
 
 namespace Hydro
 {
     template<typename Type>
-    class Buffer
+    class HYDRO_API Buffer
     {
     public:
         Buffer(const Type* buffer, size_t count) : m_Data(buffer), m_Count(count)
