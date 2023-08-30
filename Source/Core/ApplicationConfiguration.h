@@ -1,14 +1,15 @@
 ﻿#pragma once
-#include "String.h"
 #include "GraphicsSettings.h"
+#include "Macros.h"
+#include <string>
 
 namespace Hydro
 {
     struct HYDRO_API ApplicationConfiguration
     {
-        String AppName{};
-        uint32_t WindowWidth{};
-        uint32_t WindowHeight{};
+        std::string AppName{};
+        uint32_t WindowWidth{0};
+        uint32_t WindowHeight{0};
         bool StartFullscreen = false;
         bool WindowResizable = false;
         bool ShowGraphicsAPIName = false;
