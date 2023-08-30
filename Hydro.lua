@@ -4,6 +4,7 @@ project "Hydro"
 	staticruntime "On"
 	language "C++"
 	cppdialect "C++20"
+	flags "MultiProcessorCompile"
 
 	targetdir(binaries)
 	objdir(intermediate)
@@ -13,6 +14,9 @@ project "Hydro"
 		"Source/**.h",
 		"Source/**.cpp",
 		"Include/**.h",
+		"Source/**.glsl",
+		"Source/**.vert",
+		"Source/**.frag",
 		"External/spdlog/**.h",
 		"External/spdlog/**.cpp",
 		"Hydro.lua"
@@ -29,7 +33,11 @@ project "Hydro"
 		"%{libs.Vulkan}/Include",
 		"%{libs.glad}/include",
 		"%{libs.spdlog}/include",
-		"%{libs.libshaderc_util}/include"
+		"%{libs.libshaderc}/include",
+	}
+
+	libdirs {
+		"%{libs.libshaderc}/lib",
 	}
 	
 	links
@@ -38,7 +46,7 @@ project "Hydro"
 		"stb",
 	}
 
-	defines { "SPDLOG_COMPILED_LIB", "HYDRO_CORE" }
+	defines { "SPDLOG_COMPILED_LIB", "HYDRO_CORE", "HYDRO_SHADER_CACHE_DIRECTORY=\"Assets/ShaderCache/\"" }
 
 	filter "Platforms:Vulkan"
 		links { "vulkan-1" }
@@ -56,9 +64,12 @@ project "Hydro"
 
 	filter "System:Windows"
 		defines { "GLFW_EXPOSE_NATIVE_WIN32", "HYDRO_PLATFORM_WINDOWS", "_CRT_SECURE_NO_WARNINGS" }
+		toolset "msc"
 
 	filter "System:Linux"
+		toolset "gcc"
 		defines { "HYDRO_PLATFORM_UNIX" }
+		removefiles { "**/DirectXDevice*" }
 		
 
 	filter "Configurations:Debug"
@@ -66,9 +77,15 @@ project "Hydro"
 		optimize "Off"
 		symbols "On"
 		defines "HYDRO_DEBUG"
+		links {
+			"shaderc_combinedd"
+		}
 
 	filter "Configurations:Release"
 		runtime "Release"
 		optimize "On"
 		symbols "Off"
 		defines "HYDRO_RELEASE"
+		links {
+			"shaderc_combined"
+		}
