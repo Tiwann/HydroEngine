@@ -36,11 +36,11 @@ project "glfw"
 
 	includedirs "%{prj.location}/include"
 
-	filter "configurations:Debug"
+	filter "configurations:Debug*"
 		runtime "Debug"
 		symbols "On"
 
-	filter "configurations:Release"
+	filter "configurations:Release*"
 		runtime "Release"
 		optimize "On"
 		symbols "Off"
