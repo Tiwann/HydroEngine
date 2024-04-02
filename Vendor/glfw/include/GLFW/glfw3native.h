@@ -28,6 +28,7 @@
 
 #ifndef _glfw3_native_h_
 #define _glfw3_native_h_
+#include "glfw3.h"
 
 #ifdef __cplusplus
 extern "C" {
