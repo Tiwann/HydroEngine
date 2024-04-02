@@ -17,13 +17,15 @@ project "glad"
 
 	includedirs "include"
 
-	filter "Configurations:Debug"
+	filter "Configurations:Debug*"
 		runtime "Debug"
 		optimize "Off"
 		symbols "On"
 
-	filter "Configurations:Release"
+	filter "Configurations:Release*"
 		runtime "Release"
 		optimize "On"
 		symbols "Off"
-
+		
+	filter "System:Linux"
+        pic "On"
