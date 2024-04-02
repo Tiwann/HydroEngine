@@ -1,21 +1,38 @@
-﻿#pragma once
-#include <unordered_map>
-#include "Macros.h"
+#pragma once
+#include "LogCategory.h"
 #include "SharedPointer.h"
-#include "SceneObject.h"
+#include "Core/Log.h"
+#include "GUID.h"
+
+
+HYDRO_DECLARE_LOG_CATEGORY_STATIC(Scene, "SCENE");
+
+class b2World;
 
 namespace Hydro
 {
-    class HYDRO_API Scene
+    class GameObject;
+    
+    class Scene
     {
     public:
-        explicit Scene(std::string name);
-
-        Ref<SceneObject> AddObject(const Ref<SceneObject>& object);
-        Ref<SceneObject> AddNew();
+        Scene();
+        HYDRO_NO_COPYABLE_NO_MOVABLE(Scene);
         
+        void OnInit();
+        void OnUpdate(float Delta) const;
+        void OnDestroy() const;
+        
+        Ref<GameObject> CreateObject(const std::string& Name);
+        bool Destroy(Ref<GameObject>& Object);
+        void SetName(const std::string& Name);
+
     private:
+        friend class Collider2D;
+        GUID m_Guid;
         std::string m_Name;
-        std::unordered_map<std::string, Ref<SceneObject>> m_SceneObjects;
+        std::vector<Ref<GameObject>> m_GameObjects;
+        bool m_Enabled;
+        b2World* m_Physics2DWorld;
     };
 }

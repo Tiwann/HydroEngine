@@ -16,6 +16,18 @@ namespace Hydro
         virtual bool Serialize(const T&) = 0;
         virtual bool Deserialize(T&) = 0;
 
+        Serializer& operator<<(const T& Obj)
+        {
+            Serialize(Obj);
+            return *this;
+        }
+
+        Serializer& operator>>(T& Obj)
+        {
+            Deserialize(Obj);
+            return *this;
+        }
+
     protected:
         Path m_Filepath;
         std::fstream m_Stream;

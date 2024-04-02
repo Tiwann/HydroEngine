@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+    
+    <!-- Hydro::Buffer<T> -->
+    <Type Name="Hydro::Buffer&lt;*&gt;">
+        <DisplayString>{{Count = {m_Count}}}</DisplayString>
+        <Expand>
+            <ArrayItems>
+                <Size>m_Count</Size>
+                <ValuePointer>m_Data</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>
+
+    <!-- Hydro::BufferView<T> -->
+    <Type Name="Hydro::BufferView&lt;*&gt;">
+        <DisplayString>{{Count = {m_Count}}}</DisplayString>
+        <Expand>
+            <ArrayItems>
+                <Size>m_Count</Size>
+                <ValuePointer>m_Data</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>
+
+    <!-- Hydro::Vector2 -->
+    <Type Name="Hydro::Vector2&lt;*&gt;">
+        <DisplayString>{{X = {x}, Y = {y}}</DisplayString>
+    </Type>
+
+    <!-- Hydro::Vector3 -->
+    <Type Name="Hydro::Vector3&lt;*&gt;">
+        <DisplayString>{{X = {x}, Y = {y}, Z = {z}}</DisplayString>
+    </Type>
+
+    <!-- Hydro::Vector4 -->
+    <Type Name="Hydro::Vector4&lt;*&gt;">
+        <DisplayString>{{X = {x}, Y = {y}, Z = {z}, W = {w}</DisplayString>
+    </Type>
+
+    <!-- Hydro::Matrix -->
+    <Type Name="Hydro::Matrix&lt;*&gt;">
+        <Expand>
+            <DisplayString>{M00 = {m_Data[0 + 0]}, M10 = {m_Data[0 + 0]}, M20 = {m_Data[0 + 0]}, M30 = {m_Data[0 + 0]}}</DisplayString>
+            <DisplayString>{M01 = {m_Data[0 + 1]}, M11 = {m_Data[0 + 1]}, M21 = {m_Data[0 + 1]}, M31 = {m_Data[0 + 1]}}</DisplayString>
+            <DisplayString>{M02 = {m_Data[0 + 2]}, M12 = {m_Data[0 + 2]}, M22 = {m_Data[0 + 2]}, M32 = {m_Data[0 + 2]}}</DisplayString>
+            <DisplayString>{M03 = {m_Data[0 + 3]}, M13 = {m_Data[0 + 3]}, M23 = {m_Data[0 + 3]}, M33 = {m_Data[0 + 3]}}</DisplayString>  
+        </Expand>
+    </Type>
+</AutoVisualizer>

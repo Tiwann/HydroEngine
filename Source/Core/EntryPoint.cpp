@@ -1,10 +1,12 @@
 ﻿#include "HydroPCH.h"
 #include "EntryPoint.h"
 #include "Application.h"
+#include "Log.h"
+#include "LogVerbosity.h"
 
 namespace Hydro
 {
-    int Main(int argc, char** argv)
+    int Main(int Argc, char** Argv)
     {
         while (g_ApplicationRunning)
         {

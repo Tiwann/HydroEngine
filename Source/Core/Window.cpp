@@ -2,7 +2,8 @@
 #include "Window.h"
 #include "Image.h"
 #include <GLFW/glfw3.h>
-#include <GLFW/glfw3native.h>
+
+#include "Filesystem.h"
 
 
 namespace Hydro
@@ -23,6 +24,7 @@ namespace Hydro
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+        glfwWindowHint(GLFW_SAMPLES, 4);
         #if defined(HYDRO_DEBUG)
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
         #endif
@@ -106,6 +108,17 @@ namespace Hydro
         glfwSetKeyCallback(m_Handle, function);
     }
 
+    void Window::SetFramebufferCallback(Function<void, GLFWwindow*, int, int> function) const
+    {
+        glfwSetFramebufferSizeCallback(m_Handle, function);
+    }
+
+    void Window::SetRefreshCallback(Function<void, GLFWwindow*> function) const
+    {
+        glfwSetWindowRefreshCallback(m_Handle, function);
+    }
+    
+
     bool Window::ShouldClose() const
     {
         return glfwWindowShouldClose(m_Handle);
@@ -126,6 +139,11 @@ namespace Hydro
         return m_Height;
     }
 
+    glm::uvec2 Window::GetCenter() const
+    {
+        return { m_Width / 2, m_Height / 2 };
+    }
+
     const std::string& Window::GetName() const
     {
         return m_Name;
@@ -133,31 +151,19 @@ namespace Hydro
 
     void Window::SetIcon(const std::string& filepath) const
     {
-        const Image icon(filepath.c_str());
+        Buffer ImageData(File::ReadToBuffer(filepath));
+        const Image icon(ImageData, RGBA8);
         const GLFWimage glfw_image{(int)icon.GetWidth(), (int)icon.GetHeight(), (uint8_t*)icon.GetData()};
+        glfwSetWindowIcon(m_Handle, 1, &glfw_image);
+        ImageData.Free();
+    }
+    
+    void Window::SetIcon(const Ref<Image>& image) const
+    {
+        const GLFWimage glfw_image{(int)image->GetWidth(), (int)image->GetHeight(), (uint8_t*)image->GetData()};
         glfwSetWindowIcon(m_Handle, 1, &glfw_image);
     }
     
-    void Window::SetIcon(const Image& image) const
-    {
-        const GLFWimage glfw_image{(int)image.GetWidth(), (int)image.GetHeight(), (uint8_t*)image.GetData()};
-        glfwSetWindowIcon(m_Handle, 1, &glfw_image);
-    }
-
-    void Window::SetIcons(const std::vector<Ref<Image>>& images)
-    {
-        std::vector<GLFWimage> glfwImages;
-        for (const auto& icon : images)
-        {
-            GLFWimage image{};
-            image.width = icon->GetWidth();
-            image.height = icon->GetHeight();
-            image.pixels = (uint8_t*)icon->GetData();
-            glfwImages.push_back(image);
-        }
-
-        glfwSetWindowIcon(m_Handle, (int)glfwImages.size(), glfwImages.data());
-    }
 
     bool Window::IsResizable() const
     {

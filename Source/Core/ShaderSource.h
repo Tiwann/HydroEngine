@@ -1,9 +1,9 @@
 #pragma once
-#include "Macros.h"
+#include <string>
 
 namespace Hydro
 {
-    struct HYDRO_API ShaderSource
+    struct ShaderSource
     {
         std::string Vertex;
         std::string Fragment;

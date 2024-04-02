@@ -1,11 +1,10 @@
 ﻿#pragma once
 #include "GraphicsSettings.h"
-#include "Macros.h"
 #include <string>
 
 namespace Hydro
 {
-    struct HYDRO_API ApplicationConfiguration
+    struct ApplicationConfiguration
     {
         std::string AppName{};
         uint32_t WindowWidth{0};
@@ -18,6 +17,6 @@ namespace Hydro
         bool ShowDeltaTime = false;
         bool ShowFPS = false;
         float WindowTitleUpdateTime = 0.0f;
-        GraphicsSettings GraphicsSettings;
+        GraphicsSettings Graphics;
     };
 }

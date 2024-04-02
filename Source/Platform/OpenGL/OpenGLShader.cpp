@@ -2,83 +2,51 @@
 #include "OpenGLShader.h"
 
 #include "Core/Assertion.h"
-#include "shaderc/shaderc.hpp"
 #include "Core/Log.h"
-#include "Core/ShaderCache.h"
-#include "glad/gl.h"
-
-#include <fstream>
-
-#include "Core/ShaderUtils.h"
 #include "Core/LogVerbosity.h"
-#include "OpenGLDevice.h"
+
+#include "Core/Texture2D.h"
+
+#include <glad/gl.h>
+
 
 namespace Hydro
 {
-    OpenGLShader::OpenGLShader(Path Filepath, ShaderSourceLanguage Language)
-        : Shader(std::move(Filepath), Language), m_Program(UINT32_MAX), m_VertexHandle(UINT32_MAX), m_FragmentHandle(UINT32_MAX)
+    OpenGLShader::OpenGLShader(const std::string& Name, Path Filepath, ShaderSourceLanguage Language)
+        : Shader(Name, std::move(Filepath), Language), m_Program(UINT32_MAX), m_VertexHandle(UINT32_MAX), m_FragmentHandle(UINT32_MAX)
     {
-        HYDRO_LOG(Shader, Trace, "Loading shader source: {}", m_Filepath.string());
-
-       
-        //TODO: Retrieve Cached shaders
-        if(!File::Exists(m_Filepath))
-        {
-            HYDRO_LOG(Shader, Error, "Cannot load shader: File doesn't exist!");
-            HYDRO_LOG(Shader, Error, "File: {}", m_Filepath.string());
-            return;
-        }
         
-        std::ifstream Stream(m_Filepath, std::ios::in);
-        if(!Stream.is_open())
-        {
-            HYDRO_LOG(Shader, Error, "Failed to load shader: Stream failed to open!");
-            return;
-        }
-
-        std::stringstream StringStream;
-        StringStream << Stream.rdbuf();
-        std::string FileContent = StringStream.str();
-        Stream.close();
-        StringStream.clear();
-
-        const std::string PragmaVertex = "#pragma vertex";
-        const std::string PragmaFragment = "#pragma fragment";
-        const std::streamoff VertexShaderPosition = FileContent.find(PragmaVertex);
-        const std::streamoff FragmentShaderPosition = FileContent.find(PragmaFragment);
-        HYDRO_ASSERT(VertexShaderPosition != -1 || FragmentShaderPosition != -1, "Please use #pragma directives to tell the shader compiler what is the shader type");
-        m_Source.Vertex = FileContent.substr(VertexShaderPosition, FragmentShaderPosition - VertexShaderPosition);
-        m_Source.Fragment = FileContent.substr(FragmentShaderPosition);
-        m_Source.Vertex.erase(PragmaVertex.size());
-        m_Source.Fragment.erase(PragmaFragment.size());
-        
-        HYDRO_LOG(Shader, Info, "Shader successfully loaded shader source from: {}", m_Filepath.string());
     }
 
-    bool OpenGLShader::Compile()
+    OpenGLShader::OpenGLShader(const std::string& Name, Buffer<uint8_t> Buffer, ShaderSourceLanguage Language)
+        : Shader(Name, Buffer, Language), m_Program(UINT32_MAX), m_VertexHandle(UINT32_MAX), m_FragmentHandle(UINT32_MAX)
     {
-        shaderc::CompileOptions Options = ShaderUtils::CreateShadercCompileOptions(m_SourceLanguage);
-        const shaderc::Compiler Compiler;
+    }
 
+    OpenGLShader::OpenGLShader(const std::string& Name, const ShaderSource& ShaderSource, ShaderSourceLanguage Language)
+        : Shader(Name, ShaderSource, Language), m_Program(UINT32_MAX), m_VertexHandle(UINT32_MAX), m_FragmentHandle(UINT32_MAX)
+    {
+    }
+
+    OpenGLShader::~OpenGLShader()
+    {
+        glDeleteShader(m_VertexHandle);
+        glDeleteShader(m_FragmentHandle);
+        glDeleteProgram(m_Program);
+    }
+
+    bool OpenGLShader::CompileOpenGL()
+    {
         // Compile Vertex
         {
-            HYDRO_LOG(Shader, Trace, "Compiling vertex shader: {}", m_Filepath.string());
-            const std::string ShaderID = fmt::format("{}.vert", m_Filepath.stem().string());
-            const shaderc::SpvCompilationResult Result = Compiler.CompileGlslToSpv(m_Source.Vertex, shaderc_vertex_shader, ShaderID.c_str(), "main", Options);
-            
-            if (Result.GetCompilationStatus() != shaderc_compilation_status_success || Result.GetNumWarnings() != 0)
-            {
-                HYDRO_LOG(Shader, Error, "Vertex Shader {} failed to compile!", m_Filepath.filename().string());
-                HYDRO_LOG(Shader, Error, Result.GetErrorMessage().erase(Result.GetErrorMessage().size() - 1));
-                return Compiled = false;
-            }
-            HYDRO_LOG(Shader, Info, "Successfully compiled vertex shader to SPIRV!");
-
-            const std::vector<uint32_t> Spirv{Result.begin(), Result.end()};
+            const std::string ShaderName = GetName();
+            HYDRO_LOG(Shader, Trace, "Compiling vertex shader: {}", ShaderName);
             m_VertexHandle = glCreateShader(GL_VERTEX_SHADER);
-            glShaderBinary(1, &m_VertexHandle, GL_SHADER_BINARY_FORMAT_SPIR_V, Spirv.data(), (int32_t)(Spirv.size() * sizeof(uint32_t)));
-            glSpecializeShader(m_VertexHandle, "main", 0, nullptr, nullptr);
 
+            const char* VertexSource = m_Source.Vertex.c_str();
+            const int32_t VertexSize = (int32_t)m_Source.Vertex.size();
+            glShaderSource(m_VertexHandle, 1, &VertexSource, &VertexSize);
+            glCompileShader(m_VertexHandle);
             
             int Success = 0;
             glGetShaderiv(m_VertexHandle, GL_COMPILE_STATUS, &Success);
@@ -87,32 +55,23 @@ namespace Hydro
                 int32_t Length = 0;
                 char Message[GL_INFO_LOG_LENGTH];
                 glGetShaderInfoLog(m_VertexHandle, GL_INFO_LOG_LENGTH, &Length, Message);
-                HYDRO_LOG(Shader, Error, "Failed to compiled vertex shader: {}", Message);
-                return Compiled = Success;
+                HYDRO_LOG(Shader, Error, "Failed to compile vertex shader: {}", Message);
+                return false;
             }
             
-            //ShaderCache::CacheShaderSpirv(*this, Data, shaderc_vertex_shader);
             HYDRO_LOG(Shader, Info, "Successfully compiled vertex shader!");
         }
 
         // Compile Fragment
         {
-            HYDRO_LOG(Shader, Trace, "Compiling fragment shader: {}", m_Filepath.string());
-            const std::string ShaderID = fmt::format("{}.frag", m_Filepath.stem().string());
-            const shaderc::SpvCompilationResult Result = Compiler.CompileGlslToSpv(m_Source.Vertex, shaderc_fragment_shader, ShaderID.c_str(), "main", Options);
-
-            if (Result.GetCompilationStatus() != shaderc_compilation_status_success)
-            {
-                HYDRO_LOG(Shader, Error, "Fragment Shader {} failed to compile!", m_Filepath.filename().string());
-                HYDRO_LOG(Shader, Error, Result.GetErrorMessage());
-                return Compiled = false;
-            }
-
-            const std::vector<uint32_t> Spirv{Result.begin(), Result.end()};
+            const std::string ShaderName = GetName();
+            HYDRO_LOG(Shader, Trace, "Compiling fragment shader: {}", ShaderName);
             m_FragmentHandle = glCreateShader(GL_FRAGMENT_SHADER);
-            glShaderBinary(1, &m_FragmentHandle, GL_SHADER_BINARY_FORMAT_SPIR_V, Spirv.data(), (int32_t)(Spirv.size() * sizeof(uint32_t)));
-            glSpecializeShader(m_FragmentHandle, "main", 0, nullptr, nullptr);
 
+            const char* FragmentSource = m_Source.Fragment.c_str();
+            const int32_t FragmentSize = (int32_t)m_Source.Fragment.size();
+            glShaderSource(m_FragmentHandle, 1, &FragmentSource, &FragmentSize);
+            glCompileShader(m_FragmentHandle);
             
             int Success = 0;
             glGetShaderiv(m_FragmentHandle, GL_COMPILE_STATUS, &Success);
@@ -122,17 +81,26 @@ namespace Hydro
                 char Message[GL_INFO_LOG_LENGTH];
                 glGetShaderInfoLog(m_FragmentHandle, GL_INFO_LOG_LENGTH, &Length, Message);
                 HYDRO_LOG(Shader, Error, "Failed to compiled fragment shader: {}", Message);
-                return Compiled = Success;
+                return false;
             }
-            
-            //ShaderCache::CacheShaderSpirv(*this, Data, shaderc_fragment_shader);
+
             HYDRO_LOG(Shader, Info, "Successfully compiled fragment shader!");
         }
-
+        return true;
+    }
+    
+    bool OpenGLShader::Compile()
+    {
+        Compiled =
+#if defined(HYDRO_USE_DEFAULT_OPENGL_SHADER_COMPILER)
+        CompileOpenGL();
+#else
+        CompileShaderc();
+#endif
         m_Program = glCreateProgram();
         glAttachShader(m_Program, m_VertexHandle);
         glAttachShader(m_Program, m_FragmentHandle);
-        return Compiled = true;
+        return Compiled;
     }
 
     bool OpenGLShader::Link()
@@ -152,8 +120,9 @@ namespace Hydro
             char Message[GL_INFO_LOG_LENGTH];
             glGetProgramInfoLog(m_Program, GL_INFO_LOG_LENGTH, &Length, Message);
             HYDRO_LOG(Shader, Error, "Shader program failed to link: {}", Message);
+            return Linked = Success;
         }
-        HYDRO_LOG(Shader, Info, "Shader program {} successfully linked!", m_Filepath.string());
+        HYDRO_LOG(Shader, Info, "Shader program {} successfully linked!", m_Name);
         return Linked = Success;
     }
 
@@ -173,12 +142,13 @@ namespace Hydro
             char Message[GL_INFO_LOG_LENGTH];
             glGetProgramInfoLog(m_Program, GL_INFO_LOG_LENGTH, &Length, Message);
             HYDRO_LOG(Shader, Error, "Shader program failed to validate: {}", Message);
+            return Validated = Success;
         }
         HYDRO_LOG(Shader, Info, "Shader program {} successfully validated!", m_Filepath.string());
         return Validated = Success;
     }
 
-    bool OpenGLShader::UseProgram()
+    bool OpenGLShader::Bind()
     {
         if(!Validated)
         {
@@ -190,29 +160,163 @@ namespace Hydro
         return true;
     }
 
-    uint32_t OpenGLShader::ShadercToOpenGL(shaderc_shader_kind Kind)
+    void OpenGLShader::Delete()
     {
-        switch (Kind)
-        {
-        case shaderc_vertex_shader: return GL_VERTEX_SHADER;
-        case shaderc_fragment_shader: return GL_FRAGMENT_SHADER;
-        case shaderc_geometry_shader: return GL_GEOMETRY_SHADER;
-        case shaderc_compute_shader: return GL_COMPUTE_SHADER;
-        default: return GL_NONE;
-        }
+        glDeleteShader(m_VertexHandle);
+        glDeleteShader(m_FragmentHandle);
+        glDeleteProgram(m_Program);
+    }
+    
+    #define HYDRO_SHADER_UNIFORM_CHECK(Uniform, Name) \
+        if((Uniform) == -1) \
+        { \
+            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
+            return; \
+        }((void)0)
+    
+    
+    void OpenGLShader::SetUniformFloat(const std::string& Name, float Value)
+    {
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
+        glUniform1fv(Location, 1, &Value);
+    }
+    
+
+    void OpenGLShader::SetUniformFloat2(const std::string& Name, const Vector2& Value)
+    {
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
+        glUniform2fv(Location, 2, Value.ValuePtr());
     }
 
-    shaderc_shader_kind OpenGLShader::OpenGLToShaderc(uint32_t Type)
+    void OpenGLShader::SetUniformFloat3(const std::string& Name, const Vector3& Value)
     {
-        switch (Type)
-        {
-        case GL_VERTEX_SHADER: return shaderc_vertex_shader;
-        case GL_FRAGMENT_SHADER: return shaderc_fragment_shader;
-        case GL_GEOMETRY_SHADER: return shaderc_geometry_shader;
-        case GL_COMPUTE_SHADER: return shaderc_compute_shader;
-        default: HYDRO_ASSERT(false, "Bad OpenGL shader type value");
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
+        glUniform3fv(Location, 3, Value.ValuePtr());
+    }
+
+    void OpenGLShader::SetUniformFloat4(const std::string& Name, const Vector4& Value)
+    {
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
+        glUniform4fv(Location, 4, Value.ValuePtr());
+    }
+
+    void OpenGLShader::SetUniformMat4(const std::string& Name, const Matrix4& Value)
+    {
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
+        glUniformMatrix4fv(Location, 1, false, Value.ValuePtr());
+    }
+
+    void OpenGLShader::SetUniformInt(const std::string& Name, int32_t Value)
+    {
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
+        glUniform1i(Location, Value);
+    }
+
+    void OpenGLShader::SetUniformTexture(const std::string& Name, const Ref<Texture2D>& Texture)
+    {
+        SetUniformInt(Name, (int32_t)Texture->GetSlot());
+    }
+
+    void OpenGLShader::SetUniformMat2(const std::string& Name, const Matrix2& Value)
+    {
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
+        glUniformMatrix2fv(Location, 1, false, Value.ValuePtr());
+    }
+
+    float OpenGLShader::GetUniformFloat(const std::string& Name)
+    {
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        if(!Location) \
+        { \
+            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
+            HYDRO_LOG(Shader, Error, "Path: {}", m_Filepath.string()); \
+            return 0.0f; \
         }
-        HYDRO_ASSERT(false, "Bad OpenGL shader type value");
-        return (shaderc_shader_kind)0;
+
+        float Result;
+        glGetUniformfv(m_Program, Location, &Result);
+        return Result;
+    }
+
+    Vector2 OpenGLShader::GetUniformFloat2(const std::string& Name)
+    {
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        if(!Location) \
+        { \
+            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
+            HYDRO_LOG(Shader, Error, "Path: {}", m_Filepath.string()); \
+            return {0.0f}; \
+        }
+
+        Vector2 Result;
+        glGetnUniformfv(m_Program, Location, 2 * sizeof(float), (float*)&Result);
+        return Result;
+    }
+
+    Vector3 OpenGLShader::GetUniformFloat3(const std::string& Name)
+    {
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        if(!Location) \
+        { \
+            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
+            HYDRO_LOG(Shader, Error, "Path: {}", m_Filepath.string()); \
+            return {0.0f}; \
+        }
+
+        Vector3 Result;
+        glGetnUniformfv(m_Program, Location, 3 * sizeof(float), (float*)&Result);
+        return Result;
+    }
+
+    Vector4 OpenGLShader::GetUniformFloat4(const std::string& Name)
+    {
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        if(!Location) \
+        { \
+            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
+            HYDRO_LOG(Shader, Error, "Path: {}", m_Filepath.string()); \
+            return {0.0f}; \
+        }
+
+        Vector4 Result;
+        glGetnUniformfv(m_Program, Location, 4 * sizeof(float), (float*)&Result);
+        return Result;
+    }
+
+    Matrix4 OpenGLShader::GetUniformMat4(const std::string& Name)
+    {
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        if(!Location) \
+        { \
+            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
+            HYDRO_LOG(Shader, Error, "Path: {}", m_Filepath.string()); \
+            return Matrix4::Identity; \
+        }
+
+        Matrix4 Result;
+        glGetnUniformfv(m_Program, Location, 4 * 4 * sizeof(float), (float*)&Result);
+        return Result;
+    }
+
+    int32_t OpenGLShader::GetUniformInt(const std::string& Name)
+    {
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        if(!Location) \
+        { \
+            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", Name, m_Name); \
+            HYDRO_LOG(Shader, Error, "Path: {}", m_Filepath.string()); \
+            return 0; \
+        }
+
+        int32_t Result;
+        glGetUniformiv(m_Program, Location, &Result);
+        return Result;
     }
 }

@@ -1,5 +1,6 @@
 ﻿#include "HydroPCH.h"
 #include "Color.h"
+#include "Math/Vector4.h"
 
 
 namespace Hydro
@@ -25,6 +26,11 @@ namespace Hydro
         return {r, g, b, a};
     }
 
+    Color::operator Vector4() const
+    {
+        return { r, g, b, a};
+    }
+
     Color Color::FromHSL(float hue, float saturation, float lightness, float alpha)
     {
         return 0;
@@ -35,7 +41,7 @@ namespace Hydro
         return 0;
     }
 
-    Color Color::WithSturation(float saturation)
+    Color Color::WithSaturation(float saturation)
     {
         return 0;
     }
@@ -64,8 +70,7 @@ namespace Hydro
     {
         return { r, g, blue, a };
     }
-
-
+    
     Color Color::Red        { 0xFF0000FF };
     Color Color::Green      { 0x00FF00FF };
     Color Color::Blue       { 0x0000FFFF };

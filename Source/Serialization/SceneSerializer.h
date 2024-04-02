@@ -1,19 +1,15 @@
-﻿#pragma once
-
-#include "BinarySerializer.h"
-#include "Core/Scene.h"
+#pragma once
+#include "Serializer.h"
 
 namespace Hydro
 {
-   class SceneSerializer : public BinarySerializer<Scene>
-   {
-   public:
-      SceneSerializer(std::string&& filepath);
+    class Scene;
 
-      bool Serialize(const Scene&) override;
-      bool Deserialize(Scene&) override;
-
-   private:
-      
-   };
+    class SceneSerializer : public Serializer<Scene>
+    {
+    public:
+        SceneSerializer(const Path& Filepath);
+        bool Serialize(const Scene&) override;
+        bool Deserialize(Scene&) override;
+    };
 }

@@ -4,9 +4,9 @@
 namespace Hydro
 {
     template<typename T>
-    T Map(T val, T min_first_range, T max_first_range, T min_last_range, T max_last_range)
+    T Map(T Value, T MinA, T MaxA, T MinB, T MaxB)
     {
-        return min_last_range + (max_last_range - min_last_range) * ((val - min_first_range) / (max_first_range - min_first_range));
+        return MinB + (MaxB - MinB) * ((Value - MinA) / (MaxA - MinA));
     }
 
     template<typename T>
@@ -30,13 +30,31 @@ namespace Hydro
     template<typename T>
     constexpr T Lerp(T a, T b, T t)
     {
-        return a + b(t - a);
+        return a + (b - a) * t;
     }
 
     template<typename T>
     constexpr T Flip(T val)
     {
         return 1 - val;
+    }
+
+    template<typename T>
+    T MappedSin(T X, T Min, T Max)
+    {
+        return Map(std::sin(X), -1.0f, 1.0f, Min, Max);
+    }
+
+    template<typename T>
+    T Clamp(T Value, T Min, T Max)
+    {
+        return Value < Min ? Min : Value > Max ? Max : Value;
+    }
+
+    template<typename T>
+    T Abs(T Value)
+    {
+        return Value < 0 ? -Value : Value;
     }
     
 }

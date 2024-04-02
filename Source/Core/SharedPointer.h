@@ -12,4 +12,10 @@ namespace Hydro
     {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
+
+    template<typename To, typename From>
+    constexpr Ref<To> Cast(const Ref<From>& Ref)
+    {
+        return std::dynamic_pointer_cast<To>(Ref);
+    }
 }

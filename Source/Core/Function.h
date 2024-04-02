@@ -1,12 +1,11 @@
 ﻿#pragma once
 #include "Assertion.h"
-#include "Macros.h"
 #include <utility>
 
 namespace Hydro
 {
     template<typename RetType, class... Params>
-    class HYDRO_API Function
+    class Function
     {
         using FuncPtr = RetType(*)(Params...);
     public:

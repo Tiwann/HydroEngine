@@ -3,10 +3,8 @@
 #include "SharedPointer.h"
 #include "LogCategory.h"
 
-#include <vector>
 #include <string>
-
-
+#include <glm/vec2.hpp>
 
 struct GLFWwindow;
 
@@ -16,7 +14,7 @@ namespace Hydro
 
     HYDRO_DECLARE_LOG_CATEGORY_STATIC(Input, "INPUT")
     
-    class HYDRO_API Window
+    class Window
     {
     public:
         friend class Application;
@@ -24,6 +22,7 @@ namespace Hydro
         Window(const std::string& name, uint32_t width, uint32_t height, bool resizable);
         ~Window();
         
+
         static Ref<Window> Create(const std::string& name, uint32_t width, uint32_t height, bool resizable);
         const GLFWwindow* GetNativeWindow() const;
         GLFWwindow* GetNativeWindow();
@@ -36,23 +35,28 @@ namespace Hydro
         void SetMaximizeCallback(Function<void, GLFWwindow*, int> function) const;
         void SetIconifyCallback(Function<void, GLFWwindow*, int> function) const;
         void SetKeyCallback(Function<void, GLFWwindow*, int, int, int, int> function) const;
+        void SetFramebufferCallback(Function<void, GLFWwindow*, int, int> function) const;
+        void SetRefreshCallback(Function<void, GLFWwindow*> function) const;
         bool ShouldClose() const;
         bool IsValid() const;
 
         uint32_t GetWidth() const;
         uint32_t GetHeight() const;
+        glm::uvec2 GetCenter() const;
+        
         const std::string& GetName() const;
         void SetName(std::string name);
         void SetNameTemp(const std::string& name) const;
         void ResetName() const;
         void SetIcon(const std::string& filepath)const;
-        void SetIcon(const Image& image) const;
-        void SetIcons(const std::vector<Ref<Image>>& images);
+        void SetIcon(const Ref<Image>& image) const;
         bool IsResizable() const;
         void Destroy();
 
         void Show() const;
         void Hide() const;
+
+        bool IsVisible() const { return m_Visible; }
     
     private:
         GLFWwindow* m_Handle = nullptr;
@@ -62,5 +66,6 @@ namespace Hydro
         bool m_HasFocus{false};
         bool m_Maximized{false};
         bool m_Minimized{false};
+        bool m_Visible{true};
     };
 }

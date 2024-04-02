@@ -1,10 +1,9 @@
 ﻿#pragma once
-#include "Macros.h"
 #include <cstdint>
 
 namespace Hydro
 {
-    struct HYDRO_API GraphicsSettings
+    struct GraphicsSettings
     {
         using SwapchainBufferType = enum : uint32_t
         {

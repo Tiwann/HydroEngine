@@ -1,1 +1,12 @@
 *.vcxproj*
+Vendor/shaderc/libshaderc/lib/linux/libshaderc.a
+Vendor/shaderc/libshaderc/lib/linux/libshaderc_combined.a
+Vendor/shaderc/libshaderc/lib/linux/libshaderc_combinedd.a
+Vendor/shaderc/libshaderc/lib/linux/libshadercd.a
+Vendor/shaderc/libshaderc/lib/windows/shaderc.lib
+Vendor/shaderc/libshaderc/lib/windows/shaderc_combined.lib
+Vendor/shaderc/libshaderc/lib/windows/shaderc_combinedd.lib
+Vendor/shaderc/libshaderc/lib/windows/shadercd.lib
+Vendor/shaderc/libshaderc/lib/windows/shadercd.pdb
+Vendor/shaderc/libshaderc/CMakeLists.txt
+Vendor/shaderc/libshaderc/CMakeLists.txt

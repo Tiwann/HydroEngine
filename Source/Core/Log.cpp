@@ -1,6 +1,7 @@
 #include "HydroPCH.h"
 #include "Log.h"
 
+#include "spdlog/logger.h"
 #include "spdlog/pattern_formatter.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "LogCategoryFormatter.h"
@@ -24,12 +25,14 @@ namespace Hydro
 
     void Log::Init()
     {
-        auto formatter = std::make_unique<spdlog::pattern_formatter>();
-        formatter->add_flag<LogCategoryFormatter>('#').set_pattern("%^[%T]: [CORE] [%#] %v%$");
-        s_CoreLogger->set_formatter(std::move(formatter));
+        auto core_formatter = std::make_unique<spdlog::pattern_formatter>();
+        core_formatter->add_flag<LogCategoryFormatter>('#').set_pattern("%^[%T]: [CORE] [%#] %v%$");
+        s_CoreLogger->set_formatter(std::move(core_formatter));
         s_CoreLogger->set_level(spdlog::level::trace);
 
-        s_ClientLogger->set_pattern("%^[%T]: [CLIENT] [%#] %v%$");
+        auto client_formatter = std::make_unique<spdlog::pattern_formatter>();
+        client_formatter->add_flag<LogCategoryFormatter>('#').set_pattern("%^[%T]: [CLIENT] [%#] %v%$");
+        s_ClientLogger->set_formatter(std::move(client_formatter));
         s_ClientLogger->set_level(spdlog::level::trace);
     }
 

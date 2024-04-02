@@ -2,6 +2,12 @@
 #include "Serialization/Serializer.h"
 #include "Core/ApplicationConfiguration.h"
 
+namespace YAML
+{
+    class Emitter;
+    class Node;
+}
+
 namespace Hydro
 {
     class ApplicationConfigurationSerializer : public Serializer<ApplicationConfiguration>
@@ -10,11 +16,10 @@ namespace Hydro
 
         ApplicationConfigurationSerializer(const Path& Filepath);
         bool Serialize(const ApplicationConfiguration& Configuration) override;
-        
         bool Deserialize(ApplicationConfiguration& OutConfiguration) override;
 
     private:
-        void WriteWindow(const ApplicationConfiguration& Configuration);
-        void WriteGraphics(const ApplicationConfiguration& Configuration) const;
+        void SerializeSwapchainBufferType(YAML::Emitter& Yaml, GraphicsSettings::SwapchainBufferType SwapchainBufferType);
+        void DeserializeSwapchainBufferType(YAML::Node& Yaml, GraphicsSettings::SwapchainBufferType& OutSwapchainBufferType);
     };
 }

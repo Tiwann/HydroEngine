@@ -1,27 +1,27 @@
 #pragma once
 #include "KeyCodes.h"
-#include "Macros.h"
 
 namespace Hydro
 {
-    struct HYDRO_API KeyState
+    struct KeyState
     {
-        bool Pressed;
-        bool Hold;
-        bool Up;
+        bool IsPressed;
+        bool IsHold;
+        bool IsRelease;
+        bool WasPressed;
     };
     
-    class HYDRO_API Input
+    class Input
     {
     public:
+        friend class Application;
         static bool GetKeyDown(KeyCode KeyCode);
         static bool GetKey(KeyCode KeyCode);
         static bool GetKeyUp(KeyCode KeyCode);
-        static void Reset();
+        static std::string GetKeyName(KeyCode KeyCode);
 
+        static KeyState GetState(KeyCode KeyCode);
     private:
-        friend class Application;
-        static bool m_Keys[HYDRO_KEY_TOTAL];
-        static KeyState m_KeyStates[HYDRO_KEY_TOTAL];
+        static KeyState States[TOTAL];
     };
 }
