@@ -1,9 +1,11 @@
 ﻿#include "HydroPCH.h"
 #include "Transform.h"
 
+#include "Physics/Shape2D.h"
+
 namespace Hydro
 {
-    Transform::Transform() : Component("Transform")
+    Transform::Transform(GameObject* Owner) : Component(Owner, "Transform")
     {
     }
 
@@ -27,6 +29,26 @@ namespace Hydro
         m_Position = Position;
     }
 
+    void Transform::SetPosition(float X, float Y, float Z)
+    {
+        SetPosition({X, Y, Z});
+    }
+
+    void Transform::SetRotation(float X, float Y, float Z)
+    {
+        SetRotation({X, Y, Z});
+    }
+
+    void Transform::SetScale(float X, float Y, float Z)
+    {
+        SetScale({X, Y, Z});
+    }
+
+    void Transform::SetScale(float UniformScale)
+    {
+        SetScale({UniformScale, UniformScale, UniformScale});
+    }
+
     void Transform::SetRotation(const Vector3& Rotation)
     {
         m_Rotation = Rotation;
@@ -35,10 +57,15 @@ namespace Hydro
     void Transform::SetScale(const Vector3& Scale)
     {
         m_Scale = Scale;
+        if(OnScaleSet.IsBound()) OnScaleSet.Broadcast(this);
     }
 
     void Transform::Translate(const Vector3& Translation)
     {
+        if(m_GameObject->GetComponent<Shape2D>() && Translation != Vector3::Zero)
+        {
+            HYDRO_LOG(Transform, Verbosity::Warning, "Tried to translate an object that is controlled by physics.");
+        }
         m_Position += Translation;
     }
 
@@ -77,13 +104,38 @@ namespace Hydro
         return Math::UpFromRotation(m_Rotation);
     }
 
-    Matrix4 Transform::GetMatrix() const
+    Matrix4 Transform::GetWorldSpaceMatrix() const
+    {
+        if(m_GameObject->HasParent())
+        {
+            return m_GameObject->GetParent()->GetTransform()->GetWorldSpaceMatrix() * GetLocalSpaceMatrix();
+        } else
+        {
+            return GetLocalSpaceMatrix();
+        }
+    }
+
+    Matrix4 Transform::GetLocalSpaceMatrix() const
     {
         Matrix4 Result = Matrix4::Identity;
         Result.Scale(m_Scale);
-        Result.Rotate(m_Rotation);
+        Result.RotateDegrees(m_Rotation);
         Result.Translate(m_Position);
         return Result;
+    }
+
+    void Transform::OnInspectorGUI(const ImGuiIO& IO)
+    {
+        Component::OnInspectorGUI(IO);
+        ImGui::PushID((void*)m_Guid);
+        if (ImGui::TreeNode("Transform"))
+        {
+            ImGui::DragFloat3("Position", m_Position.ValuePtr(), 0.01f, 0, 0, "%.2f");
+            ImGui::DragFloat3("Rotation", m_Rotation.ValuePtr(), 0.01f, 0, 360.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+            ImGui::DragFloat3("Scale", m_Scale.ValuePtr(), 0.01f, 0, 0, "%.2f");
+            ImGui::TreePop();
+        }
+        ImGui::PopID();
     }
 }
 

@@ -2,7 +2,7 @@
 
 namespace Hydro
 {
-    using ColliderType = enum
+    enum class ColliderType
     {
         Static,
         Kinematic,

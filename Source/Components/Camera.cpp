@@ -4,52 +4,71 @@
 #include "Transform.h"
 #include "Core/Application.h"
 #include "Core/GameObject.h"
-#include "Core/Assertion.h"
 #include "Core/Window.h"
 
 namespace Hydro
 {
-    Camera::Camera(const CameraSettings& Settings) : Component("Camera"), m_Settings(Settings)
+    Camera::Camera(GameObject* Owner) : Component(Owner, "Camera")
     {                             
     }
 
     void Camera::OnUpdate(float Delta)
     {
         const Application& App = Application::GetCurrentApplication();
-        const Window& Window = App.GetWindow();
+        const Ref<Window>& Window = App.GetWindow();
         
-        m_Settings.Width = (float)Window.GetWidth();
-        m_Settings.Height = (float)Window.GetHeight();
+        Settings.Width = Window->GetWidth();
+        Settings.Height = Window->GetHeight();
+    }
+
+    void Camera::OnInspectorGUI(const ImGuiIO& IO)
+    {
+        Component::OnInspectorGUI(IO);
+        if(ImGui::TreeNode(m_Name.c_str()))
+        {
+            ImGui::DragFloat("Width", &Settings.Width);
+            ImGui::DragFloat("Height", &Settings.Height);
+            ImGui::DragFloat("Near Plane", &Settings.NearPlane);
+            ImGui::DragFloat("Far Plane", &Settings.FarPlane);
+
+            const char* ProjectionTypes[2] = { "Perspective", "Orthographic" };
+            ImGui::Combo("Projection", (int*)&Settings.Projection, ProjectionTypes, 2);
+            
+            if(Settings.Projection == CameraProjectionType::Orthographic)
+            {
+                ImGui::DragFloat("Orthographic Size", &Settings.OrthoSize);
+            } else
+            {
+                ImGui::DragFloat("Field Of View", &Settings.FieldOfView);
+                
+            }
+            ImGui::TreePop();
+        }
     }
 
     Matrix4 Camera::GetViewMatrix() const
     {
-        const Ref<Transform> ObjectTransform = m_GameObject->GetTransform();
-        Matrix4 View = ObjectTransform->GetMatrix();
-        View.Translate(-ObjectTransform->GetPosition());
-        View.Rotate(-ObjectTransform->GetRotation());
-        View.Scale(1.0f / ObjectTransform->GetScale());
-        return View;
+        return m_GameObject->GetTransform()->GetWorldSpaceMatrix().Inverse();
     }
 
     Matrix4 Camera::GetProjectionMatrix() const
     {
-        const float AspectRatio = m_Settings.Width / m_Settings.Height;
+        const float AspectRatio = Settings.Width / Settings.Height;
         
         const Matrix4 PerspectiveProj = Math::Perspective(
-            m_Settings.FieldOfView,
+            Settings.FieldOfView,
             AspectRatio,
-            m_Settings.NearPlane,
-            m_Settings.FarPlane);
+            Settings.NearPlane,
+            Settings.FarPlane);
 
         const Matrix4 OrthoProj = Math::Orthographic(
-            m_Settings.Width,
-            m_Settings.Height,
-            m_Settings.OrthoSize,
-            m_Settings.NearPlane,
-            m_Settings.FarPlane);
+            Settings.Width,
+            Settings.Height,
+            Settings.OrthoSize,
+            Settings.NearPlane,
+            Settings.FarPlane);
         
-        const Matrix4 Projection = m_Settings.Projection == Perspective ? PerspectiveProj : OrthoProj;
+        const Matrix4 Projection = Settings.Projection == CameraProjectionType::Perspective ? PerspectiveProj : OrthoProj;
           
         return Projection;
     }
