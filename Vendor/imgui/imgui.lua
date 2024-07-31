@@ -36,6 +36,8 @@ project "imgui"
             "backends/imgui_impl_vulkan.h",
             "backends/imgui_impl_vulkan.cpp",
         }
+        
+        includedirs "%{libs.Vulkan}/Include"
 
     filter "Configurations:*DirectX"
         files 
