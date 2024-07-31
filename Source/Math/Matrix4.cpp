@@ -7,7 +7,7 @@
 namespace Hydro
 {
     Matrix4 Matrix4::Identity = Matrix4();
-    Matrix4 Matrix4::One = { Vector4::One, Vector4::One, Vector4::One, Vector4::One };
+    Matrix4 Matrix4::One = { Vector4(1.0f), Vector4(1.0f), Vector4(1.0f), Vector4(1.0f) };
     
     Matrix4::Matrix4()
     {
@@ -45,6 +45,63 @@ namespace Hydro
         //const Matrix2 Z{{m01, m02}, {m11, m12}};
         //return m00 * X.Determinant() - m10 * Y.Determinant() + m20 * Z.Determinant();
         return 0.0f;
+    }
+
+    Matrix4 Matrix4::Inverse() const
+    {
+	    float Coef00 = Columns[2].z * Columns[3].w - Columns[3].z * Columns[2].w;
+	    float Coef02 = Columns[1].z * Columns[3].w - Columns[3].z * Columns[1].w;
+	    float Coef03 = Columns[1].z * Columns[2].w - Columns[2].z * Columns[1].w;
+
+	    float Coef04 = Columns[2].y * Columns[3].w - Columns[3].y * Columns[2].w;
+	    float Coef06 = Columns[1].y * Columns[3].w - Columns[3].y * Columns[1].w;
+	    float Coef07 = Columns[1].y * Columns[2].w - Columns[2].y * Columns[1].w;
+
+	    float Coef08 = Columns[2].y * Columns[3].z - Columns[3].y * Columns[2].z;
+	    float Coef10 = Columns[1].y * Columns[3].z - Columns[3].y * Columns[1].z;
+	    float Coef11 = Columns[1].y * Columns[2].z - Columns[2].y * Columns[1].z;
+
+	    float Coef12 = Columns[2].x * Columns[3].w - Columns[3].x * Columns[2].w;
+	    float Coef14 = Columns[1].x * Columns[3].w - Columns[3].x * Columns[1].w;
+	    float Coef15 = Columns[1].x * Columns[2].w - Columns[2].x * Columns[1].w;
+
+	    float Coef16 = Columns[2].x * Columns[3].z - Columns[3].x * Columns[2].z;
+	    float Coef18 = Columns[1].x * Columns[3].z - Columns[3].x * Columns[1].z;
+	    float Coef19 = Columns[1].x * Columns[2].z - Columns[2].x * Columns[1].z;
+
+	    float Coef20 = Columns[2].x * Columns[3].y - Columns[3].x * Columns[2].y;
+	    float Coef22 = Columns[1].x * Columns[3].y - Columns[3].x * Columns[1].y;
+	    float Coef23 = Columns[1].x * Columns[2].y - Columns[2].x * Columns[1].y;
+
+	    Vector4 Fac0(Coef00, Coef00, Coef02, Coef03);
+	    Vector4 Fac1(Coef04, Coef04, Coef06, Coef07);
+	    Vector4 Fac2(Coef08, Coef08, Coef10, Coef11);
+	    Vector4 Fac3(Coef12, Coef12, Coef14, Coef15);
+	    Vector4 Fac4(Coef16, Coef16, Coef18, Coef19);
+	    Vector4 Fac5(Coef20, Coef20, Coef22, Coef23);
+
+	    Vector4 Vec0(Columns[1].x, Columns[0].x, Columns[0].x, Columns[0].x);
+	    Vector4 Vec1(Columns[1].y, Columns[0].y, Columns[0].y, Columns[0].y);
+	    Vector4 Vec2(Columns[1].z, Columns[0].z, Columns[0].z, Columns[0].z);
+	    Vector4 Vec3(Columns[1].w, Columns[0].w, Columns[0].w, Columns[0].w);
+
+	    Vector4 Inv0(Vec1 * Fac0 - Vec2 * Fac1 + Vec3 * Fac2);
+	    Vector4 Inv1(Vec0 * Fac0 - Vec2 * Fac3 + Vec3 * Fac4);
+	    Vector4 Inv2(Vec0 * Fac1 - Vec1 * Fac3 + Vec3 * Fac5);
+	    Vector4 Inv3(Vec0 * Fac2 - Vec1 * Fac4 + Vec2 * Fac5);
+
+	    Vector4 SignA(+1, -1, +1, -1);
+	    Vector4 SignB(-1, +1, -1, +1);
+	    Matrix4 Inverse(Inv0 * SignA, Inv1 * SignB, Inv2 * SignA, Inv3 * SignB);
+
+	    Vector4 Row0(Inverse[0].x, Inverse[1].x, Inverse[2].x, Inverse[3].x);
+
+	    Vector4 Dot0(Columns[0] * Row0);
+	    float Dot1 = (Dot0.x + Dot0.y) + (Dot0.z + Dot0.w);
+
+	    float OneOverDeterminant = 1.0f / Dot1;
+
+	    return Inverse * OneOverDeterminant;
     }
 
     Vector4 Matrix4::Multiply(const Vector4& Vec) const
@@ -116,7 +173,12 @@ namespace Hydro
 
     void Matrix4::Rotate(const Vector3& EulerAngles)
     {
-        *this = Math::RotateAxisAngleDegrees(*this, EulerAngles);
+    	*this = Math::RotateAxisAngle(*this, EulerAngles);
+    }
+
+    void Matrix4::RotateDegrees(const Vector3& EulerAnglesDegrees)
+    {
+        *this = Math::RotateAxisAngleDegrees(*this, EulerAnglesDegrees);
     }
 
     void Matrix4::RotateDegrees(float Degrees, const Vector3& Axis)

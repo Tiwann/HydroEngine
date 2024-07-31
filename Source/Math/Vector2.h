@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Vector3.h"
-#include "box2d/b2_math.h"
+
+struct b2Vec2;
 
 namespace Hydro
 {
@@ -17,9 +18,10 @@ namespace Hydro
         Vector2(float X, float Y);
         Vector2(float Value);
         Vector2(const Vector3& Vec);
+        Vector2(const b2Vec2& Vec);
         
         float Magnitude() const;
-        const float* ValuePtr() const;
+        float* ValuePtr();
         float Dot(const Vector2& Vec) const;
 
         Vector2 WithX(float X) const;
@@ -35,9 +37,9 @@ namespace Hydro
         friend Vector2 operator*(const Vector2& Vec, float Scalar);
         Vector2& operator*=(float Scalar);
         bool operator==(const Vector2& Vec) const;
+        Vector2 operator*(const Vector2& Vec) const;
 
 
-        
         static Vector2 Zero;
         static Vector2 One;
         static Vector2 Right;

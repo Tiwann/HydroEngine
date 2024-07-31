@@ -2,6 +2,7 @@
 #include "Vector3.h"
 #include "Vector2.h"
 #include "Vector4.h"
+#include <box2d/b2_math.h>
 
 namespace Hydro
 {
@@ -27,7 +28,15 @@ namespace Hydro
     {
     }
 
+    Vector3::Vector3(const Vector2& Vec, float Z) : x(Vec.x), y(Vec.y), z(Z)
+    {
+    }
+
     Vector3::Vector3(const Vector4& Vec) : x(Vec.x), y(Vec.y), z(Vec.z)
+    {
+    }
+
+    Vector3::Vector3(const b2Vec3& Vec) : x(Vec.x), y(Vec.y), z(Vec.z)
     {
     }
 
@@ -36,9 +45,9 @@ namespace Hydro
         return Math::Sqrt(x * x + y * y + z*z);
     }
 
-    const float* Vector3::ValuePtr() const
+    float* Vector3::ValuePtr()
     {
-        return (const float*)this;
+        return (float*)this;
     }
 
     float Vector3::Dot(const Vector3& Vec) const
@@ -95,6 +104,16 @@ namespace Hydro
         y -= Vec.y;
         z -= Vec.z;
         return *this;
+    }
+
+    Vector3::operator b2Vec3() const
+    {
+        return {x, y, z};
+    }
+
+    Vector3 Vector3::Apply(const std::function<float(float)>& Func) const
+    {
+        return {Func(x), Func(y), Func(z)};
     }
 
 
@@ -167,5 +186,22 @@ namespace Hydro
     {
         const float CosAngle = VecA.Dot(VecB) / (VecA.Magnitude() * VecB.Magnitude());
         return Math::Arccos(CosAngle);
+    }
+
+    Vector3 Vector3::MoveTowards(const Vector3& Current, const Vector3& Target, float MaxDelta)
+    {
+        const Vector3 Direction = Target - Current;
+        const float Distance = Direction.Magnitude();
+        const Vector3 MovedVector = Current + Direction / Distance * MaxDelta;
+        return Distance <= MaxDelta || Math::IsZero(Distance) ? Target : MovedVector;
+    }
+
+    Vector3 Vector3::SmoothDamp(const Vector3& Current, const Vector3& Target, Vector3& CurrentVelocity,
+        float SmoothTime, float Delta, float MaxSpeed)
+    {
+        const float x = Math::SmoothDamp(Current.x, Target.x, CurrentVelocity.x, SmoothTime, Delta, MaxSpeed);
+        const float y = Math::SmoothDamp(Current.y, Target.y, CurrentVelocity.y, SmoothTime, Delta, MaxSpeed);
+        const float z = Math::SmoothDamp(Current.z, Target.z, CurrentVelocity.z, SmoothTime, Delta, MaxSpeed);
+        return {x, y, z};
     }
 }

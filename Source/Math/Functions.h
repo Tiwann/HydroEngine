@@ -1,6 +1,6 @@
 #pragma once
 #include "Vector3.h"
-
+#include <limits>
 
 namespace Hydro
 {
@@ -12,6 +12,7 @@ namespace Hydro
         static constexpr float Tau = 2.0f * Pi;
         static constexpr float PiHalf = 0.5f * Pi;
         static constexpr float E = 2.71828182846f;
+        static constexpr float Infinity = std::numeric_limits<float>::infinity();
         
         static float Cos(float Val);
         static float Sin(float Val);
@@ -29,13 +30,31 @@ namespace Hydro
         static float MappedSin(float Val, float Min, float Max);
         static float MappedCos(float Val, float Min, float Max);
         
+        static float Min(float A, float B);
         
+        template <typename ... Args>
+        static float Min(float A, float B, Args&&... C)
+        {
+            return A < B ? A : Min(B, std::forward<Args>(C)...);
+        }
+
+        static float Max(float A, float B);
+        
+        template <typename ... Args>
+        static float Max(float A, float B, Args&&... C)
+        {
+            return A > B ? A : Max(B, std::forward<Args>(C)...);
+        }
+        
+        static float Sign(float Val);
         static bool AreSame(float Lhs, float Rhs);
         static bool IsZero(float Val);
         static float Sqrt(float Val);
         static float Pow(float Val, float Exp);
         static float Radians(float Degrees);
         static float Degrees(float Radians);
+        static float MoveTowards(float Current, float Target, float MaxDelta);
+        static float SmoothDamp(float Current, float Target, float& CurrentVelocity, float SmoothTime,  float Delta, float MaxSpeed = Infinity);
         
         static class Matrix2 Rotate(const Matrix2& Mat, float Radians);
         static Matrix2 RotateDegrees(const Matrix2& Mat, float Degrees);
@@ -66,4 +85,6 @@ namespace Hydro
         static Vector3 UpFromRotation(const Vector3& EulerAngles);
         static Vector3 RightFromRotation(const Vector3& EulerAngles);
     };
+
+    
 }

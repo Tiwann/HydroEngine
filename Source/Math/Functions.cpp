@@ -81,6 +81,21 @@ namespace Hydro
         return Map(Cos(Val), -1.0f, 1.0f, Min, Max);
     }
 
+    float Math::Min(float A, float B)
+    {
+        return A < B ? A : B;
+    }
+    
+    float Math::Max(float A, float B)
+    {
+        return A > B ? A : B;
+    }
+
+    float Math::Sign(float Val)
+    {
+        return Val > 0.0f ? 1.0f : Val < 0.0f ? -1.0f : 0.0f;
+    }
+
     float Math::Distance(const Vector2& VecA, const Vector2& VecB)
     {
         return Sqrt(Pow(VecB.x - VecA.x, 2) + Pow(VecB.y - VecA.y, 2));
@@ -121,6 +136,39 @@ namespace Hydro
     {
         return Radians * 180.0f / Pi;
     }
-    
 
+    float Math::MoveTowards(float Current, float Target, float MaxDelta)
+    {
+        const float MovedValue = Current + Sign(Target - Current) * MaxDelta;
+        return Abs(Target - Current) <= MaxDelta ? Target : MovedValue;
+    }
+
+    float Math::SmoothDamp(float Current, float Target, float& CurrentVelocity, float SmoothTime, float Delta, float MaxSpeed)
+    {
+        SmoothTime = Max(0.0001f, SmoothTime);
+        const float Omega = 2.0f / SmoothTime;
+
+        const float X = Omega * Delta;
+        const float Exp = 1.0f / (1.0f + X + 0.48F * X * X + 0.235F * X * X * X);
+        float Change = Current - Target;
+        const float OriginalTo = Target;
+
+        // Clamp maximum speed
+        const float MaxChange = MaxSpeed * SmoothTime;
+        Change = Clamp(Change, -MaxChange, MaxChange);
+        Target = Current - Change;
+
+        const float Temp = (CurrentVelocity + Omega * Change) * Delta;
+        CurrentVelocity = (CurrentVelocity - Omega * Temp) * Exp;
+        float Output = Target + (Change + Temp) * Exp;
+
+        // Prevent overshooting
+        if (OriginalTo - Current > 0.0F == Output > OriginalTo)
+        {
+            Output = OriginalTo;
+            CurrentVelocity = (Output - OriginalTo) / Delta;
+        }
+
+        return Output;
+    }
 }

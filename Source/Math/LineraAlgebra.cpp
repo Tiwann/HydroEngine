@@ -154,17 +154,14 @@ namespace Hydro
 
     Matrix4 Math::RotateAxisAngleDegrees(const Matrix4& Mat, const Vector3& EulerAnglesDegrees)
     {
-        Matrix4 Result = Matrix4::Identity;
-        if(!IsZero(EulerAnglesDegrees.x)) Result.Rotate(Radians(EulerAnglesDegrees.x), Vector3::Right);
-        if(!IsZero(EulerAnglesDegrees.y)) Result.Rotate(Radians(EulerAnglesDegrees.y), Vector3::Up);
-        if(!IsZero(EulerAnglesDegrees.z)) Result.Rotate(Radians(EulerAnglesDegrees.z), Vector3::Forward);
-        return Mat * Result;
+        return RotateAxisAngle(Mat, EulerAnglesDegrees.Apply(Radians));
     }
 
     Matrix4 Math::Translate(const Matrix4& Mat, const Vector3& Translation)
     {
+        const Vector4 Trans(Translation, 1.0f);
         Matrix4 Result(Mat);
-        Result[3] = Mat[0] * Translation.x + Mat[1] * Translation.y + Mat[2] * Translation.z + Mat[3];
+        Result[3] = Trans;
         return Result;
     }
 
@@ -183,32 +180,36 @@ namespace Hydro
     
     Matrix4 Math::Orthographic(float Width, float Height, float Scale, float Near, float Far)
     {
+        const float x = Scale * 2.0f / Width;
+        const float y = Scale * 2.0f /  Height;
+        const float z = 1.0f / (Far - Near);
+        
         return {
-            {2.0f / Width, 0.0f, 0.0f, 0.0f},
-            {0.0f, 2.0f / Height, 0.0f, 0.0f},
-            {0.0f, 0.0f, 1.0f / (Far - Near), 0.0f},
-            {0.0f, 0.0f, -Near / (Far - Near), 1.0f},
+            {x   , 0.0f, +0.0f, +0.0f},
+            {0.0f, y   , +0.0f, +0.0f},
+            {0.0f, 0.0f, +z   , +0.0f},
+            {0.0f, 0.0f, -Near / (Far - Near), +1.0f},
         };
     }
 
     Vector3 Math::ForwardFromRotation(const Vector3& EulerAngles)
     {
         Matrix4 Result = Matrix4::Identity;
-        Result.Rotate(EulerAngles);
+        Result.RotateDegrees(EulerAngles);
         return Result * Vector3::Forward;
     }
 
     Vector3 Math::UpFromRotation(const Vector3& EulerAngles)
     {
         Matrix4 Result = Matrix4::Identity;
-        Result.Rotate(EulerAngles);
+        Result.RotateDegrees(EulerAngles);
         return Result * Vector3::Up;
     }
 
     Vector3 Math::RightFromRotation(const Vector3& EulerAngles)
     {
         Matrix4 Result = Matrix4::Identity;
-        Result.Rotate(EulerAngles);
+        Result.RotateDegrees(EulerAngles);
         return Result * Vector3::Right;  
     }
 }

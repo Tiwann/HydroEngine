@@ -9,66 +9,53 @@ namespace Hydro
     Quaternion Quaternion::Identity = { 1.0f, 0.0f, 0.0f, 0.0f };
     Quaternion::Quaternion(float W, float X, float Y, float Z): w(W), x(X), y(Y), z(Z){}
 
-    Quaternion::Quaternion(Vector3 Vec) : w(0.0f), x(Vec.x), y(Vec.y), z(Vec.z) {}
-
-    Quaternion Quaternion::Conjugate() const
-    {
-        return {w, -x, -y, -z};
-    }
-
-    Quaternion Quaternion::Opposite() const
-    {
-        return {-w, -x, -y, -z};
-    }
-
-    Quaternion Quaternion::Inverse() const
-    {
-        Quaternion Conj = Conjugate();
-        Conj.w /= Magnitude();
-        Conj.x /= Magnitude();
-        Conj.y /= Magnitude();
-        Conj.z /= Magnitude();
-        return Conj;
-    }
-
     float Quaternion::Magnitude() const
     {
-        return Math::Sqrt(w*w + x*x + y*y + z*z);
+        return Math::Sqrt(x*x + y*y + z*z + w*w);
     }
 
-    Quaternion Quaternion::Add(const Quaternion& Quat) const
+    Quaternion Quaternion::Normalized() const
     {
-        return { w + Quat.w, x + Quat.x, y + Quat.y, z + Quat.z };
+        return { x / Magnitude(), y / Magnitude(), z / Magnitude(), w / Magnitude() };
     }
 
-    Quaternion Quaternion::operator+(const Quaternion& Quat) const
+    Quaternion Quaternion::Conjugated() const
     {
-        return Add(Quat);
+        return { -x, -y, -z, w};
     }
 
-    Quaternion Quaternion::Multiply(const Quaternion& Quat) const
+    Quaternion Quaternion::Inversed() const
     {
-        return {
-            w*Quat.w - x*Quat.x - y*Quat.y - z*Quat.z,
-            w*Quat.x + x*Quat.w - y*Quat.z + z*Quat.y,
-            w*Quat.y + x*Quat.z + y*Quat.w - z*Quat.x,
-            w*Quat.z - x*Quat.y + y*Quat.z + z*Quat.w
-        };
+        return this->Conjugated().Normalized();
     }
 
-    Quaternion Quaternion::operator*(const Quaternion& Quat) const
+    float Quaternion::Dot(const Quaternion& Other)
     {
-        return Multiply(Quat);
+        return 0.0f;
     }
 
-    Vector3 Quaternion::AsVector3() const
+    Quaternion Quaternion::Multiply(const Quaternion& Other) const
     {
-        return {x, y, z};
-    }
+        Quaternion Result = Identity;
+        Result.x =  x * Other.w +
+                    y * Other.z -
+                    z * Other.y +
+                    w * Other.x;
 
-    Vector3 Quaternion::Rotate(const Vector3& Vec) const
-    {
-        const Quaternion Intermediate = Multiply(Vec);
-        return Intermediate.Multiply(Conjugate()).AsVector3();
+        Result.y =  -x * Other.z +
+                    y * Other.w +
+                    z * Other.x +
+                    w * Other.y;
+
+        Result.z =  x * Other.y -
+                    y * Other.x +
+                    z * Other.w +
+                    w * Other.z;
+        
+        Result.w =  -x * Other.x -
+                    y * Other.y -
+                    z * Other.z +
+                    w * Other.w;
+        return Result;
     }
 }

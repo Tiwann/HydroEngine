@@ -3,7 +3,7 @@
 #include "Vector3.h"
 #include "Functions.h"
 
-#include "box2d/b2_math.h"
+#include <box2d/b2_math.h>
 
 
 namespace Hydro
@@ -28,14 +28,18 @@ namespace Hydro
     {
     }
 
+    Vector2::Vector2(const b2Vec2& Vec) : x(Vec.x), y(Vec.y)
+    {
+    }
+
     float Vector2::Magnitude() const
     {
         return Math::Sqrt(x * x + y * y);
     }
 
-    const float* Vector2::ValuePtr() const
+    float* Vector2::ValuePtr()
     {
-        return (const float*)this;
+        return (float*)this;
     }
 
     float Vector2::Dot(const Vector2& Vec) const
@@ -99,5 +103,10 @@ namespace Hydro
     {
         return Math::AreSame(x, Vec.x)
             && Math::AreSame(y, Vec.y);
+    }
+
+    Vector2 Vector2::operator*(const Vector2& Vec) const
+    {
+        return {x * Vec.x, y * Vec.y};
     }
 }

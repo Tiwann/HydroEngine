@@ -90,4 +90,9 @@ namespace Hydro
     {
         *this = Math::Scale(*this, Scalar);
     }
+
+    void Matrix2::Scale(const Vector2& Scale)
+    {
+        *this = Math::Scale(*this, Scale);
+    }
 }

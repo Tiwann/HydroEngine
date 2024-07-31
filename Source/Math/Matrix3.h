@@ -26,6 +26,7 @@ namespace Hydro
         void Rotate(float Radians, const Vector3& Axis);
         void RotateDegrees(float Degrees, const Vector3& Axis);
         void Scale(float Scalar);
+        void Scale(const Vector3& Scale);
         
         static Matrix3 Identity;
         static Matrix3 One;

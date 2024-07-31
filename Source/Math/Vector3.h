@@ -1,10 +1,16 @@
 #pragma once
+#include <functional>
+
 #include "Functions.h"
+
+
+struct b2Vec3;
 
 namespace Hydro
 {
     class Vector2;
     class Vector4;
+    
     
     class Vector3
     {
@@ -17,10 +23,13 @@ namespace Hydro
         Vector3(float X, float Y, float Z);
         Vector3(float Value);
         Vector3(const Vector2& Vec);
+        Vector3(const Vector2& Vec, float Z);
         Vector3(const Vector4& Vec);
+        Vector3(const b2Vec3& Vec);
+        
         
         float Magnitude() const;
-        const float* ValuePtr() const;
+        float* ValuePtr();
         float Dot(const Vector3& Vec) const;
 
         Vector3 WithX(float X) const;
@@ -32,6 +41,9 @@ namespace Hydro
         Vector3 operator-() const;
         Vector3& operator+=(const Vector3& Vec);
         Vector3& operator-=(const Vector3& Vec);
+        operator b2Vec3() const;
+
+        Vector3 Apply(const std::function<float(float)>& Func) const;
 
         friend Vector3 operator/(float Scalar, const Vector3& Vec);
         friend Vector3 operator/( const Vector3& Vec, float Scalar);
@@ -48,6 +60,9 @@ namespace Hydro
         
         static Vector3 Lerp(const Vector3& VecA, const Vector3& VecB, float Alpha);
         static float Angle(const Vector3& VecA, const Vector3& VecB);
+        static Vector3 MoveTowards(const Vector3& Current, const Vector3& Target, float MaxDelta);
+        static Vector3 SmoothDamp(const Vector3& Current, const Vector3& Target, Vector3& CurrentVelocity, float SmoothTime, float Delta, float MaxSpeed);
+        
         static Vector3 Zero;
         static Vector3 One;
         static Vector3 Right;

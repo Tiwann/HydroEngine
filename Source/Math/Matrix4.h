@@ -15,6 +15,7 @@ namespace Hydro
         const float* ValuePtr() const;
         float Magnitude() const;
         float Determinant() const;
+        Matrix4 Inverse() const;
 
         Vector4 Multiply(const Vector4& Vec) const;
         Vector4 operator*(const Vector4& Vec) const;
@@ -27,6 +28,7 @@ namespace Hydro
 
         void Rotate(float Radians, const Vector3& Axis);
         void Rotate(const Vector3& EulerAngles);
+        void RotateDegrees(const Vector3& EulerAnglesDegrees);
         void RotateDegrees(float Degrees, const Vector3& Axis);
         void Scale(float Scalar);
         void Scale(const Vector3& Scale);

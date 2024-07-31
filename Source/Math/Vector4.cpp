@@ -26,15 +26,19 @@ namespace Hydro
     Vector4::Vector4(const Vector3& Vec): x(Vec.x), y(Vec.y), z(Vec.z), w(0.0f)
     {
     }
-    
+
+    Vector4::Vector4(const Vector3& Vec, float W) : x(Vec.x), y(Vec.y), z(Vec.z), w(W)
+    {
+    }
+
     float Vector4::Magnitude() const
     {
         return Math::Sqrt(x * x + y * y + z * z + w * w);
     }
 
-    const float* Vector4::ValuePtr() const
+    float* Vector4::ValuePtr()
     {
-        return (const float*)this;
+        return (float*)this;
     }
 
     float Vector4::Dot(const Vector4& Vec) const
@@ -90,6 +94,11 @@ namespace Hydro
     Vector4 operator*(const Vector4& Vec, float Scalar)
     {
         return {Vec.x * Scalar, Vec.y * Scalar, Vec.z * Scalar, Vec.w * Scalar};
+    }
+
+    Vector4 Vector4::operator*(const Vector4& Vec) const
+    {
+        return { x * Vec.x, y * Vec.y, z * Vec.z, w * Vec.w};
     }
 
     Vector4& Vector4::operator*=(float Scalar)

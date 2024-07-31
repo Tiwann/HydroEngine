@@ -18,9 +18,10 @@ namespace Hydro
         Vector4(float X, float Y, float Z, float W);
         Vector4(float Value);
         Vector4(const Vector3& Vec);
+        Vector4(const Vector3& Vec, float W);
         
         float Magnitude() const;
-        const float* ValuePtr() const;
+        float* ValuePtr();
         float Dot(const Vector4& Vec) const;
 
         Vector4 WithX(float X) const;
@@ -34,10 +35,11 @@ namespace Hydro
 
         friend Vector4 operator*(float Scalar, const Vector4& Vec);
         friend Vector4 operator*(const Vector4& Vec, float Scalar);
+        Vector4 operator*(const Vector4& Vec) const;
         Vector4& operator*=(float Scalar);
         bool operator==(const Vector4& Vec) const;
         operator Color() const;
-        
+
         static Vector4 Zero;
         static Vector4 One;
         static Vector4 Right;
