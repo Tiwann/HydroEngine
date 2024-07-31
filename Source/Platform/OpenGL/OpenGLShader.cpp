@@ -40,7 +40,7 @@ namespace Hydro
         // Compile Vertex
         {
             const std::string ShaderName = GetName();
-            HYDRO_LOG(Shader, Trace, "Compiling vertex shader: {}", ShaderName);
+            HYDRO_LOG(Shader, Verbosity::Trace, "Compiling vertex shader: {}", ShaderName);
             m_VertexHandle = glCreateShader(GL_VERTEX_SHADER);
 
             const char* VertexSource = m_Source.Vertex.c_str();
@@ -55,17 +55,17 @@ namespace Hydro
                 int32_t Length = 0;
                 char Message[GL_INFO_LOG_LENGTH];
                 glGetShaderInfoLog(m_VertexHandle, GL_INFO_LOG_LENGTH, &Length, Message);
-                HYDRO_LOG(Shader, Error, "Failed to compile vertex shader: {}", Message);
+                HYDRO_LOG(Shader, Verbosity::Error, "Failed to compile vertex shader: {}", Message);
                 return false;
             }
             
-            HYDRO_LOG(Shader, Info, "Successfully compiled vertex shader!");
+            HYDRO_LOG(Shader, Verbosity::Info, "Successfully compiled vertex shader!");
         }
 
         // Compile Fragment
         {
             const std::string ShaderName = GetName();
-            HYDRO_LOG(Shader, Trace, "Compiling fragment shader: {}", ShaderName);
+            HYDRO_LOG(Shader, Verbosity::Trace, "Compiling fragment shader: {}", ShaderName);
             m_FragmentHandle = glCreateShader(GL_FRAGMENT_SHADER);
 
             const char* FragmentSource = m_Source.Fragment.c_str();
@@ -80,11 +80,11 @@ namespace Hydro
                 int32_t Length = 0;
                 char Message[GL_INFO_LOG_LENGTH];
                 glGetShaderInfoLog(m_FragmentHandle, GL_INFO_LOG_LENGTH, &Length, Message);
-                HYDRO_LOG(Shader, Error, "Failed to compiled fragment shader: {}", Message);
+                HYDRO_LOG(Shader, Verbosity::Error, "Failed to compiled fragment shader: {}", Message);
                 return false;
             }
 
-            HYDRO_LOG(Shader, Info, "Successfully compiled fragment shader!");
+            HYDRO_LOG(Shader, Verbosity::Info, "Successfully compiled fragment shader!");
         }
         return true;
     }
@@ -107,7 +107,7 @@ namespace Hydro
     {
         if(!Compiled)
         {
-            HYDRO_LOG(Shader, Error, "Shader program failed to link: One or more shader(s) failed to compile!");
+            HYDRO_LOG(Shader, Verbosity::Error, "Shader program failed to link: One or more shader(s) failed to compile!");
             return Linked = false;
         }
         
@@ -119,10 +119,10 @@ namespace Hydro
             int32_t Length = 0;
             char Message[GL_INFO_LOG_LENGTH];
             glGetProgramInfoLog(m_Program, GL_INFO_LOG_LENGTH, &Length, Message);
-            HYDRO_LOG(Shader, Error, "Shader program failed to link: {}", Message);
+            HYDRO_LOG(Shader, Verbosity::Error, "Shader program failed to link: {}", Message);
             return Linked = Success;
         }
-        HYDRO_LOG(Shader, Info, "Shader program {} successfully linked!", m_Name);
+        HYDRO_LOG(Shader, Verbosity::Info, "Shader program {} successfully linked!", m_Name);
         return Linked = Success;
     }
 
@@ -130,7 +130,7 @@ namespace Hydro
     {
         if(!Linked)
         {
-            HYDRO_LOG(Shader, Error, "Shader program failed to validate: Shader program failed to link!");
+            HYDRO_LOG(Shader, Verbosity::Error, "Shader program failed to validate: Shader program failed to link!");
             return Validated = false;
         }
         glValidateProgram(m_Program);
@@ -141,10 +141,10 @@ namespace Hydro
             int32_t Length = 0;
             char Message[GL_INFO_LOG_LENGTH];
             glGetProgramInfoLog(m_Program, GL_INFO_LOG_LENGTH, &Length, Message);
-            HYDRO_LOG(Shader, Error, "Shader program failed to validate: {}", Message);
+            HYDRO_LOG(Shader, Verbosity::Error, "Shader program failed to validate: {}", Message);
             return Validated = Success;
         }
-        HYDRO_LOG(Shader, Info, "Shader program {} successfully validated!", m_Filepath.string());
+        HYDRO_LOG(Shader, Verbosity::Info, "Shader program {} successfully validated!", m_Filepath.string());
         return Validated = Success;
     }
 
@@ -152,7 +152,7 @@ namespace Hydro
     {
         if(!Validated)
         {
-            HYDRO_LOG(Shader, Error, "Cannot use this shader: Not a valid shader!");
+            HYDRO_LOG(Shader, Verbosity::Error, "Cannot use this shader: Not a valid shader!");
             return false;
         }
 
@@ -170,7 +170,7 @@ namespace Hydro
     #define HYDRO_SHADER_UNIFORM_CHECK(Uniform, Name) \
         if((Uniform) == -1) \
         { \
-            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
+            HYDRO_LOG(Shader, Verbosity::Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
             return; \
         }((void)0)
     
@@ -187,28 +187,28 @@ namespace Hydro
     {
         const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
-        glUniform2fv(Location, 2, Value.ValuePtr());
+        glUniform2f(Location, Value.x, Value.y);
     }
 
     void OpenGLShader::SetUniformFloat3(const std::string& Name, const Vector3& Value)
     {
         const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
-        glUniform3fv(Location, 3, Value.ValuePtr());
+        glUniform3fv(Location, 1, (const float*)&Value);
     }
 
     void OpenGLShader::SetUniformFloat4(const std::string& Name, const Vector4& Value)
     {
         const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
-        glUniform4fv(Location, 4, Value.ValuePtr());
+        glUniform4fv(Location, 1, (const float*)&Value);
     }
 
     void OpenGLShader::SetUniformMat4(const std::string& Name, const Matrix4& Value)
     {
         const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
-        glUniformMatrix4fv(Location, 1, false, Value.ValuePtr());
+        glUniformMatrix4fv(Location, 1, false, (const float*)&Value);
     }
 
     void OpenGLShader::SetUniformInt(const std::string& Name, int32_t Value)
@@ -220,6 +220,12 @@ namespace Hydro
 
     void OpenGLShader::SetUniformTexture(const std::string& Name, const Ref<Texture2D>& Texture)
     {
+        if(!Texture)
+        {
+            HYDRO_LOG(Shader, Verbosity::Error, "Tried to upload a nullptr texture to a shader!");
+            return;
+        }
+        Texture->Bind();
         SetUniformInt(Name, (int32_t)Texture->GetSlot());
     }
 
@@ -227,7 +233,14 @@ namespace Hydro
     {
         const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
-        glUniformMatrix2fv(Location, 1, false, Value.ValuePtr());
+        glUniformMatrix2fv(Location, 1, false, (const float*)&Value);
+    }
+
+    void OpenGLShader::SetUniformMat3(const std::string& Name, const Matrix3& Value)
+    {
+        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
+        glUniformMatrix3fv(Location, 1, false, (const float*)&Value);
     }
 
     float OpenGLShader::GetUniformFloat(const std::string& Name)
@@ -235,8 +248,8 @@ namespace Hydro
         const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
         if(!Location) \
         { \
-            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
-            HYDRO_LOG(Shader, Error, "Path: {}", m_Filepath.string()); \
+            HYDRO_LOG(Shader, Verbosity::Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
+            HYDRO_LOG(Shader, Verbosity::Error, "Path: {}", m_Filepath.string()); \
             return 0.0f; \
         }
 
@@ -250,8 +263,8 @@ namespace Hydro
         const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
         if(!Location) \
         { \
-            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
-            HYDRO_LOG(Shader, Error, "Path: {}", m_Filepath.string()); \
+            HYDRO_LOG(Shader, Verbosity::Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
+            HYDRO_LOG(Shader, Verbosity::Error, "Path: {}", m_Filepath.string()); \
             return {0.0f}; \
         }
 
@@ -265,8 +278,8 @@ namespace Hydro
         const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
         if(!Location) \
         { \
-            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
-            HYDRO_LOG(Shader, Error, "Path: {}", m_Filepath.string()); \
+            HYDRO_LOG(Shader, Verbosity::Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
+            HYDRO_LOG(Shader, Verbosity::Error, "Path: {}", m_Filepath.string()); \
             return {0.0f}; \
         }
 
@@ -280,8 +293,8 @@ namespace Hydro
         const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
         if(!Location) \
         { \
-            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
-            HYDRO_LOG(Shader, Error, "Path: {}", m_Filepath.string()); \
+            HYDRO_LOG(Shader, Verbosity::Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
+            HYDRO_LOG(Shader, Verbosity::Error, "Path: {}", m_Filepath.string()); \
             return {0.0f}; \
         }
 
@@ -295,8 +308,8 @@ namespace Hydro
         const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
         if(!Location) \
         { \
-            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
-            HYDRO_LOG(Shader, Error, "Path: {}", m_Filepath.string()); \
+            HYDRO_LOG(Shader, Verbosity::Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
+            HYDRO_LOG(Shader, Verbosity::Error, "Path: {}", m_Filepath.string()); \
             return Matrix4::Identity; \
         }
 
@@ -310,8 +323,8 @@ namespace Hydro
         const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
         if(!Location) \
         { \
-            HYDRO_LOG(Shader, Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", Name, m_Name); \
-            HYDRO_LOG(Shader, Error, "Path: {}", m_Filepath.string()); \
+            HYDRO_LOG(Shader, Verbosity::Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", Name, m_Name); \
+            HYDRO_LOG(Shader, Verbosity::Error, "Path: {}", m_Filepath.string()); \
             return 0; \
         }
 

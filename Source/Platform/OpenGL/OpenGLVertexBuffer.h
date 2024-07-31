@@ -12,7 +12,7 @@ namespace Hydro
         OpenGLVertexBuffer(Vertex* Data, size_t Count);
         ~OpenGLVertexBuffer() override;
         
-        void SendData() override;
+        void SendData(Vertex* Data, size_t Count) override;
         void Bind() const override;
         void Unbind() const override;
 

@@ -11,7 +11,7 @@ namespace Hydro
         ~OpenGLVertexArray() override;
         void Bind() const override;
         void Unbind() const override;
-        void SetBufferLayout() override;
+        void SetBufferLayout(const VertexBufferLayout& Layout) override;
     private:
         uint32_t m_Handle;
     };

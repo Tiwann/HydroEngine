@@ -6,12 +6,15 @@ namespace Hydro
     class OpenGLTexture2D : public Texture2D
     {
     public:
-        OpenGLTexture2D(const std::string& Name, uint32_t Slot);
+        OpenGLTexture2D(const std::string& Name, uint32_t Width, uint32_t Height, uint32_t Slot);
         ~OpenGLTexture2D() override;
+
         
         void SetImage(const Ref<Image>& Image) override;
         Ref<Image> GetImage() const override;
         void Bind() const override;
+
+        uintptr_t GetHandle() const override;
     private:
         uint32_t FormatToOpenGLFormat(ImageFormat Format) const;
         uint32_t FormatToType(ImageFormat Format) const;

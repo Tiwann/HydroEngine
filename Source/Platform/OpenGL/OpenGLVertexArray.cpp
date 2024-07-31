@@ -3,6 +3,8 @@
 #include "Core/Vertex.h"
 #include <glad/gl.h>
 
+#include "Core/VertexBufferLayout.h"
+
 namespace Hydro
 {
     OpenGLVertexArray::OpenGLVertexArray()
@@ -26,20 +28,14 @@ namespace Hydro
         glBindVertexArray(0);
     }
 
-    void OpenGLVertexArray::SetBufferLayout()
+    void OpenGLVertexArray::SetBufferLayout(const VertexBufferLayout& Layout)
     {
-        // Using this buffer layout by default with all attributes.
-        // Need a way to construct buffer layout easily
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
-
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TextureCoordinate));
-
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Normal));
-
-        glEnableVertexAttribArray(3);
-        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
+        for (size_t Att = 0; Att < Layout.Count(); Att++)
+        {
+            const VertexAttribute& Attribute = Layout[Att];
+            const size_t Count = GetNumComponents(Attribute.Type);
+            glEnableVertexAttribArray((GLuint)Att);
+            glVertexAttribPointer((GLuint)Att, (GLint)Count, GL_FLOAT, GL_FALSE, (GLsizei)Layout.Stride(), (const void*)Layout.GetOffset(Attribute));
+        }
     }
 }

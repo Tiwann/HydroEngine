@@ -8,52 +8,33 @@
 #include "Core/Vertex.h"
 #include <GLFW/glfw3.h>
 
-#include "Core/Rectangle.h"
+#include "Components/Camera.h"
 #include "Core/Shader.h"
 #include "Components/Transform.h"
 #include "Core/IndexBuffer.h"
+#include "Core/ShaderManager.h"
 #include "Core/VertexArray.h"
 #include "Core/VertexBuffer.h"
+#include "Core/VertexBufferLayout.h"
 
-#include "Math/Functions.h"
 #include "Math/LinearAlgebra.h"
 
-#define HYDRO_NO_UV_NO_NRM Vector2::Zero, Vector3::Zero
-#define HYDRO_NO_UV Vector2::Zero
-#define HYDRO_NO_NRM Vector3::Zero
-
-#define HYDRO_COMPILE_SHADER(Shader) \
-    if(!(Shader)->Compile()) \
-    {\
-        m_IsReady = false; \
-        return; \
-    } \
-    if(!(Shader)->Link()) \
-    {\
-        m_IsReady = false; \
-        return; \
-    } \
-    if(!(Shader)->Validate()) \
-    {\
-        m_IsReady = false; \
-        return; \
-    }((void)0)
-
+#include <glad/gl.h>
 
 namespace Hydro
 {
-    OpenGLRendererBackend::OpenGLRendererBackend() : RendererBackend()
+    bool OpenGLRendererBackend::Initialize()
     {
         Application& application = Application::GetCurrentApplication();
         HYDRO_LOG(OpenGL, Verbosity::Trace, "Creating OpenGL context");
-        glfwMakeContextCurrent(application.GetWindow().GetNativeWindow());
+        glfwMakeContextCurrent(application.GetWindow()->GetNativeWindow());
         glfwSwapInterval(true);
         
         if(!gladLoadGL(glfwGetProcAddress))
         {
             HYDRO_LOG(OpenGL, Verbosity::Error, "Failed to retrieve OpenGL function pointers!");
             application.RequireExit();
-            return;
+            return false;
         }
         
         const auto Callback = [](GLenum Source, GLenum, GLuint, GLenum Severity, GLsizei, const GLchar *Message, const void *) -> void
@@ -63,25 +44,30 @@ namespace Hydro
             HYDRO_LOG(OpenGL, Verbo, "Debug ({}): {}", SourceName, Message);
         };
 
+#if defined(HYDRO_DEBUG)
         glEnable(GL_DEBUG_OUTPUT);
-        glEnable(GL_MULTISAMPLE); 
         glDebugMessageCallback(Callback, nullptr);
+#endif
         
-        std::string Renderer = (const char*)glGetString(GL_RENDERER);
-        HYDRO_LOG(OpenGL, Info, "Using OpenGL 4.6");
-        HYDRO_LOG(OpenGL, Info, "Using GPU: {}", Renderer);
-        
-        m_IsReady = true;
+        glEnable(GL_MULTISAMPLE);
+
+        const std::string Renderer = (const char*)glGetString(GL_RENDERER);
+        HYDRO_LOG(OpenGL, Verbosity::Info, "Using OpenGL 4.6");
+        HYDRO_LOG(OpenGL, Verbosity::Info, "Using GPU: {}", Renderer);
+
+        return true;
     }
 
-    OpenGLRendererBackend::~OpenGLRendererBackend() = default;
+    void OpenGLRendererBackend::Destroy()
+    {
+    }
 
     void OpenGLRendererBackend::ClearDepthBuffer()
     {
         glClear(GL_DEPTH_BUFFER_BIT);
     }
 
-    void OpenGLRendererBackend::ClearColor(const Color& color)
+    void OpenGLRendererBackend::ClearColorBuffer(const Color& color)
     {
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(color.r, color.g, color.b, color.a);
@@ -89,138 +75,129 @@ namespace Hydro
 
     void OpenGLRendererBackend::SwapBuffers()
     {
-        glfwSwapBuffers(Application::GetCurrentApplication().GetWindow().GetNativeWindow());
+        glfwSwapBuffers(Application::GetCurrentApplication().GetWindow()->GetNativeWindow());
     }
-    
-    void OpenGLRendererBackend::DrawRect(const Rectangle& Rect, const Color& Color)
+
+    void OpenGLRendererBackend::Draw(DrawMode Mode, const Vao& VAO, uint32_t NumVert, const Ref<Shader>& Shader)
     {
-        uint32_t vao, vbo, ibo;
-        const Application& Application = Application::GetCurrentApplication();
-        const Window& Window = Application.GetWindow();
-        const float Width = (float)Window.GetWidth();
-        const float Height = (float)Window.GetHeight();
-        
-        const float X0 = Math::Map(Rect.X, 0.0f, Width, -1.0f, 1.0f);
-        const float Y0 = -Math::Map(Rect.Y, 0.0f, Height, -1.0f, 1.0f);
-        const float X1 = Math::Map(Rect.X + Rect.Width, 0.0f, Width, -1.0f, 1.0f);
-        const float Y1 = -Math::Map(Rect.Y, 0.0f, Height, -1.0f, 1.0f);
-        const float X2 = Math::Map(Rect.X + Rect.Width, 0.0f, Width, -1.0f, 1.0f);
-        const float Y2 = -Math::Map(Rect.Y + Rect.Height, 0.0f, Height, -1.0f, 1.0f);
-        const float X3 = Math::Map(Rect.X, 0.0f, Width, -1.0f, 1.0f);
-        const float Y3 = -Math::Map(Rect.Y + Rect.Height, 0.0f, Height, -1.0f, 1.0f);
-        
-        const Vertex vertices[4]
+        VAO->Bind();
+        Shader->Bind();
+        if(m_CurrentCamera)
         {
-            { { X0, Y0, 0.0f}, HYDRO_NO_UV_NO_NRM, Color },
-            { { X1, Y1, 0.0f}, HYDRO_NO_UV_NO_NRM, Color },
-            { { X2, Y2, 0.0f}, HYDRO_NO_UV_NO_NRM, Color },
-            { { X3, Y3, 0.0f}, HYDRO_NO_UV_NO_NRM, Color },
-        };
-
-        const uint32_t indices[6]
+            Shader->SetUniformMat4("uView", m_CurrentCamera->GetViewMatrix());
+            Shader->SetUniformMat4("uProjection", m_CurrentCamera->GetProjectionMatrix());
+        } else
         {
-            0, 1, 2, 0, 2, 3
-        };
-        
-        glCreateVertexArrays(1, &vao);
-        glBindVertexArray(vao);
-        
-        glCreateBuffers(1, &vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(Vertex), vertices, GL_STATIC_DRAW);
-        
-        glCreateBuffers(1, &ibo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(uint32_t), indices, GL_STATIC_DRAW);
-        
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Hydro::Vertex, Position));
+            HYDRO_LOG(OpenGL, Verbosity::Warning, "No camera component found! No view-projection matrix sent.");
+        }
 
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Hydro::Vertex, TextureCoordinate));
-
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Hydro::Vertex, Normal));
-
-        glEnableVertexAttribArray(3);
-        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Hydro::Vertex, Color));
-        
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-        
-        glDeleteBuffers(1, &ibo);
-        glDeleteBuffers(1, &vbo);
-        glDeleteVertexArrays(1, &vao);
+        glDrawArrays(GetOpenGLDrawMode(Mode), 0, NumVert);
     }
 
-    void OpenGLRendererBackend::DrawCircle(const Rectangle& Rect, float Radius, const Color& Color)
-    {
-        uint32_t vao, vbo, ibo;
-        const Application& Application = Application::GetCurrentApplication();
-        const Window& Window = Application.GetWindow();
-        const float Width = (float)Window.GetWidth();
-        const float Height = (float)Window.GetHeight();
-
-
-        const float X0 = Math::Map(Rect.X, 0.0f, Width, -1.0f, 1.0f);
-        const float Y0 = -Math::Map(Rect.Y, 0.0f, Height, -1.0f, 1.0f);
-        const float X1 = Math::Map(Rect.X + Rect.Width, 0.0f, Width, -1.0f, 1.0f);
-        const float Y1 = -Math::Map(Rect.Y, 0.0f, Height, -1.0f, 1.0f);
-        const float X2 = Math::Map(Rect.X + Rect.Width, 0.0f, Width, -1.0f, 1.0f);
-        const float Y2 = -Math::Map(Rect.Y + Rect.Height, 0.0f, Height, -1.0f, 1.0f);
-        const float X3 = Math::Map(Rect.X, 0.0f, Width, -1.0f, 1.0f);
-        const float Y3 = -Math::Map(Rect.Y + Rect.Height, 0.0f, Height, -1.0f, 1.0f);
-        
-        const Vertex vertices[4]
-        {
-            { { X0, Y0, 0.0f}, { 0.0f, 1.0f}, HYDRO_NO_NRM, Color },
-            { { X1, Y1, 0.0f}, { 1.0f, 1.0f}, HYDRO_NO_NRM, Color },
-            { { X2, Y2, 0.0f}, { 1.0f, 0.0f}, HYDRO_NO_NRM, Color },
-            { { X3, Y3, 0.0f}, { 0.0f, 0.0f}, HYDRO_NO_NRM, Color },
-        };
-
-        constexpr uint32_t indices[6]
-        {
-            0, 1, 2, 0, 2, 3
-        };
-        
-        glCreateVertexArrays(1, &vao);
-        glBindVertexArray(vao);
-        
-        glCreateBuffers(1, &vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(Vertex), vertices, GL_STATIC_DRAW);
-        
-        glCreateBuffers(1, &ibo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(uint32_t), indices, GL_STATIC_DRAW);
-        
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Hydro::Vertex, Position));
-
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Hydro::Vertex, TextureCoordinate));
-
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Hydro::Vertex, Normal));
-
-        glEnableVertexAttribArray(3);
-        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Hydro::Vertex, Color));
-        
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-        
-        glDeleteBuffers(1, &ibo);
-        glDeleteBuffers(1, &vbo);
-        glDeleteVertexArrays(1, &vao);
-    }
-
-    void OpenGLRendererBackend::DrawIndexed(const Ref<VertexArray>& VAO, const Ref<VertexBuffer>& VBO,
-        const Ref<IndexBuffer>& IBO, const Ref<Shader>& Shader)
+    void OpenGLRendererBackend::DrawIndexed(DrawMode Mode, const Ref<VertexArray>& VAO, const Ref<VertexBuffer>& VBO, const Ref<IndexBuffer>& IBO, const Ref<Shader>& Shader)
     {
         VAO->Bind();
         VBO->Bind();
         IBO->Bind();
         Shader->Bind();
-        glDrawElements(GL_TRIANGLES, (GLsizei)IBO->Count(), GL_UNSIGNED_INT, nullptr);
+        if(m_CurrentCamera)
+        {
+            Shader->SetUniformMat4("uView", m_CurrentCamera->GetViewMatrix());
+            Shader->SetUniformMat4("uProjection", m_CurrentCamera->GetProjectionMatrix());
+        } else
+        {
+            HYDRO_LOG(OpenGL, Verbosity::Warning, "No camera component found! No view-projection matrix sent.");
+        }
+        glDrawElements(GetOpenGLDrawMode(Mode), (GLsizei)IBO->Count(), GL_UNSIGNED_INT, nullptr);
+    }
+
+    void OpenGLRendererBackend::DrawLine(const Vector3& PointA, const Vector3& PointB, float Thickness, const Color& Color)
+    {
+        auto vao = VertexArray::Create();
+        vao->Bind();
+        Vertex Points[] ={
+            { PointA, Vector2::Zero, Vector3::Zero, Color },    
+            { PointB, Vector2::Zero, Vector3::Zero, Color },    
+        };
+        auto vbo = VertexBuffer::Create(Points, std::size(Points));
+        auto ibo = IndexBuffer::Create({0, 1});
+
+        vao->SetBufferLayout(VertexBufferLayout::Default);
+        
+        auto shader = m_Application.GetShaderManager().Retrieve("UniformColor");
+        shader->Bind();
+        
+
+        Matrix4 Model = Matrix4::Identity;
+        Model.Scale({1.0f, 1.0f, 1.0f});
+        shader->SetUniformMat4("uModel", Model);
+        
+        glLineWidth(Thickness);
+    
+        DrawIndexed(DrawMode::Lines, vao, vbo, ibo, shader);
+    }
+
+    void OpenGLRendererBackend::DrawWireBox(const Vector3& Position, const Vector2& HalfExtents, float Thickness, const Color& Color)
+    {
+        auto vao = VertexArray::Create();
+        vao->Bind();
+        Vertex Points[] ={
+            { Position + Vector3(-HalfExtents.x, HalfExtents.y, 0.0f) , Vector2::Zero, Vector3::Zero, Color },    
+            { Position + Vector3(+HalfExtents.x, HalfExtents.y, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
+            { Position + Vector3(+HalfExtents.x, -HalfExtents.y, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
+            { Position + Vector3(-HalfExtents.x, -HalfExtents.y, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
+        };
+        auto vbo = VertexBuffer::Create(Points, std::size(Points));
+        auto ibo = IndexBuffer::Create({0, 1, 2, 3});
+
+        vao->SetBufferLayout(VertexBufferLayout::Default);
+        
+        auto shader = m_Application.GetShaderManager().Retrieve("UniformColor");
+        shader->Bind();
+        
+
+        Matrix4 Model = Matrix4::Identity;
+        Model.Scale({1.0f, 1.0f, 1.0f});
+        shader->SetUniformMat4("uModel", Model);
+        
+        glLineWidth(Thickness);
+    
+        DrawIndexed(DrawMode::LineLoop, vao, vbo, ibo, shader);
+    }
+
+    void OpenGLRendererBackend::SetCullMode(CullMode Mode)
+    {
+        switch(Mode)
+        {
+        case CullMode::FrontFace:
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_FRONT);
+            break;
+        case CullMode::BackFace:
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_BACK);
+            break;
+        case CullMode::FrontAndBackFaces:
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_FRONT_AND_BACK);
+            break;
+        case CullMode::None:
+            glDisable(GL_CULL_FACE);
+            break;
+        }
+    }
+
+    GLenum OpenGLRendererBackend::GetOpenGLDrawMode(DrawMode Mode)
+    {
+        switch (Mode)
+        {
+        case DrawMode::Points: return GL_POINTS;
+        case DrawMode::Lines: return GL_LINES;
+        case DrawMode::LineStrip: return GL_LINE_STRIP;
+        case DrawMode::Triangles: return GL_TRIANGLES;
+        case DrawMode::LineLoop: return GL_LINE_LOOP;
+        }
+        return 0;
     }
 
 
@@ -242,11 +219,11 @@ namespace Hydro
     {
         switch (Severity)
         {
-        case GL_DEBUG_SEVERITY_HIGH: return Error;
+        case GL_DEBUG_SEVERITY_HIGH: return Verbosity::Error;
         case GL_DEBUG_SEVERITY_MEDIUM:
-        case GL_DEBUG_SEVERITY_LOW: return Warning;
+        case GL_DEBUG_SEVERITY_LOW: return Verbosity::Warning;
         case GL_DEBUG_SEVERITY_NOTIFICATION:
-        default: return Trace;
+        default: return Verbosity::Trace;
         }
     }
 }

@@ -23,10 +23,12 @@ namespace Hydro
         void SetUniformFloat2(const std::string& Name, const Vector2& Value) override;
         void SetUniformFloat3(const std::string& Name, const Vector3& Value) override;
         void SetUniformFloat4(const std::string& Name, const Vector4& Value) override;
-        void SetUniformMat4(const std::string& Name, const Matrix4& Value) override;
         void SetUniformInt(const std::string& Name, int32_t Value) override;
         void SetUniformTexture(const std::string& Name, const Ref<Texture2D>& Texture) override;
         void SetUniformMat2(const std::string& Name, const Matrix2& Value) override;
+        void SetUniformMat3(const std::string& Name, const Matrix3& Value) override;
+        void SetUniformMat4(const std::string& Name, const Matrix4& Value) override;
+
         float GetUniformFloat(const std::string& Name) override;
         Vector2 GetUniformFloat2(const std::string& Name) override;
         Vector3 GetUniformFloat3(const std::string& Name) override;
