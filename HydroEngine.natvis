@@ -47,4 +47,8 @@
             <DisplayString>{M03 = {m_Data[0 + 3]}, M13 = {m_Data[0 + 3]}, M23 = {m_Data[0 + 3]}, M33 = {m_Data[0 + 3]}}</DisplayString>  
         </Expand>
     </Type>
+    
+    <Type Name="Hydro::V4IPAdress">
+        <DisplayString>{m_Bits[0]}.{m_Bits[1]}.{m_Bits[2]}.{m_Bits[3]}:{m_Port}</DisplayString>
+    </Type>
 </AutoVisualizer>

@@ -1,5 +1,5 @@
-group "HydroFramework"
-project "Hydro"
+
+project "HydroEngine"
 	kind "StaticLib"
 	staticruntime "On"
 	language "C++"
@@ -19,13 +19,10 @@ project "Hydro"
 	{
 		"Source/**.h",
 		"Source/**.cpp",
-		"Include/**.h",
+		"Include/Hydro/Hydro.h",
 		"Source/**.glsl",
-		"Source/**.vert",
-		"Source/**.frag",
-		"Shaders/**.h",
-		"Hydro.lua",
-		"Hydro.natvis"
+		"HydroEngine.lua",
+		"HydroEngine.natvis"
 	}
 	
 	pchheader "HydroPCH.h"
@@ -35,15 +32,17 @@ project "Hydro"
 	{
 	    "Source",
 		"%{libs.glfw}/include",
+		"%{libs.glad}/include",
 		"%{libs.stb}/include",
 		"%{libs.Vulkan}/Include",
-		"%{libs.glad}/include",
 		"%{libs.spdlog}/include",
 		"%{libs.yaml}/include",
 		"%{libs.ufbx}/include",
 		"%{libs.box2d}/include",
 		"%{libs.imgui}/include",
 		"%{libs.imgui}/backends",
+		"%{libs.Jolt}",
+		"%{libs.miniaudio}/include",
 	}
 
 	links
@@ -54,17 +53,18 @@ project "Hydro"
 		"yaml-cpp",
 		"ufbx",
 		"box2d",
-		"imgui"
+		"imgui",
+		"Jolt",
+		"miniaudio"
 	}
 
 	defines 
 	{  
 	    "HYDRO_CORE",
-	    "HYDRO_SHADER_DIR=\"%{wks.location}/Binaries/%{cfg.buildcfg}-%{cfg.system}/Shaders\"",
-	    "HYDRO_SHADER_CACHE_DIRECTORY=\"Assets/ShaderCache/\"",
 	    "HYDRO_USE_DEFAULT_OPENGL_SHADER_COMPILER",
 		"YAML_CPP_STATIC_DEFINE",
-		"_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING"
+		"_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING",
+		
 	}
 
 	filter "Configurations:*Vulkan"
