@@ -17,6 +17,7 @@ namespace Hydro
         ApplicationConfigurationSerializer(const Path& Filepath);
         bool Serialize(const ApplicationConfiguration& Configuration) override;
         bool Deserialize(ApplicationConfiguration& OutConfiguration) override;
+        void ReOpen();
 
     private:
         void SerializeSwapchainBufferType(YAML::Emitter& Yaml, GraphicsSettings::SwapchainBufferType SwapchainBufferType);
