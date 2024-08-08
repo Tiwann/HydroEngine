@@ -1,10 +1,13 @@
 ﻿#include "HydroPCH.h"
 #include "Shader.h"
+
+#include "Application.h"
 #include "Assertion.h"
 #include "Log.h"
 #include "LogVerbosity.h"
 #include "Platform/PlatformShader.h"
 #include "Macros.h"
+#include "PopupMessage.h"
 
 namespace Hydro
 {
@@ -34,26 +37,27 @@ namespace Hydro
     {
         const Path AbsolutePath = weakly_canonical(m_Filepath);
         const std::string ShaderName = GetName();
-        HYDRO_LOG(Shader, Trace, "Loading shader source: {}", ShaderName);
+        HYDRO_LOG(Shader, Verbosity::Trace, "Loading shader source: {}", ShaderName);
         
         if(!File::Exists(AbsolutePath))
         {
-            HYDRO_LOG(Shader, Error, "Cannot load shader: File doesn't exist!");
-            HYDRO_LOG(Shader, Error, "File: {}", m_Filepath.string());
+            constexpr std::string_view Message("Cannot load shader: File doesn't exist!");
+            HYDRO_LOG(Shader, Verbosity::Error, Message);
+            HYDRO_LOG(Shader, Verbosity::Error, "File: {}", m_Filepath.string());
             return;
         }
         
         const std::string FileContent = File::ReadToString(AbsolutePath);
         SplitSources(FileContent);
 
-        HYDRO_LOG(Shader, Trace, "Preprocessing shader...", AbsolutePath.string());
+        HYDRO_LOG(Shader, Verbosity::Trace, "Preprocessing shader \"{}\"", ShaderName);
         if(!Preprocess(m_Source.Vertex) || !Preprocess(m_Source.Fragment))
         {
-            HYDRO_LOG(Shader, Info, "Shader preprocess failed. File {}.", AbsolutePath.string());
+            HYDRO_LOG(Shader, Verbosity::Info, "Shader preprocess failed. File {}.", ShaderName);
             return;
         }
         
-        HYDRO_LOG(Shader, Info, "Shader successfully loaded shader source from: {}", AbsolutePath.string());
+        HYDRO_LOG(Shader, Verbosity::Info, "Shader successfully loaded shader source from: {}", ShaderName);
     }
     
 
@@ -61,9 +65,9 @@ namespace Hydro
         : m_Name(std::move(Name)), m_SourceLanguage(Language)
     {
         const std::string Source((const char*)Buffer.GetData(), Buffer.Count());
-        HYDRO_LOG(Shader, Trace, "Loading shader source from memory", m_Filepath.string());
+        HYDRO_LOG(Shader, Verbosity::Trace, "Loading shader source from memory");
         SplitSources(Source);
-        HYDRO_LOG(Shader, Info, "Shader successfully loaded shader source from memory!", m_Filepath.string());
+        HYDRO_LOG(Shader, Verbosity::Info, "Shader successfully loaded shader source from memory!");
     }
 
     Shader::Shader(std::string Name, const ShaderSource& ShaderSource, ShaderSourceLanguage Language)
@@ -104,7 +108,7 @@ namespace Hydro
             const Path IncludePath = weakly_canonical(weakly_canonical(Directory) / Path(IncludeStr));
             if(!File::Exists(IncludePath))
             {
-                HYDRO_LOG(Shader, Error, "Failed to preprocess shader: File {} dooesn't exist!", IncludePath.string());
+                HYDRO_LOG(Shader, Verbosity::Error, "Failed to preprocess shader: File {} dooesn't exist!", IncludePath.string());
                 return false;
             }
 

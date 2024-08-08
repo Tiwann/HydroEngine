@@ -2,7 +2,7 @@
 
 namespace Hydro
 {
-    using Verbosity = enum Verbosity
+    enum class Verbosity
     {
         Trace,
         Info,

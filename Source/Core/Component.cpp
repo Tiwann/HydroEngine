@@ -6,25 +6,20 @@
 namespace Hydro
 {
     
-    Component::Component(std::string Name) : m_Name(std::move(Name)), m_Enabled(true)
+    Component::Component(GameObject* Owner, std::string Name) : m_Name(std::move(Name)), m_Enabled(true), m_GameObject(Owner)
     {
+    }
+
+    Component::~Component()
+    {
+        OnDestroy();
     }
 
     const std::string& Component::GetName() const
     {
         return m_Name;
     }
-
-    GameObject& Component::GetGameObject()
-    {
-        return *m_GameObject;
-    }
-
-    const GameObject& Component::GetGameObject() const
-    {
-        return *m_GameObject;
-    }
-
+    
     Ref<Transform> Component::GetTransform() const
     {
         return m_GameObject->GetTransform();
@@ -35,5 +30,10 @@ namespace Hydro
         if(m_Enabled == Enabled)
             return;
         m_Enabled = Enabled;
+    }
+
+    GUID Component::GetGuid() const
+    {
+        return m_Guid;
     }
 }

@@ -5,13 +5,13 @@ namespace Hydro
 {
     struct GraphicsSettings
     {
-        using SwapchainBufferType = enum : uint32_t
+        enum class SwapchainBufferType
         {
             DoubleBuffering = 2,
             TripleBuffering = 3
         };
         
-        SwapchainBufferType BufferType;
+        SwapchainBufferType BufferType = SwapchainBufferType::TripleBuffering;
         static GraphicsSettings DefaultSettings;
     };
 }

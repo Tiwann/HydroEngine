@@ -7,7 +7,7 @@
 #include <string>
 namespace Hydro {
 
-	using ImageFormat = enum
+	enum class ImageFormat
 	{
 		RGBA8,
 		RGBA16,
@@ -17,9 +17,9 @@ namespace Hydro {
 	static constexpr std::string FormatToString(ImageFormat Format)
 	{
 		switch (Format) {
-		case RGBA8: return "RGBA8 (Unsigned Bytes)";
-		case RGBA16: return "RGBA16 (Unsigned Shorts)";
-		case RGBA32F: return "RGBA32F (Floats)";
+		case ImageFormat::RGBA8: return "RGBA8 (Unsigned Bytes)";
+		case ImageFormat::RGBA16: return "RGBA16 (Unsigned Shorts)";
+		case ImageFormat::RGBA32F: return "RGBA32F (Floats)";
 		}
 		return "";
 	}
@@ -30,14 +30,14 @@ namespace Hydro {
 		Image(uint32_t Width, uint32_t Height, ImageFormat Format, const void* Pixels)
 			: m_Width(Width), m_Height(Height), m_Format(Format)
 		{
-			const size_t Size = m_Format == RGBA8 ? 1 : m_Format == RGBA16 ? 2 : 4;
+			const size_t Size = m_Format == ImageFormat::RGBA8 ? 1 : m_Format == ImageFormat::RGBA16 ? 2 : 4;
 			m_Pixels = malloc(m_Width * m_Height * 4 * Size);
 			std::copy_n((uint8_t*)Pixels, Size, (uint8_t*)m_Pixels);
 		}
 
-		Image(const std::filesystem::path& filepath, ImageFormat format);
-		Image(const Buffer<uint8_t>& buffer, ImageFormat format);
-		Image(const BufferView<uint8_t>& buffer, ImageFormat format);
+		Image(const Path& Filepath, ImageFormat Fmt);
+		Image(const Buffer<uint8_t>& Buffer, ImageFormat Fmt);
+		Image(const BufferView<uint8_t>& Buffer, ImageFormat Fmt);
 		~Image();
 		
 		static Ref<Image> Create(const Path& Filepath, ImageFormat Format);
@@ -54,7 +54,7 @@ namespace Hydro {
 	
 	private:
 		uint32_t m_Width{0}, m_Height{0};
-		ImageFormat m_Format{RGBA8};
+		ImageFormat m_Format{ImageFormat::RGBA8};
 		void* m_Pixels{nullptr};
 	};
 }

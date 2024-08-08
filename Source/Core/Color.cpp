@@ -28,7 +28,7 @@ namespace Hydro
 
     Color::operator Vector4() const
     {
-        return { r, g, b, a};
+        return { r, g, b, a };
     }
 
     Color Color::FromHSL(float hue, float saturation, float lightness, float alpha)

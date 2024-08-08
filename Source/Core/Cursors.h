@@ -5,7 +5,7 @@ namespace Hydro
 {
     class Window;
     
-    using StandardCursors = enum
+    enum class StandardCursors
     {
         Arrow,
         IBeam,

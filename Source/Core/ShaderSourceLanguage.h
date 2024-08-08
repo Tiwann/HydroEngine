@@ -2,7 +2,7 @@
 
 namespace Hydro
 {
-    using ShaderSourceLanguage = enum ShaderSourceLanguage
+    enum class ShaderSourceLanguage
     {
         GLSL,
         HLSL

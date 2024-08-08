@@ -16,6 +16,7 @@ namespace Hydro
     class Shader
     {
     public:
+        virtual ~Shader() = default;
         virtual bool Compile() = 0;
         virtual bool Link() = 0;
         virtual bool Validate() = 0;
@@ -30,7 +31,7 @@ namespace Hydro
         virtual void SetUniformInt(const std::string& Name, int32_t Value){}
         virtual void SetUniformTexture(const std::string& Name, const Ref<Texture2D>& Texture){}
         virtual void SetUniformMat2(const std::string& Name, const Matrix2& Value){}
-        
+        virtual void SetUniformMat3(const std::string& Name, const Matrix3& Value){}
 
         virtual float GetUniformFloat(const std::string& Name){ return 0.0f; }
         virtual Vector2 GetUniformFloat2(const std::string& Name){ return Vector2::Zero; }
@@ -41,10 +42,11 @@ namespace Hydro
         
         std::string GetFilename() const;
         
+
         static Ref<Shader> Create(const std::string& Name, const Path& Filepath, ShaderSourceLanguage Language);
         static Ref<Shader> Create(const std::string& Name, const Buffer<uint8_t>& Buffer, ShaderSourceLanguage Language);
         static Ref<Shader> Create(const std::string& Name, const ShaderSource& ShaderSource, ShaderSourceLanguage Language);
-        virtual ~Shader() = default;
+    
 
         
     protected:

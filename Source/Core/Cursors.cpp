@@ -28,12 +28,12 @@ namespace Hydro
     int Cursor::StandardCursorConvert(StandardCursors Cursors)
     {
         switch (Cursors) {
-        case Arrow: return GLFW_ARROW_CURSOR;
-        case IBeam: return GLFW_IBEAM_CURSOR;
-        case Crosshair: return GLFW_CROSSHAIR_CURSOR;
-        case Hand: return GLFW_HAND_CURSOR;
-        case HorizontalResize: return GLFW_HRESIZE_CURSOR;
-        case VerticalResize: return GLFW_VRESIZE_CURSOR;
+        case StandardCursors::Arrow: return GLFW_ARROW_CURSOR;
+        case StandardCursors::IBeam: return GLFW_IBEAM_CURSOR;
+        case StandardCursors::Crosshair: return GLFW_CROSSHAIR_CURSOR;
+        case StandardCursors::Hand: return GLFW_HAND_CURSOR;
+        case StandardCursors::HorizontalResize: return GLFW_HRESIZE_CURSOR;
+        case StandardCursors::VerticalResize: return GLFW_VRESIZE_CURSOR;
         }
         return 0;
     }

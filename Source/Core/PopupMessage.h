@@ -7,7 +7,7 @@
 
 namespace Hydro
 {
-    using PopupMessageResponse = enum class PopupMessageResponse
+    enum class PopupMessageResponse
     {
         None,
         OK,
@@ -19,7 +19,7 @@ namespace Hydro
         AbortRetryIgnore
     };
 
-    using PopupMessageResult = enum class PopupMessageResult
+    enum class PopupMessageResult
     {
         None,
         OK,
@@ -33,7 +33,7 @@ namespace Hydro
         Ignore
     };
 
-    using PopupMessageIcon = enum class PopupMessageIcon
+    enum class PopupMessageIcon
     {
         Error,
         Question,
@@ -45,11 +45,11 @@ namespace Hydro
     
     class PopupMessage
     {
-        using PopupMessageAction = MulticastDelegate<>;
+        using PopupMessageAction = MulticastDelegate<void()>;
     public:
-        HYDRO_NO_COPYABLE_NO_MOVABLE(PopupMessage);
+        HYDRO_NOT_COPYABLE_NOT_MOVABLE(PopupMessage);
         PopupMessage(HYDRO_POPUPMESSAGE_SIGNATURE);
-        virtual ~PopupMessage() = default;
+        virtual ~PopupMessage();
         
         std::string Title;
         std::string Message;

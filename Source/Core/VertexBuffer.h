@@ -13,7 +13,7 @@ namespace Hydro
         virtual ~VertexBuffer() = default;
         static Ref<VertexBuffer> Create(Vertex* Data, size_t Count);
 
-        virtual void SendData() = 0;
+        virtual void SendData(Vertex* Data, size_t Count) = 0;
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
 

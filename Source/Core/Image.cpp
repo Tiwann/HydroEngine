@@ -5,59 +5,59 @@
 
 namespace Hydro
 {
-    Image::Image(const std::filesystem::path& filepath, ImageFormat format): m_Format(format), m_Pixels(nullptr)
+    Image::Image(const std::filesystem::path& Filepath, ImageFormat Fmt): m_Format(Fmt), m_Pixels(nullptr)
     {
         stbi_set_flip_vertically_on_load(true);
         switch (m_Format)
         {
         case ImageFormat::RGBA8:
-            m_Pixels = stbi_load(filepath.string().c_str(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_load(Filepath.string().c_str(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
             break;
         
         case ImageFormat::RGBA16:
-            m_Pixels = stbi_load_16(filepath.string().c_str(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_load_16(Filepath.string().c_str(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
             break;
         
         case ImageFormat::RGBA32F:
-            m_Pixels = stbi_loadf(filepath.string().c_str(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_loadf(Filepath.string().c_str(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
             break;
         }
     }
 
-    Image::Image(const Buffer<uint8_t>& buffer, ImageFormat format) : m_Format(format), m_Pixels(nullptr)
+    Image::Image(const Buffer<uint8_t>& Buffer, ImageFormat Fmt) : m_Format(Fmt), m_Pixels(nullptr)
     {
         stbi_set_flip_vertically_on_load(true);
         switch (m_Format)
         {
         case ImageFormat::RGBA8:
-            m_Pixels = stbi_load_from_memory(buffer.GetData(), (int)buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_load_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
             break;
         
         case ImageFormat::RGBA16:
-            m_Pixels = stbi_load_16_from_memory(buffer.GetData(), (int)buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_load_16_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
             break;
         
         case ImageFormat::RGBA32F:
-            m_Pixels = stbi_loadf_from_memory(buffer.GetData(), (int)buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_loadf_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
             break;
         }
     }
 
-    Image::Image(const BufferView<uint8_t>& buffer, ImageFormat format) : m_Format(format), m_Pixels(nullptr)
+    Image::Image(const BufferView<uint8_t>& Buffer, ImageFormat Fmt) : m_Format(Fmt), m_Pixels(nullptr)
     {
         stbi_set_flip_vertically_on_load(true);
         switch (m_Format)
         {
         case ImageFormat::RGBA8:
-            m_Pixels = stbi_load_from_memory(buffer.GetData(), (int)buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_load_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
             break;
         
         case ImageFormat::RGBA16:
-            m_Pixels = stbi_load_16_from_memory(buffer.GetData(), (int)buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_load_16_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
             break;
         
         case ImageFormat::RGBA32F:
-            m_Pixels = stbi_loadf_from_memory(buffer.GetData(), (int)buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_loadf_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
             break;
         }
     }
@@ -79,7 +79,7 @@ namespace Hydro
 
     size_t Image::GetSize() const
     {
-        return m_Width * m_Height * 4 * (((m_Format == RGBA8) ? 1 : (m_Format == RGBA16)) ? 2 : 4);
+        return m_Width * m_Height * 4 * (((m_Format == ImageFormat::RGBA8) ? 1 : (m_Format == ImageFormat::RGBA16)) ? 2 : 4);
     }
 
     const void* Image::GetData() const

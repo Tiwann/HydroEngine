@@ -73,52 +73,6 @@ namespace Hydro
         return m_Handle;
     }
     
-    void Window::SetCloseCallback(Function<void, GLFWwindow*> function) const
-    {
-        glfwSetWindowCloseCallback(m_Handle, function);
-    }
-    
-    void Window::SetResizeCallback(Function<void, GLFWwindow*, int, int> function) const
-    {
-        glfwSetWindowSizeCallback(m_Handle, function);
-    }
-    
-    void Window::SetPositionCallback(Function<void, GLFWwindow*, int, int> function) const
-    {
-        glfwSetWindowPosCallback(m_Handle, function);
-    }
-    
-    void Window::SetFocusCallback(Function<void, GLFWwindow*, int> function) const
-    {
-        glfwSetWindowFocusCallback(m_Handle, function);
-    }
-    
-    void Window::SetMaximizeCallback(Function<void, GLFWwindow*, int> function) const
-    {
-        glfwSetWindowMaximizeCallback(m_Handle, function);
-    }
-
-    void Window::SetIconifyCallback(Function<void, GLFWwindow*, int> function) const
-    {
-        glfwSetWindowIconifyCallback(m_Handle, function);
-    }
-
-    void Window::SetKeyCallback(Function<void, GLFWwindow*, int, int, int, int> function) const
-    {
-        glfwSetKeyCallback(m_Handle, function);
-    }
-
-    void Window::SetFramebufferCallback(Function<void, GLFWwindow*, int, int> function) const
-    {
-        glfwSetFramebufferSizeCallback(m_Handle, function);
-    }
-
-    void Window::SetRefreshCallback(Function<void, GLFWwindow*> function) const
-    {
-        glfwSetWindowRefreshCallback(m_Handle, function);
-    }
-    
-
     bool Window::ShouldClose() const
     {
         return glfwWindowShouldClose(m_Handle);
@@ -129,19 +83,15 @@ namespace Hydro
         return m_Handle;
     }
 
-    uint32_t Window::GetWidth() const
+
+    Vector2 Window::GetSize() const
     {
-        return m_Width;
+        return { GetWidth<float>(), GetHeight<float>() };
     }
 
-    uint32_t Window::GetHeight() const
+    Vector2 Window::GetCenter() const
     {
-        return m_Height;
-    }
-
-    glm::uvec2 Window::GetCenter() const
-    {
-        return { m_Width / 2, m_Height / 2 };
+        return { (float)m_Width / 2, (float)m_Height / 2 };
     }
 
     const std::string& Window::GetName() const
@@ -152,7 +102,7 @@ namespace Hydro
     void Window::SetIcon(const std::string& filepath) const
     {
         Buffer ImageData(File::ReadToBuffer(filepath));
-        const Image icon(ImageData, RGBA8);
+        const Image icon(ImageData, ImageFormat::RGBA8);
         const GLFWimage glfw_image{(int)icon.GetWidth(), (int)icon.GetHeight(), (uint8_t*)icon.GetData()};
         glfwSetWindowIcon(m_Handle, 1, &glfw_image);
         ImageData.Free();

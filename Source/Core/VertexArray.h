@@ -3,6 +3,11 @@
 
 namespace Hydro
 {
+    class VertexBufferLayout;
+}
+
+namespace Hydro
+{
     class VertexArray
     {
     public:
@@ -11,7 +16,7 @@ namespace Hydro
 
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
-        virtual void SetBufferLayout() = 0;
+        virtual void SetBufferLayout(const VertexBufferLayout& Layout) = 0;
         static Ref<VertexArray> Create();
     };
 }

@@ -40,4 +40,9 @@ namespace Hydro::Memory
     {
         HYDRO_FREE(Ptr);
     }
+
+    inline void* Memcpy(void* Destination, const void* Source, size_t Size)
+    {
+        return std::memcpy(Destination, Source, Size);
+    }
 }

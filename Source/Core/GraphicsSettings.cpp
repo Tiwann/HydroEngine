@@ -3,5 +3,5 @@
 
 namespace Hydro
 {
-    GraphicsSettings GraphicsSettings::DefaultSettings = { GraphicsSettings::DoubleBuffering };    
+    GraphicsSettings GraphicsSettings::DefaultSettings = { SwapchainBufferType::TripleBuffering };    
 }

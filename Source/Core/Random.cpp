@@ -27,19 +27,8 @@ namespace Hydro
         return Distribution(s_RandomDevice);
     }
 
-    glm::vec2 Random::Vector2(glm::vec2::value_type MinX, glm::vec2::value_type MaxX, glm::vec2::value_type MinY,
-        glm::vec2::value_type MaxY)
+    Vector2 Random::Vector2(float MinX, float MaxX, float MinY, float MaxY)
     {
         return { Float(MinX, MaxX), Float(MinY, MaxY) };
-    }
-
-    Rectangle Random::Rect(glm::vec2 MinPos, glm::vec2 MaxPos, glm::vec2 MinMaxWidth, glm::vec2 MinMaxHeight)
-    {
-        Rectangle Rect;
-        Rect.X = Float(MinPos.x, MaxPos.x);
-        Rect.Y = Float(MinPos.y, MaxPos.y);
-        Rect.Width = Float(MinMaxWidth.x, MinMaxWidth.y);
-        Rect.Height = Float(MinMaxHeight.x, MinMaxHeight.y);
-        return Rect;
     }
 }

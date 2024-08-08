@@ -1,15 +1,17 @@
 #pragma once
-#include "Function.h"
-
+#include <functional>
 #include <vector>
+
+#define HYDRO_BIND_EVENT(Event, Func) (Event).BindMember(this, (Func))
+#define HYDRO_BIND_EVENT_AS(Event, As, Func) (Event).BindMember<As>(this, (Func))
 
 namespace Hydro
 {
-	template<typename... Params>
+	template<typename Signature>
 	class MulticastDelegate
 	{
 	public:
-		using DelegateType = Function<void, Params...>;
+		using DelegateType = std::function<Signature>;
 		MulticastDelegate() = default;
 
 		bool IsBound() const { return !m_Subscribers.empty(); }
@@ -17,6 +19,15 @@ namespace Hydro
 		void Bind(DelegateType Subscriber)
 		{
 			m_Subscribers.push_back(Subscriber);
+		}
+
+		template<typename Class, typename... Args>
+		void BindMember(Class* Instance, void (Class::*MemberFunc)(Args...))
+		{
+			Bind([Instance, MemberFunc](Args... args)
+			{
+				(Instance->*MemberFunc)(std::forward<Args>(args)...);
+			});
 		}
 
 		void operator+=(DelegateType Subscriber)
@@ -39,13 +50,13 @@ namespace Hydro
 		{
 			m_Subscribers.clear();
 		}
-		
+
+		template<typename... Params>
 		void Broadcast(Params... Parameters)
 		{
-			for (auto it = m_Subscribers.begin(); it != m_Subscribers.end(); ++it)
+			for (const auto& Delegate : m_Subscribers)
 			{
-				DelegateType* Delegate = &(*it);
-				(void)Delegate->CallChecked(std::forward<Params>(Parameters)...);
+				Delegate(std::forward<Params>(Parameters)...);
 			}
 		}
 

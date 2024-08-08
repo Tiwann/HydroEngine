@@ -1,7 +1,7 @@
 #pragma once
 #include "SharedPointer.h"
-
 #include <spdlog/logger.h>
+#include "Macros.h"
 #include <string>
 
 #if defined(HYDRO_CORE)
@@ -15,7 +15,7 @@
         case Hydro::Verbosity::Error:      Hydro::Log::GetCoreLogger().error(__VA_ARGS__); break; \
         }((void)0)
     #else
-        #define HYDRO_LOG(CategoryName, Verbosity, ...)    HYDRO_VOID
+        #define HYDRO_LOG(CategoryName, Verbosity, ...) HYDRO_VOID
     #endif
 #else
     #if defined(HYDRO_DEBUG)

@@ -4,30 +4,24 @@
 #include "Application.h"
 #include "Scene.h"
 #include "Components/Transform.h"
+#include "Components/Rendering/Renderer.h"
 
 namespace Hydro
 {
-    GameObject::GameObject(std::string Name) : m_Name(std::move(Name))
+    GameObject::GameObject(std::string Name, Scene* Owner) : m_Name(std::move(Name)), m_Scene(Owner)
     {
         m_Transform = AddComponent<Transform>();
     }
 
     GameObject::~GameObject()
     {
-        OnDestroy();
-    }
-
-    Ref<GameObject> GameObject::Create(const std::string& Name)
-    {
-        const Application& Application = Application::GetCurrentApplication();
-        Ref<GameObject> NewObject = Application.GetScene().CreateObject(Name);
-        return NewObject;
+        
     }
 
     bool GameObject::Destroy(Ref<GameObject>& Object)
     {
-        const Application& Application = Application::GetCurrentApplication();
-        return Application.GetScene().Destroy(Object);
+        Application& Application = Application::GetCurrentApplication();
+        return Application.GetScene()->DestroyObject(Object);
     }
 
     void GameObject::SetName(const std::string& Name)
@@ -35,17 +29,25 @@ namespace Hydro
         m_Name = Name;
     }
     
-    void GameObject::SetParent(Ref<GameObject> Object)
+    void GameObject::SetParent(const Ref<GameObject>& Object)
     {
-        if(Object == nullptr)
+        if(!Object)
         {
-            Object->m_Parent = nullptr;
+            m_Parent = nullptr;
+            Object->m_Children.erase(std::ranges::find(m_Children, Object));
+            return;
         }
 
-        Object->m_Parent = Ref<GameObject>(this);
+        m_Parent = Object;
+        Object->m_Children.push_back(shared_from_this());
     }
     
     bool GameObject::HasChildren() const { return !m_Children.empty(); }
+
+    bool GameObject::HasParent() const
+    {
+        return m_Parent != nullptr;
+    }
 
     Ref<GameObject> GameObject::GetChild(size_t Index) const
     {
@@ -54,26 +56,33 @@ namespace Hydro
         return m_Children[Index];
     }
 
+    Ref<GameObject> GameObject::GetParent() const
+    {
+        return m_Parent;
+    }
+
     Ref<Transform> GameObject::GetTransform() const
     {
         return m_Transform;
     }
 
-    Scene& GameObject::GetScene() const
+    const Scene& GameObject::GetScene() const
     {
         return *m_Scene;
     }
     
 
-    void GameObject::OnInit() const
+    void GameObject::OnInit()
     {
-        for(const Ref<Component>& Component : m_Components)
-        {
-            Component->OnInit();
-        }
+        ForEach([](const auto& Component){ Component->OnInit(); });
     }
 
-    void GameObject::OnUpdate(float Delta) const
+    void GameObject::OnStart()
+    {
+        ForEach([](const auto& Component) { Component->OnStart(); });
+    }
+
+    void GameObject::OnUpdate(float Delta)
     {
         if(!m_Enabled) return;
         for(const Ref<Component>& Component : m_Components)
@@ -84,7 +93,19 @@ namespace Hydro
         }
     }
 
-    void GameObject::OnPhysicsUpdate(float Delta) const
+    void GameObject::OnRender(const Ref<RendererBackend>& Renderer)
+    {
+        if(!m_Enabled) return;
+        for(const Ref<Component>& Component : m_Components)
+        {
+            if(!Component->m_Enabled)
+                continue;
+            
+            Component->OnRender(Renderer);
+        }
+    }
+
+    void GameObject::OnPhysicsUpdate(float Delta)
     {
         if(!m_Enabled) return;
         for(const Ref<Component>& Component : m_Components)
@@ -95,9 +116,9 @@ namespace Hydro
         }
     }
 
-    void GameObject::OnDestroy() const
+    void GameObject::OnDestroy()
     {
-        for(const Ref<Component>& Component : m_Components)
+        for(Ref<Component>& Component : m_Components)
         {
             Component->OnDestroy();
         }

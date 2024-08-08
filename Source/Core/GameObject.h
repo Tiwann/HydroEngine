@@ -1,11 +1,11 @@
 ﻿#pragma once
 #include "Core/Component.h"
 #include "GUID.h"
-#include "Macros.h"
 #include "SharedPointer.h"
 #include "Log.h"
 #include "LogCategory.h"
 #include "LogVerbosity.h"
+#include "MulticastDelegate.h"
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(GameObject, "GameObject")
 
@@ -13,20 +13,24 @@ namespace Hydro
 {
     class Component;
     class Transform;
+    class RendererBackend;
+    class Vector3;
     
-    class GameObject
+    class GameObject : public std::enable_shared_from_this<GameObject>
     {
+        using ComponentIterator = std::vector<Ref<Component>>::iterator;
+        using ComponentConstIterator = std::vector<Ref<Component>>::const_iterator;
     public:
         friend class Scene;
-        GameObject(std::string Name);
+        friend class Application;
+        GameObject(std::string Name, Scene* Owner);
         ~GameObject();
         
-        static Ref<GameObject> Create(const std::string& Name);
         static bool Destroy(Ref<GameObject>& Object);
         
         void SetName(const std::string& Name);
 
-        template<typename T, typename Traits = std::enable_if_t<std::is_base_of_v<Component, T>>>
+        template<typename T>
         Ref<T> GetComponent() const
         {
             for(Ref<Component> Component : m_Components)
@@ -47,16 +51,15 @@ namespace Hydro
             return nullptr;
         }
         
-        template<typename T, typename = std::enable_if_t<std::is_base_of_v<Component, T>>, typename... Params>
-        Ref<T> AddComponent(Params&&... params)
+        template<typename T>
+        Ref<T> AddComponent()
         {
-            Ref<T> NewComponentRef = CreateRef<T>(std::forward<Params>(params)...);
-            const Ref<Component> AsComponent = Cast<Component, T>(NewComponentRef);
-            AsComponent->m_GameObject = this;
-            m_Components.push_back(NewComponentRef);
-            AsComponent->OnInit();
-            HYDRO_LOG(GameObject, Trace, "Created {} component on GameObject {}", AsComponent->GetName(), m_Name);
-            return NewComponentRef;
+            Ref<T> NewComponent = CreateRef<T>(this);
+            const Ref<Component> AsComponent = Cast<Component, T>(NewComponent);
+            m_Components.push_back(NewComponent);
+            NewComponent->OnInit();
+            HYDRO_LOG(GameObject, Verbosity::Trace, "Created {} component on GameObject {}", AsComponent->GetName(), m_Name);
+            return NewComponent;
         }
         
         template<typename T, typename = std::enable_if_t<std::is_base_of_v<Component, T>>>
@@ -75,21 +78,41 @@ namespace Hydro
             return false;
         }
         
-        void SetParent(Ref<GameObject> Object);
+        void SetParent(const Ref<GameObject>& Object);
         bool HasChildren() const;
-        Ref<GameObject> GetChild(size_t Index) const;
+        bool HasParent() const;
         
+        Ref<GameObject> GetChild(size_t Index) const;
+        Ref<GameObject> GetParent() const;
         Ref<Transform> GetTransform() const;
 
-        Scene& GetScene() const;
+        const Scene& GetScene() const;
         const std::string& GetName() const { return m_Name; }
+
+        
+        ComponentIterator begin() { return m_Components.begin(); }
+        ComponentIterator end() { return m_Components.end(); }
+        ComponentConstIterator begin() const { return m_Components.begin(); }
+        ComponentConstIterator end() const { return m_Components.end(); }
+
+        void ForEach(const std::function<void(Ref<Component>)>& Delegate) const
+        {
+            for(const auto& Component : m_Components)
+            {
+                Delegate(Component);
+            }
+        }
+
+        GUID GetGuid() const { return m_Guid; }
     protected:
-        void OnInit() const;
-        void OnUpdate(float Delta) const;
-        void OnPhysicsUpdate(float Delta) const;
-        void OnDestroy() const;
+        virtual void OnInit();
+        virtual void OnStart();
+        virtual void OnUpdate(float Delta);
+        virtual void OnRender(const Ref<RendererBackend>& Renderer);
+        virtual void OnPhysicsUpdate(float Delta);
+        virtual void OnDestroy();
         void SetEnabled(bool Enabled);
-    private:
+
         GUID m_Guid;
         std::string m_Name;
         std::vector<Ref<Component>> m_Components;

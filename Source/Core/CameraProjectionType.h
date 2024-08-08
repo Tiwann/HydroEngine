@@ -2,7 +2,7 @@
 
 namespace Hydro
 {
-    using CameraProjectionType = enum 
+    enum class CameraProjectionType
     {
         Perspective,
         Orthographic

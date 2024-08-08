@@ -10,6 +10,12 @@ namespace Hydro
         
     }
 
+    PopupMessage::~PopupMessage()
+    {
+        OnPopupMessageClosed.ClearAll();
+        OnPopupMessageOpened.ClearAll();
+    }
+
     Ref<PopupMessage> PopupMessage::Create(HYDRO_POPUPMESSAGE_SIGNATURE)
     {
         HYDRO_OS_PLATFORM_RETURN(PopupMessage, Title, Message, Response, Icon);

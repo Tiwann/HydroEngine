@@ -17,12 +17,12 @@ namespace Hydro
 {
     bool File::Exists(const Path& Filepath)
     {
-        return std::filesystem::exists(Filepath);
+        return exists(Filepath);
     }
 
     bool File::Create(const Path& Filepath)
     {
-        HYDRO_LOG(Filesystem, Warning, "Creating file: {}", Filepath.string());
+        HYDRO_LOG(Filesystem, Verbosity::Warning, "Creating file: {}", Filepath.string());
         FILE* file = fopen(Filepath.string().c_str(), "w");
         if(!file) return false;
         
@@ -39,7 +39,7 @@ namespace Hydro
         FILE* File = fopen(Filepath.string().c_str(), "rb");
         if(!File)
         {
-            HYDRO_LOG(Filesystem, Error, "Failed to read file {} into buffer: File doesn't exist!", Filepath.string());
+            HYDRO_LOG(Filesystem, Verbosity::Error, "Failed to read file {} into buffer: File doesn't exist!", Filepath.string());
             return {};
         }
 
@@ -47,7 +47,7 @@ namespace Hydro
         const size_t FileSize = ftell(File);
         (void)fseek(File, 0, SEEK_SET);
 
-        HYDRO_LOG(Filesystem, Warning, "Reading file to buffer: {}. Size: {}", Filepath.string(), BytesToString(FileSize));
+        HYDRO_LOG(Filesystem, Verbosity::Warning, "Reading file to buffer: {}. Size: {}", Filepath.string(), BytesToString(FileSize));
         Buffer<uint8_t> OutBuffer(FileSize);
         (void)fread(OutBuffer.GetData(), 1, FileSize, File);
         (void)fclose(File);
@@ -56,11 +56,11 @@ namespace Hydro
 
     std::string File::ReadToString(const Path& Filepath)
     {
-        HYDRO_LOG(Filesystem, Trace, "Reading file to string: {}", Filepath.string());
+        HYDRO_LOG(Filesystem, Verbosity::Trace, "Reading file to string: {}", Filepath.string());
         std::ifstream File(Filepath, std::ios::in);
         if(!File.is_open())
         {
-            HYDRO_LOG(Filesystem, Error, "Failed to read file {} into string: File doesn't exist!", Filepath.string());
+            HYDRO_LOG(Filesystem, Verbosity::Error, "Failed to read file {} into string: File doesn't exist!", Filepath.string());
             return "";
         }
 
@@ -72,12 +72,12 @@ namespace Hydro
 
     Path File::OpenFileDialog(const std::string& Title, const Path& DefaultPath, const char* Filters)
     {
-        Window& Window = Application::GetCurrentApplication().GetWindow();
+        const Ref<Window>& Window = Application::GetCurrentApplication().GetWindow();
 #if defined HYDRO_PLATFORM_WINDOWS
         OPENFILENAMEA OpenFileName = { };
         ZeroMemory(&OpenFileName, sizeof(OPENFILENAME));
         CHAR szFile[HYDRO_FILENAME_MAX_LENGTH] = { 0 };
-        OpenFileName.hwndOwner = glfwGetWin32Window(Window.GetNativeWindow());
+        OpenFileName.hwndOwner = glfwGetWin32Window(Window->GetNativeWindow());
         OpenFileName.lStructSize = sizeof(OPENFILENAME);
         OpenFileName.lpstrFile = szFile;
         OpenFileName.nMaxFile = HYDRO_FILENAME_MAX_LENGTH;
@@ -90,6 +90,28 @@ namespace Hydro
 
 #elif defined HYDRO_PLATFORM_UNIX
         return "";
+#endif
+    }
+
+    Path File::SaveFileDialog(const std::string& Title, const Path& DefaultPath, const char* Filters)
+    {
+        const Ref<Window>& Window = Application::GetCurrentApplication().GetWindow();
+#if defined HYDRO_PLATFORM_WINDOWS
+        OPENFILENAMEA OpenFileName = { };
+        ZeroMemory(&OpenFileName, sizeof(OPENFILENAME));
+        CHAR szFile[HYDRO_FILENAME_MAX_LENGTH] = { 0 };
+        OpenFileName.hwndOwner = glfwGetWin32Window(Window->GetNativeWindow());
+        OpenFileName.lStructSize = sizeof(OPENFILENAME);
+        OpenFileName.lpstrFile = szFile;
+        OpenFileName.nMaxFile = HYDRO_FILENAME_MAX_LENGTH;
+        OpenFileName.lpstrFilter = Filters;
+        OpenFileName.nFilterIndex = 1;
+        OpenFileName.Flags = OFN_CREATEPROMPT | OFN_NOCHANGEDIR | OFN_OVERWRITEPROMPT | OFN_NOLONGNAMES | OFN_EXTENSIONDIFFERENT;
+        OpenFileName.lpstrInitialDir = DefaultPath.string().c_str();
+        OpenFileName.lpstrTitle = Title.c_str();
+        return GetSaveFileNameA(&OpenFileName) ? OpenFileName.lpstrFile : "";
+#elif defined HYDRO_PLATFORM_LINUX
+        HYDRO_ASSERT(false, "NOT IMPLEMENTED!");
 #endif
     }
 

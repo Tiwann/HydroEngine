@@ -1,5 +1,6 @@
 ﻿#pragma once
-
+#include <initializer_list>
+#include <algorithm>
 
 namespace Hydro
 {
@@ -13,10 +14,22 @@ namespace Hydro
             std::copy(buffer, buffer + m_Count, m_Data);
         }
 
+        Buffer(const std::initializer_list<Type>& List) : m_Count(List.size())
+        {
+            Allocate(m_Count);
+            std::copy(List.begin(), List.end(), m_Data);
+        }
+
         Buffer(const Buffer& Buffer)
         {
             Allocate(Buffer.Count());
             std::copy(Buffer.GetData(), Buffer.GetData() + Buffer.Count(), m_Data);
+        }
+
+        Buffer(Buffer&& Buff) noexcept
+        {
+            Allocate(Buff.Count());
+            std::move(Buff.GetData(), Buff.GetData() + Buff.Count(), m_Data);
         }
 
         Buffer(size_t Count) : m_Count(Count)
@@ -128,7 +141,7 @@ namespace Hydro
 
 
     template<typename Type>
-    class BufferView
+    class BufferView 
     {
     public:
         using Iterator = Type*;
