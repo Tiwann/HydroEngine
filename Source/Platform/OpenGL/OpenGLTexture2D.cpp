@@ -26,8 +26,19 @@ namespace Hydro
         glDeleteTextures(1, &m_Handle);
     }
 
+    void OpenGLTexture2D::SetData(uint8_t* Data, uint32_t Width, uint32_t Height, ImageFormat Format)
+    {
+        Bind();
+        m_Width = Width;
+        m_Height = Height;
+        m_Format = Format;
+        const GLenum Type = FormatToType(m_Format);
+        const GLenum Fmt = FormatToOpenGLFormat(m_Format);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)m_Width, (GLsizei)m_Height, 0, Fmt, Type, Data);
+    }
 
-    void OpenGLTexture2D::SetImage(const Ref<Image>& Image)
+
+    void OpenGLTexture2D::SetData(const Ref<Image>& Image)
     {
         Bind();
         m_Width = Image->GetWidth();
@@ -80,9 +91,9 @@ namespace Hydro
     uint32_t OpenGLTexture2D::FormatToOpenGLFormat(ImageFormat Format) const
     {
         switch (Format) {
-        case ImageFormat::RGBA8: return GL_RGBA8;
-        case ImageFormat::RGBA16: return GL_RGBA16;
-        case ImageFormat::RGBA32F: return GL_RGBA32F;
+        case ImageFormat::RGBA8: return GL_RGBA;
+        case ImageFormat::RGBA16: return GL_RGBA;
+        case ImageFormat::RGBA32F: return GL_RGBA;
         }
         return 0;
     }

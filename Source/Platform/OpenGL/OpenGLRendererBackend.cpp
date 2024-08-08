@@ -12,7 +12,7 @@
 #include "Core/Shader.h"
 #include "Components/Transform.h"
 #include "Core/IndexBuffer.h"
-#include "Core/ShaderManager.h"
+#include "ResourceManager/ShaderManager.h"
 #include "Core/VertexArray.h"
 #include "Core/VertexBuffer.h"
 #include "Core/VertexBufferLayout.h"
@@ -137,7 +137,7 @@ namespace Hydro
         DrawIndexed(DrawMode::Lines, vao, vbo, ibo, shader);
     }
 
-    void OpenGLRendererBackend::DrawWireBox(const Vector3& Position, const Vector2& HalfExtents, float Thickness, const Color& Color)
+    void OpenGLRendererBackend::DrawWireQuad(const Vector3& Position, const Vector2& HalfExtents, float Thickness, const Color& Color)
     {
         auto vao = VertexArray::Create();
         vao->Bind();
@@ -163,6 +163,20 @@ namespace Hydro
         glLineWidth(Thickness);
     
         DrawIndexed(DrawMode::LineLoop, vao, vbo, ibo, shader);
+    }
+
+    void OpenGLRendererBackend::DrawCircle(const Vector3& Position, float Radius, const Color& Color)
+    {
+        auto vao = VertexArray::Create();
+        vao->Bind();
+        Vertex Points[] ={
+            { Position + Vector3(-Radius / 2.0f, +Radius / 2.0f, 0.0f) , Vector2::Zero, Vector3::Zero, Color },    
+            { Position + Vector3(+Radius / 2.0f, +Radius / 2.0f, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
+            { Position + Vector3(+Radius / 2.0f, -Radius / 2.0f, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
+            { Position + Vector3(-Radius / 2.0f, -Radius / 2.0f, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
+        };
+        auto vbo = VertexBuffer::Create(Points, std::size(Points));
+        auto ibo = IndexBuffer::Create({0, 1, 2, 3});
     }
 
     void OpenGLRendererBackend::SetCullMode(CullMode Mode)

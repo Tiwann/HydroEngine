@@ -122,7 +122,8 @@ namespace Hydro
             HYDRO_LOG(Shader, Verbosity::Error, "Shader program failed to link: {}", Message);
             return Linked = Success;
         }
-        HYDRO_LOG(Shader, Verbosity::Info, "Shader program {} successfully linked!", m_Name);
+        const auto ShaderName = GetName();
+        HYDRO_LOG(Shader, Verbosity::Info, "Shader program {} successfully linked!", ShaderName);
         return Linked = Success;
     }
 
@@ -144,7 +145,8 @@ namespace Hydro
             HYDRO_LOG(Shader, Verbosity::Error, "Shader program failed to validate: {}", Message);
             return Validated = Success;
         }
-        HYDRO_LOG(Shader, Verbosity::Info, "Shader program {} successfully validated!", m_Filepath.string());
+        const auto ShaderName = GetName();
+        HYDRO_LOG(Shader, Verbosity::Info, "Shader program {} successfully validated!", ShaderName);
         return Validated = Success;
     }
 

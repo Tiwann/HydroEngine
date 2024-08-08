@@ -9,8 +9,8 @@ namespace Hydro
         OpenGLTexture2D(const std::string& Name, uint32_t Width, uint32_t Height, uint32_t Slot);
         ~OpenGLTexture2D() override;
 
-        
-        void SetImage(const Ref<Image>& Image) override;
+        void SetData(uint8_t* Data, uint32_t Width, uint32_t Height, ImageFormat Format) override;
+        void SetData(const Ref<Image>& Image) override;
         Ref<Image> GetImage() const override;
         void Bind() const override;
 

@@ -7,8 +7,10 @@ namespace Hydro
     {
     public:
         OpenGLFrameBuffer();
+        OpenGLFrameBuffer(FrameBufferAttachment Attachment);
         ~OpenGLFrameBuffer() override;
-        
+
+        void Destroy() override;
         void Bind() override;
         void Unbind() override;
         void AttachTexture(const Ref<Texture2D>& Texture, FrameBufferAttachment Attachment) override;

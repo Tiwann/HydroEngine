@@ -12,7 +12,22 @@ namespace Hydro
         glBindFramebuffer(GL_FRAMEBUFFER, m_Handle);
     }
 
+    OpenGLFrameBuffer::OpenGLFrameBuffer(FrameBufferAttachment Attachment) : FrameBuffer(Attachment)
+    {
+        glCreateFramebuffers(1, &m_Handle);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_Handle);
+        m_AttachedTexture = Texture2D::Create("OpenGLFrameBuffer", 0, 0);
+        m_AttachedTexture->Bind();
+        GLenum BufferAttachment = GetOpenGLAttachment(m_Attachment);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, BufferAttachment, GL_TEXTURE_2D, (GLuint)m_AttachedTexture->GetHandle(), 0); 
+    }
+
     OpenGLFrameBuffer::~OpenGLFrameBuffer()
+    {
+        Destroy();
+    }
+
+    void OpenGLFrameBuffer::Destroy()
     {
         glDeleteFramebuffers(1, &m_Handle);
     }
@@ -29,16 +44,20 @@ namespace Hydro
 
     void OpenGLFrameBuffer::AttachTexture(const Ref<Texture2D>& Texture, FrameBufferAttachment Attachment)
     {
+        Bind();
         m_AttachedTexture = Texture;
         m_Attachment = Attachment;
-        uint32_t BufferAttachment = GetOpenGLAttachment(m_Attachment);
-        Ref<OpenGLTexture2D> OpenGLTexture = Cast<OpenGLTexture2D>(Texture);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, BufferAttachment, GL_TEXTURE_2D, (GLint)OpenGLTexture->GetHandle(), 0); 
+        GLenum BufferAttachment = GetOpenGLAttachment(m_Attachment);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, BufferAttachment, GL_TEXTURE_2D, (GLint)Texture->GetHandle(), 0); 
     }
 
     void OpenGLFrameBuffer::DetachTexture()
     {
+        Bind();
+        m_AttachedTexture = nullptr;
+        m_Attachment = FrameBufferAttachment::None;
         glFramebufferTexture2D(GL_FRAMEBUFFER, GetOpenGLAttachment(m_Attachment), GL_TEXTURE_2D, 0, 0);
+        
     }
 
     uint32_t OpenGLFrameBuffer::GetOpenGLAttachment(FrameBufferAttachment Attachment)
