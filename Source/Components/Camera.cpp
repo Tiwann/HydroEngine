@@ -24,25 +24,21 @@ namespace Hydro
     void Camera::OnInspectorGUI(const ImGuiIO& IO)
     {
         Component::OnInspectorGUI(IO);
-        if(ImGui::TreeNode(m_Name.c_str()))
-        {
-            ImGui::DragFloat("Width", &Settings.Width);
-            ImGui::DragFloat("Height", &Settings.Height);
-            ImGui::DragFloat("Near Plane", &Settings.NearPlane);
-            ImGui::DragFloat("Far Plane", &Settings.FarPlane);
+        
+        ImGui::DragFloat("Width", &Settings.Width);
+        ImGui::DragFloat("Height", &Settings.Height);
+        ImGui::DragFloat("Near Plane", &Settings.NearPlane);
+        ImGui::DragFloat("Far Plane", &Settings.FarPlane);
 
-            const char* ProjectionTypes[2] = { "Perspective", "Orthographic" };
-            ImGui::Combo("Projection", (int*)&Settings.Projection, ProjectionTypes, 2);
+        const char* ProjectionTypes[2] = { "Perspective", "Orthographic" };
+        ImGui::Combo("Projection", (int*)&Settings.Projection, ProjectionTypes, 2);
             
-            if(Settings.Projection == CameraProjectionType::Orthographic)
-            {
-                ImGui::DragFloat("Orthographic Size", &Settings.OrthoSize);
-            } else
-            {
-                ImGui::DragFloat("Field Of View", &Settings.FieldOfView);
-                
-            }
-            ImGui::TreePop();
+        if(Settings.Projection == CameraProjectionType::Orthographic)
+        {
+            ImGui::DragFloat("Orthographic Size", &Settings.OrthoSize);
+        } else
+        {
+            ImGui::DragFloat("Field Of View", &Settings.FieldOfView);
         }
     }
 

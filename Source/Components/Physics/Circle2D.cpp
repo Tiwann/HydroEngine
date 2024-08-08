@@ -3,6 +3,7 @@
 
 #include <box2d/b2_circle_shape.h>
 
+
 namespace Hydro
 {
     Circle2D::Circle2D(GameObject* Owner) : Shape2D(Owner, "Circle 2D")
@@ -45,6 +46,6 @@ namespace Hydro
 
     void Circle2D::RenderCollisions(const Ref<RendererBackend>& Renderer) const
     {
-        //Renderer->DrawSphere(m_Center)
+        //Renderer->DrawCircle()
     }
 }

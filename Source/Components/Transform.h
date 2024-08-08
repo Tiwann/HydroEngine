@@ -11,6 +11,8 @@ namespace Hydro
     {
     public:
         Transform(GameObject* Owner);
+
+        void OnDestroy() override;
         
         const Vector3& GetPosition() const;
         const Vector3& GetRotation() const;
@@ -39,7 +41,8 @@ namespace Hydro
         Matrix4 GetLocalSpaceMatrix() const;
         void OnInspectorGUI(const ImGuiIO& IO) override;
 
-        MulticastDelegate<void(const Transform*)> OnScaleSet;
+        using ScaleSetDelegate = MulticastDelegate<void(const Transform*)>;
+        ScaleSetDelegate OnScaleSet;
     private:
         Vector3 m_Position{Vector3::Zero};
         Vector3 m_Rotation{Vector3::Zero};

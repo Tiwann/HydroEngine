@@ -17,5 +17,5 @@ namespace Hydro
         All = Position | Rotation,
     };
 
-    using PhysicsConstraintsFlags = Flags<PhysicsConstraintsBits>;
+    HYDRO_DECLARE_FLAGS(PhysicsConstraintsBits, PhysicsConstraintsFlags)
 }

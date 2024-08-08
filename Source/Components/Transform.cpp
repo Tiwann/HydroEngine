@@ -1,12 +1,19 @@
 ﻿#include "HydroPCH.h"
 #include "Transform.h"
 
+#include "Editor/EditorGUI.h"
 #include "Physics/Shape2D.h"
 
 namespace Hydro
 {
     Transform::Transform(GameObject* Owner) : Component(Owner, "Transform")
     {
+    }
+
+    void Transform::OnDestroy()
+    {
+        Component::OnDestroy();
+        OnScaleSet.ClearAll();
     }
 
     const Vector3& Transform::GetPosition() const
@@ -109,10 +116,8 @@ namespace Hydro
         if(m_GameObject->HasParent())
         {
             return m_GameObject->GetParent()->GetTransform()->GetWorldSpaceMatrix() * GetLocalSpaceMatrix();
-        } else
-        {
-            return GetLocalSpaceMatrix();
         }
+        return GetLocalSpaceMatrix();
     }
 
     Matrix4 Transform::GetLocalSpaceMatrix() const
@@ -127,15 +132,9 @@ namespace Hydro
     void Transform::OnInspectorGUI(const ImGuiIO& IO)
     {
         Component::OnInspectorGUI(IO);
-        ImGui::PushID((void*)m_Guid);
-        if (ImGui::TreeNode("Transform"))
-        {
-            ImGui::DragFloat3("Position", m_Position.ValuePtr(), 0.01f, 0, 0, "%.2f");
-            ImGui::DragFloat3("Rotation", m_Rotation.ValuePtr(), 0.01f, 0, 360.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-            ImGui::DragFloat3("Scale", m_Scale.ValuePtr(), 0.01f, 0, 0, "%.2f");
-            ImGui::TreePop();
-        }
-        ImGui::PopID();
+        UI::DragVector3("Position", m_Position, 0.01f, 0, 0, "%.2f");
+        UI::DragVector3("Rotation", m_Rotation, 0.01f, 0, 360.0f, "%.2f");
+        UI::DragVector3("Scale", m_Scale, 0.01f, 0, 0, "%.2f");
     }
 }
 

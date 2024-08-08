@@ -10,6 +10,7 @@ namespace Hydro
     {
     public:
         Box2D(GameObject* Owner);
+        
         void OnInspectorGUI(const ImGuiIO& IO) override;
         
         Vector2 GetCenter() const;

@@ -7,17 +7,25 @@
 #include "Core/IndexBuffer.h"
 #include "Core/Shader.h"
 #include "Core/Color.h"
-#include "Core/PopupMessage.h"
 #include "Core/RendererBackend.h"
-#include "Core/ShaderManager.h"
+#include "ResourceManager/ShaderManager.h"
 
 #include "Core/Texture2D.h"
 #include "Core/VertexBufferLayout.h"
-#include "Platform/OpenGL/OpenGLRendererBackend.h"
+#include "Editor/EditorGUI.h"
+#include "ResourceManager/TextureManager.h"
+
+static Hydro::Vertex SpriteVertices[4] = {
+    {{-0.5f, +0.5f, 0.0f}, {0.0f, 1.0f}, Hydro::Vector3::Zero, Hydro::Color::White},
+    {{+0.5f, +0.5f, 0.0f}, {1.0f, 1.0f}, Hydro::Vector3::Zero, Hydro::Color::White},
+    {{+0.5f, -0.5f, 0.0f}, {1.0f, 0.0f}, Hydro::Vector3::Zero, Hydro::Color::White},
+    {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f}, Hydro::Vector3::Zero, Hydro::Color::White},
+};
 
 namespace Hydro
 {
-    SpriteRenderer::SpriteRenderer(GameObject* Owner) : Renderer(Owner, "Sprite"), m_Tiling(Vector2::One)
+    SpriteRenderer::SpriteRenderer(GameObject* Owner)
+    : Renderer(Owner, "Sprite Renderer"), m_Sprite(nullptr, Vector2::Zero, Vector2::Zero), m_Tiling(Vector2::One)
     {
     }
 
@@ -28,21 +36,14 @@ namespace Hydro
         m_VertexArray = VertexArray::Create();
         m_VertexArray->Bind();
         
-        Vertex Vertices[4] = {
-            {{-0.5f, +0.5f, 0.0f}, {0.0f, 1.0f}, Vector3::Zero, Color::White},
-            {{+0.5f, +0.5f, 0.0f}, {1.0f, 1.0f}, Vector3::Zero, Color::White},
-            {{+0.5f, -0.5f, 0.0f}, {1.0f, 0.0f}, Vector3::Zero, Color::White},
-            {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f}, Vector3::Zero, Color::White},
-        };
-        
-        m_VertexBuffer = VertexBuffer::Create(Vertices, std::size(Vertices));
+        m_VertexBuffer = VertexBuffer::Create(SpriteVertices, std::size(SpriteVertices));
         
         m_IndexBuffer = IndexBuffer::Create({ 0, 2, 1, 0, 3, 2 });
         
         m_VertexArray->SetBufferLayout(VertexBufferLayout::Default);
 
         ShaderManager& Manager = Application::GetCurrentApplication().GetShaderManager();
-        m_Shader = Manager.Retrieve("Sprite2D");
+        m_Shader = Manager.Retrieve("Sprite");
     }
 
     void SpriteRenderer::OnDestroy()
@@ -57,62 +58,72 @@ namespace Hydro
     {
         Renderer::OnRender(Renderer);
         if(!m_Shader) return;
+        if(!m_Sprite.GetTexture()) return;
+        
         m_Shader->Bind();
         m_Shader->SetUniformMat4("uModel", GetTransform()->GetWorldSpaceMatrix());
 
-        if(m_Texture)
+        if(m_Sprite.GetTexture())
         {
-            // Calculate aspect ratio
-            const Vector2 Size = m_Texture->GetSize();
+            const Vector2 Size = m_Sprite.GetTexture()->GetSize();
             const float AspectRatio = Size.x / Size.y;
             
             const Vector2 NewSize = Size.x < Size.y
                 ? Vector2(1.0f, AspectRatio)
                 : Vector2(AspectRatio, 1.0f);
 
-            Matrix3 TextureScale = Matrix3::Identity;
-            TextureScale.Scale(NewSize);
+            const Matrix3 TextureScale = Flags.Contains(SpriteRendererFlagBit::NormalizeSize)
+            ? Math::Scale(Matrix3::Identity, NewSize)
+            : Math::Scale(Matrix3::Identity, m_Sprite.GetSize() / (float)m_PixelsPerUnit);
+            
             m_Shader->SetUniformMat3("uTextureScale", TextureScale);
-            m_Shader->SetUniformTexture("uTexture", m_Texture);
+            m_Shader->SetUniformTexture("uTexture", m_Sprite.GetTexture());
         }
         
         
-        const Vector2 Tiling = m_TileWithScale ? (Vector2)GetTransform()->GetScale() : m_Tiling;
-        const Vector2 FinalTiling = m_Flipped ? Tiling * Vector2(-1.0f, 1.0f) : Tiling;
+        const Vector2 Tiling = Flags.Contains(SpriteRendererFlagBit::TileWithScale) ? (Vector2)GetTransform()->GetScale() : m_Tiling;
+        const Vector2 HorizontalTiling = Flags.Contains(SpriteRendererFlagBit::FlipHorizontal) ? Vector2(-1.0f, 1.0f) : Vector2(1.0f, 1.0f);
+        const Vector2 VerticalTiling = Flags.Contains(SpriteRendererFlagBit::FlipVertical) ? Vector2(1.0f, -1.0f) : Vector2(1.0f, 1.0f);
+        const Vector2 FinalTiling = Tiling * HorizontalTiling * VerticalTiling;
         m_Shader->SetUniformFloat2("uTiling", FinalTiling);
         m_Shader->SetUniformFloat4("uColorTint", m_ColorTint);
-
-        auto Rend = Cast<OpenGLRendererBackend>(Renderer);
-        Rend->DrawIndexed(DrawMode::Triangles, m_VertexArray, m_VertexBuffer, m_IndexBuffer, m_Shader);
+        
+        Renderer->DrawIndexed(DrawMode::Triangles, m_VertexArray, m_VertexBuffer, m_IndexBuffer, m_Shader);
     }
 
     void SpriteRenderer::OnInspectorGUI(const ImGuiIO& IO)
     {
         Renderer::OnInspectorGUI(IO);
-        ImGui::PushID((const void*)m_Guid);
-        if(ImGui::TreeNode(m_Name.c_str()))
+
+        
+        UI::Sprite(m_Sprite);
+        
+        ImGui::DragFloat2("Tiling", m_Tiling.ValuePtr());
+        ImGui::DragFloat2("Size", m_Size.ValuePtr());
+
+        const char* FlagNames[] = { "None",
+                                    "Tile With Scale",
+                                    "Flip Horizontal",
+                                    "Flip Vertical",
+                                    "Normalize Size" };
+
+        
+        if(ImGui::BeginCombo("Flags", nullptr, ImGuiComboFlags_NoPreview))
         {
-            ImGui::Image((ImTextureID)m_Texture->GetHandle(), ImVec2(m_Texture->GetSize().x, m_Texture->GetSize().y),
-                ImVec2(1, 1), ImVec2(0, 0));
-            
-            ImGui::DragFloat2("Tiling", m_Tiling.ValuePtr());
-            ImGui::DragFloat2("Size", m_Size.ValuePtr());
-            ImGui::Checkbox("Tile With Scale", &m_TileWithScale);
-            ImGui::Checkbox("Flipped", &m_Flipped);
-            ImGui::ColorEdit4("Tint", (float*)&m_ColorTint, ImGuiColorEditFlags_DisplayHex);
-            ImGui::TreePop();
+            for(size_t i = 1; i < std::size(FlagNames); i++)
+            {
+                
+                bool IsSelected = Flags.Contains(SpriteRendererFlags(1 << i));
+                if(ImGui::Selectable(FlagNames[i], &IsSelected))
+                {
+                    Flags.Toggle(SpriteRendererFlags(1 << i));
+                }
+            }
+            ImGui::EndCombo();
         }
-        ImGui::PopID();
-    }
 
-    void SpriteRenderer::SetTexture(const Ref<Texture2D>& Texture)
-    {
-        m_Texture = Texture;
-    }
-
-    Ref<Texture2D> SpriteRenderer::GetTexture() const
-    {
-        return m_Texture;
+        ImGui::ColorEdit4("Tint", (float*)&m_ColorTint, ImGuiColorEditFlags_DisplayHex);
+        UI::DragValue<int>("Pixels Per Unit", m_PixelsPerUnit, 1, 0, 0, "%d");
     }
 
     void SpriteRenderer::SetTiling(const Vector2& Tiling)
@@ -125,16 +136,7 @@ namespace Hydro
         return m_Tiling;
     }
 
-    void SpriteRenderer::SetTileWithScale(bool Enable)
-    {
-        m_TileWithScale = Enable;
-    }
-
-    bool SpriteRenderer::IsTilingWithScale() const
-    {
-        return m_TileWithScale;
-    }
-
+    
     void SpriteRenderer::SetSize(const Vector2& Size)
     {
         m_Size = Size;
@@ -145,11 +147,6 @@ namespace Hydro
         return m_Size;
     }
 
-    void SpriteRenderer::SetFlipped(bool Flipped)
-    {
-        m_Flipped = Flipped;
-    }
-
     Color SpriteRenderer::GetColorTint() const
     {
         return m_ColorTint;
@@ -158,5 +155,25 @@ namespace Hydro
     void SpriteRenderer::SetColorTint(const Color& Color)
     {
         m_ColorTint = Color;
+    }
+
+    int32_t SpriteRenderer::GetPixelsPerUnit() const
+    {
+        return m_PixelsPerUnit;
+    }
+
+    void SpriteRenderer::SetPixelsPerUnit(int32_t PixelsPerUnit)
+    {
+        m_PixelsPerUnit = PixelsPerUnit;
+    }
+
+    Sprite SpriteRenderer::GetSprite() const
+    {
+        return m_Sprite;
+    }
+
+    void SpriteRenderer::SetSprite(const Sprite& sprite)
+    {
+        m_Sprite = sprite;
     }
 }

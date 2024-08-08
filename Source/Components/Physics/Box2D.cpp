@@ -8,10 +8,11 @@
 
 #include "Core/Color.h"
 
+static constexpr char ComponentName[7] = "Box 2D";
 
 namespace Hydro
 {
-    Box2D::Box2D(GameObject* Owner) : Shape2D(Owner, "Box 2D")
+    Box2D::Box2D(GameObject* Owner) : Shape2D(Owner, ComponentName)
     {
         
     }
@@ -19,19 +20,18 @@ namespace Hydro
     void Box2D::OnInspectorGUI(const ImGuiIO& IO)
     {
         Shape2D::OnInspectorGUI(IO);
-        ImGui::PushID((void*)m_Guid);
-        if(ImGui::TreeNode(m_Name.c_str()))
-        {
-            ImGui::DragFloat2("Center", m_Center.ValuePtr());
-            ImGui::DragFloat2("Half Extents", m_HalfExtents.ValuePtr());
-            ImGui::Checkbox("Is Trigger", &m_IsTrigger);
-            ImGui::Checkbox("Draw Debug", &m_ShowCollisions);
+        
+        ImGui::DragFloat2("Center", m_Center.ValuePtr());
+        ImGui::DragFloat2("Half Extents", m_HalfExtents.ValuePtr());
+        ImGui::Checkbox("Is Trigger", &m_IsTrigger);
+        ImGui::Checkbox("Draw Debug", &m_ShowCollisions);
 
-            const char* ColliderTypes[3] = { "Static", "Kinematic", "Dynamic" };
-            ImGui::Combo("Collider Type", (int*)&m_Type, ColliderTypes, 3);
-            ImGui::TreePop();
+        const char* ColliderTypes[3] = { "Static", "Kinematic", "Dynamic" };
+        
+        if(ImGui::Combo("Collider Type", (int*)&m_Type, ColliderTypes, 3))
+        {
+            RecreateFixture();
         }
-        ImGui::PopID();
     }
 
 
@@ -73,7 +73,7 @@ namespace Hydro
     void Box2D::RenderCollisions(const Ref<RendererBackend>& Renderer) const
     {
         Vector3 TransformedCenter = GetTransform()->GetPosition() + m_Center;
-        Vector3 TransformedExtents = GetTransform()->GetWorldSpaceMatrix()* Vector3(m_HalfExtents);
-        Renderer->DrawWireBox(TransformedCenter,  TransformedExtents , 3.0f, Color::Green);
+        Vector3 TransformedExtents = GetTransform()->GetWorldSpaceMatrix() * Vector3(m_HalfExtents);
+        Renderer->DrawWireQuad(TransformedCenter,  TransformedExtents , 3.0f, Color::Green);
     }
 }

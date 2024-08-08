@@ -13,10 +13,12 @@ namespace Hydro
 {
     Shape2D::Shape2D(GameObject* Owner, const std::string& Name) : PhysicsComponent(Owner, Name)
     {
-        OnCollisionEnterEvent += HYDRO_BIND(&Shape2D::OnCollisionEnter);
-        OnCollisionStayEvent += HYDRO_BIND(&Shape2D::OnCollisionStay);
-        OnCollisionExitEvent += HYDRO_BIND(&Shape2D::OnCollisionExit);
-        Owner->GetTransform()->OnScaleSet += HYDRO_BIND(&Shape2D::OnTransformScaleSet);
+        HYDRO_BIND_EVENT_AS(OnCollisionEnterEvent, ICollisionResponse, &Shape2D::OnCollisionEnter);
+        HYDRO_BIND_EVENT_AS(OnCollisionStayEvent, ICollisionResponse, &Shape2D::OnCollisionStay);
+        HYDRO_BIND_EVENT_AS(OnCollisionExitEvent, ICollisionResponse, &Shape2D::OnCollisionExit);
+        
+        Transform::ScaleSetDelegate& ScaleSetEvent = Owner->GetTransform()->OnScaleSet;
+        HYDRO_BIND_EVENT(ScaleSetEvent, &Shape2D::OnTransformScaleSet);
     }
     void Shape2D::OnInit()
     {
@@ -85,8 +87,17 @@ namespace Hydro
         
         const Ref<Transform> Trans = GetTransform();
         b2Vec2 Position = m_Body->GetPosition();
-        Trans->SetPosition({Position.x, Position.y, Trans->GetPosition().z});
-        Trans->SetRotation({0.0f, 0.0f, m_Body->GetAngle()});
+        if(m_Type != ColliderType::Static)
+        {
+            Trans->SetPosition({Position.x, Position.y, Trans->GetPosition().z});
+            Trans->SetRotation({0.0f, 0.0f, m_Body->GetAngle()});
+        } else
+        {
+            Ref<Transform> Transform = GetTransform();
+            const Vector3 Position = Transform->GetPosition();
+            const Vector3 Rotation = Transform->GetRotation();
+            m_Body->SetTransform({Position.x, Position.y}, Rotation.z);
+        }
     }
     
     float Shape2D::GetGravityScale() const
