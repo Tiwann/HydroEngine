@@ -171,4 +171,14 @@ namespace Hydro
 
         return Output;
     }
+
+    int32_t Math::IntegerPart(float Val)
+    {
+        return (int32_t)Floor(Val);
+    }
+
+    float Math::DecimalPart(float Val)
+    {
+        return Val - IntegerPart(Val);
+    }
 }

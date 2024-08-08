@@ -11,7 +11,8 @@ namespace Hydro
     public:
         Matrix4();
         Matrix4(const Vector4& Col1, const Vector4& Col2, const Vector4& Col3, const Vector4& Col4);
-        
+
+        float* ValuePtr();
         const float* ValuePtr() const;
         float Magnitude() const;
         float Determinant() const;

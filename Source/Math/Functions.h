@@ -55,6 +55,8 @@ namespace Hydro
         static float Degrees(float Radians);
         static float MoveTowards(float Current, float Target, float MaxDelta);
         static float SmoothDamp(float Current, float Target, float& CurrentVelocity, float SmoothTime,  float Delta, float MaxSpeed = Infinity);
+        static int32_t IntegerPart(float Val);
+        static float DecimalPart(float Val);
         
         static class Matrix2 Rotate(const Matrix2& Mat, float Radians);
         static Matrix2 RotateDegrees(const Matrix2& Mat, float Degrees);

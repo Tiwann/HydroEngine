@@ -26,6 +26,11 @@ namespace Hydro
         Columns[3] = Col4;
     }
 
+    float* Matrix4::ValuePtr()
+    {
+    	return (float*)this;
+    }
+
     const float* Matrix4::ValuePtr() const
     {
         return (const float*)this;

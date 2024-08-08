@@ -3,10 +3,12 @@
 #include "Vector3.h"
 
 struct b2Vec2;
+struct ImVec2;
 
 namespace Hydro
 {
     class Vector3;
+
     
     class Vector2
     {
@@ -19,6 +21,7 @@ namespace Hydro
         Vector2(float Value);
         Vector2(const Vector3& Vec);
         Vector2(const b2Vec2& Vec);
+        Vector2(const ImVec2& Vec);
         
         float Magnitude() const;
         float* ValuePtr();
@@ -32,9 +35,12 @@ namespace Hydro
         Vector2 operator-() const;
 
         operator b2Vec2() const;
+        operator ImVec2() const;
 
+        Vector2 operator/(float Scalar);
         friend Vector2 operator*(float Scalar, const Vector2& Vec);
         friend Vector2 operator*(const Vector2& Vec, float Scalar);
+        
         Vector2& operator*=(float Scalar);
         bool operator==(const Vector2& Vec) const;
         Vector2 operator*(const Vector2& Vec) const;

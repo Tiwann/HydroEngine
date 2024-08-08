@@ -4,6 +4,7 @@
 #include "Functions.h"
 
 #include <box2d/b2_math.h>
+#include "imgui/imgui.h"
 
 
 namespace Hydro
@@ -29,6 +30,10 @@ namespace Hydro
     }
 
     Vector2::Vector2(const b2Vec2& Vec) : x(Vec.x), y(Vec.y)
+    {
+    }
+
+    Vector2::Vector2(const ImVec2& Vec) : x(Vec.x), y(Vec.y)
     {
     }
 
@@ -80,6 +85,16 @@ namespace Hydro
     Vector2::operator b2Vec2() const
     {
         return {x, y};
+    }
+
+    Vector2::operator ImVec2() const
+    {
+        return {x, y};
+    }
+
+    Vector2 Vector2::operator/(float Scalar)
+    {
+        return { x / Scalar, y / Scalar };
     }
 
     Vector2 operator*(float Scalar, const Vector2& Vec)
