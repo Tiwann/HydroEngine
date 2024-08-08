@@ -11,16 +11,20 @@ out vec2 oTexCoord;
 out vec3 oNormal;
 out vec4 oColor;
 
-uniform mat4 uModelMatrix;
+uniform mat4 uModel;
+uniform mat4 uView;
+uniform mat4 uProjection;
+
 
 void main()
 {
-    oPosition = (uModelMatrix * vec4(vPosition, 1.0)).xyz;
+    vec4 newPosition = uProjection * uView * uModel * vec4(vPosition, 1.0);
+    oPosition = newPosition.xyz;
     oTexCoord = vTexCoord;
     oNormal = vNormal;
     oColor = vColor;
-    gl_Position = vec4(oPosition, 1.0);
-};
+    gl_Position = newPosition;
+}
 
 #pragma fragment
 #version 460 core
@@ -30,10 +34,8 @@ in vec2 oTexCoord;
 in vec3 oNormal;
 in vec4 oColor;
 
-uniform sampler2D uTexture;
 
 void main()
 {
-    vec4 colorTexture = texture(uTexture, oTexCoord);
-    gl_FragColor = colorTexture;
+    gl_FragColor = oColor;
 }
