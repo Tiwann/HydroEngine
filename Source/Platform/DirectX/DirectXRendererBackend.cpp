@@ -108,5 +108,10 @@ namespace Hydro
     {
             
     }
+
+    const ID3D12Device* DirectXRendererBackend::GetDevice() const
+    {
+        return m_Device.Get();
+    }
 }
 

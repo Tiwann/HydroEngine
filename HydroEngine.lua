@@ -1,4 +1,3 @@
-
 project "HydroEngine"
 	kind "StaticLib"
 	staticruntime "On"
@@ -9,14 +8,19 @@ project "HydroEngine"
 	targetdir(binaries)
 	objdir(intermediate)
 	
+	
+	delete_assets = string.format("{RMDIR} %s", path.join(binaries, "Engine", "Assets"))
+	copy_assets = string.format("{COPYDIR} %s %s", path.join("%{prj.location}", "Assets"), path.join(binaries, "Engine", "Assets"))
+	
 	postbuildcommands
 	{
-	    "{DELETE} " .. binaries .. "\\Shaders",
-	    "{COPY} %{prj.location}Source\\Shaders " .. binaries .. "\\Shaders"
+	    delete_assets,
+	    copy_assets
 	}
 
 	files
 	{
+        "Assets/**",
 		"Source/**.h",
 		"Source/**.cpp",
 		"Include/Hydro/Hydro.h",
@@ -43,6 +47,7 @@ project "HydroEngine"
 		"%{libs.imgui}/backends",
 		"%{libs.Jolt}",
 		"%{libs.miniaudio}/include",
+		"%{libs.json}/include",
 	}
 
 	links
@@ -83,6 +88,16 @@ project "HydroEngine"
 
 	filter "System:Windows"
 		defines { "GLFW_EXPOSE_NATIVE_WIN32", "HYDRO_PLATFORM_WINDOWS", "_CRT_SECURE_NO_WARNINGS", "WIN32_LEAN_AND_MEAN" }
+		libdirs { "%{libs.fmod}/core/lib/x64" }
+		includedirs { "%{libs.fmod}/core/inc" }
+
+	filter { "System:Windows", "Configurations:Debug*"}
+		links "fmodL_vc"
+		postbuildcommands "{COPY} %{libs.fmod}/core/lib/x64/fmodL.dll %{binaries}"
+
+	filter { "System:Windows", "Configurations:Release*"}
+		links "fmod_vc"
+		postbuildcommands "{COPY} %{libs.fmod}/core/lib/x64/fmod.dll %{binaries}"
 		
 	filter "Configurations:*OpenGL or Configurations:*Vulkan"
 	    removefiles { "Source/Platform/DirectX/**.h", "Source/Platform/DirectX/**.cpp" }

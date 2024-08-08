@@ -34,22 +34,18 @@
 
 #define HYDRO_VOID ((void)0)
 #define HYDRO_NODISCARD [[nodiscard]]
-#define HYDRO_NOEXCEPT noexcept
-#define HYDRO_EXPLICIT explicit
 
 
 #if !defined(HYDRO_FILENAME_MAX_LENGTH)
 #define HYDRO_FILENAME_MAX_LENGTH MAX_PATH
 #endif
 
-#define HYDRO_NO_COPYABLE_NO_MOVABLE(ClassType) \
+#define HYDRO_NOT_COPYABLE_NOT_MOVABLE(ClassType) \
     ClassType(const ClassType&) = delete; \
     ClassType(ClassType&&) = delete; \
     ClassType& operator=(const ClassType&) = delete; \
     ClassType& operator=(ClassType&&) = delete
 
-
-#define HYDRO_CONCAT_STR(str1, str2) (str1 " " str2)
 
 #if defined(HYDRO_PLATFORM_OPENGL)
 #define HYDRO_RHI_PLATFORM_RETURN(ClassName, ...) return CreateRef<OpenGL##ClassName>(__VA_ARGS__)

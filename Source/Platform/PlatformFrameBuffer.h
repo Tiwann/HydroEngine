@@ -1,13 +1,13 @@
 #pragma once
 
 #if defined(HYDRO_PLATFORM_OPENGL)
-#include "OpenGL/OpenGLRendererBackend.h"
+#include "OpenGL/OpenGLFrameBuffer.h"
 #endif
 
 #if defined(HYDRO_PLATFORM_VULKAN)
-#include "Vulkan/VulkanRenderer.h"
+#include "Vulkan/VulkanFrameBuffer.h"
 #endif
 
 #if defined(HYDRO_PLATFORM_DIRECTX)
-#include "DirectX/DirectXRenderer.h"
+#include "DirectX/DirectXFrameBuffer.h"
 #endif

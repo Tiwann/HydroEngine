@@ -27,8 +27,10 @@ namespace Hydro
         ~DirectXRendererBackend() override;
         
         void ClearDepthBuffer() override;
-        void ClearColor(const Color& color) override;
+        void ClearColorBuffer(const Color& color) override;
         void SwapBuffers() override;
+        
+        const ID3D12Device* GetDevice() const;
 
     private:
         D3DRef<ID3D12InfoQueue>            m_InfoQueue{nullptr};
