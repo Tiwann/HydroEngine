@@ -1,4 +1,4 @@
-group "HydroFramework"
+
 project "spdlog"
 	kind "StaticLib"
 	language "C++"

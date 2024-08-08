@@ -1,5 +1,4 @@
-
-project "ufbx"
+project "miniaudio"
 	kind "StaticLib"
 	language "C"
 	staticruntime "On"
@@ -9,13 +8,14 @@ project "ufbx"
 	objdir(intermediate)
 
 	files {
-		"include/ufbx/ufbx.h",
-        "src/ufbx.c",
-		"ufbx.natvis",
-		"ufbx.lua",
+		"include/miniaudio/miniaudio.h",
+		"src/miniaudio.c",
+		"miniaudio.lua"
 	}
 
 	includedirs "include"
+	
+	defines "MINIAUDIO_IMPLEMENTATION"
 
 	filter "Configurations:Debug*"
 		runtime "Debug"

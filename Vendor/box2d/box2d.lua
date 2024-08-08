@@ -103,16 +103,17 @@ project "box2d"
         "include/box2d/b2_wheel_joint.h",
         "include/box2d/b2_world.h",
         "include/box2d/b2_world_callbacks.h",
-        "include/box2d/box2d.h"
+        "include/box2d/box2d.h",
+        "box2d.lua"
     }
 
     includedirs "include"
 
 
 	filter "Configurations:Debug*"
-	runtime "Debug"
-	optimize "Off"
-	symbols "On"
+	    runtime "Debug"
+	    optimize "Off"
+	    symbols "On"
 
 	filter "Configurations:Release*"
 		runtime "Release"

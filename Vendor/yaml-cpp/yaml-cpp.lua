@@ -1,4 +1,4 @@
-group "HydroFramework"
+
 project "yaml-cpp"
 	kind "StaticLib"
 	language "C++"

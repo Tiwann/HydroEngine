@@ -1,4 +1,4 @@
-group "HydroFramework"
+
 project "stb"
 	kind "StaticLib"
 	staticruntime "On"

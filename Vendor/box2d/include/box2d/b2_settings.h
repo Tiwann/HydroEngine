@@ -99,13 +99,21 @@ B2_API void b2Free_Default(void* mem);
 /// Implement this function to use your own memory allocator.
 inline void* b2Alloc(int32 size)
 {
+#ifdef B2_MALLOC
+	return B2_MALLOC(size);
+#else
 	return b2Alloc_Default(size);
+#endif
 }
 
 /// If you implement b2Alloc, you should also implement this function.
 inline void b2Free(void* mem)
 {
-	b2Free_Default(mem);
+#ifdef B2_FREE
+	return B2_FREE(mem);
+#else
+	return b2Free_Default(mem);
+#endif
 }
 
 /// Default logging function
