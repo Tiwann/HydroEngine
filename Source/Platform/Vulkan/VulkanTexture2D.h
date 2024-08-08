@@ -10,7 +10,7 @@ namespace Hydro
     {
     public:
         VulkanTexture2D(const std::string& Name, uint32_t Slot);
-        void SetImage(const Ref<Image>& Image) override;
+        void SetData(const Ref<Image>& Image) override;
         Ref<Image> GetImage() const override;
         void Bind() const override;
     private:
