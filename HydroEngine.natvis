@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+<AutoVisualizer>
     
     <!-- Hydro::Buffer<T> -->
     <Type Name="Hydro::Buffer&lt;*&gt;">
@@ -47,8 +47,15 @@
             <DisplayString>{M03 = {m_Data[0 + 3]}, M13 = {m_Data[0 + 3]}, M23 = {m_Data[0 + 3]}, M33 = {m_Data[0 + 3]}}</DisplayString>  
         </Expand>
     </Type>
-    
-    <Type Name="Hydro::V4IPAdress">
-        <DisplayString>{m_Bits[0]}.{m_Bits[1]}.{m_Bits[2]}.{m_Bits[3]}:{m_Port}</DisplayString>
+
+    <!-- Hydro::Array<T> -->
+    <Type Name="Hydro::Array&lt;*&gt;">
+        <DisplayString>{{Count = {m_Count}}, {Allocated = {m_Allocated}}}</DisplayString>
+        <Expand>
+            <ArrayItems>
+                <Size>m_Count</Size>
+                <ValuePointer>m_Data</ValuePointer>
+            </ArrayItems>
+        </Expand>
     </Type>
 </AutoVisualizer>
