@@ -12,7 +12,7 @@ libs["miniaudio"] = "%{wks.location}/Vendor/HydroEngine/Vendor/miniaudio"
 libs["fmod"] = "%{wks.location}/Vendor/HydroEngine/Vendor/fmod"
 libs["json"] = "%{wks.location}/Vendor/HydroEngine/Vendor/nlohmann-json"
 
-group "HydroEngine"
+group "Engine"
 include "HydroEngine.lua"
 include "Vendor/glfw/glfw.lua"
 include "Vendor/stb/stb.lua"

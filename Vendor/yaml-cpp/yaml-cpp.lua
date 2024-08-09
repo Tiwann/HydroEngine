@@ -6,6 +6,7 @@ project "yaml-cpp"
 	staticruntime "On"
 	flags "MultiProcessorCompile"
 
+    location(build)
 	targetdir(binaries)
 	objdir(intermediate)
 

@@ -4,6 +4,7 @@ project "stb"
 	staticruntime "On"
 	language "C"
 	
+	location(build)
 	targetdir(binaries)
 	objdir(intermediate)
 

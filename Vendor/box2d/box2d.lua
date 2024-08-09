@@ -5,8 +5,9 @@ project "box2d"
 	staticruntime "On"
 	flags "MultiProcessorCompile"
 	
-	targetdir(binaries)
-	objdir(intermediate)
+	location(build)
+    targetdir (binaries)
+    objdir (intermediate)
 
     files
     {

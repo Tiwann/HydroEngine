@@ -5,12 +5,14 @@ project "HydroEngine"
 	cppdialect "C++20"
 	flags "MultiProcessorCompile"
 
-	targetdir(binaries)
-	objdir(intermediate)
+   
+	location(build)
+    targetdir (binaries)
+    objdir (intermediate)
 	
 	
 	delete_assets = string.format("{RMDIR} %s", path.join(binaries, "Engine", "Assets"))
-	copy_assets = string.format("{COPYDIR} %s %s", path.join("%{prj.location}", "Assets"), path.join(binaries, "Engine", "Assets"))
+	copy_assets = string.format("{COPYDIR} %s %s", path.join("%{libs.HydroEngine}", "Assets"), path.join(binaries, "Engine", "Assets"))
 	
 	postbuildcommands
 	{
@@ -24,7 +26,6 @@ project "HydroEngine"
 		"Source/**.h",
 		"Source/**.cpp",
 		"Include/Hydro/Hydro.h",
-		"Source/**.glsl",
 		"HydroEngine.lua",
 		"HydroEngine.natvis"
 	}
