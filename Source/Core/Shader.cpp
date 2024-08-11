@@ -75,6 +75,35 @@ namespace Hydro
     {
     }
 
+    void Shader::LoadSource(Path Filepath, ShaderSourceLanguage Language)
+    {
+        m_Filepath = std::move(Filepath);
+
+        const Path AbsolutePath = weakly_canonical(m_Filepath);
+        const std::string ShaderName = GetName();
+        HYDRO_LOG(Shader, Verbosity::Trace, "Loading shader source: {}", ShaderName);
+        
+        if(!File::Exists(AbsolutePath))
+        {
+            constexpr std::string_view Message("Cannot load shader: File doesn't exist!");
+            HYDRO_LOG(Shader, Verbosity::Error, Message);
+            HYDRO_LOG(Shader, Verbosity::Error, "File: {}", m_Filepath.string());
+            return;
+        }
+        
+        const std::string FileContent = File::ReadToString(AbsolutePath);
+        SplitSources(FileContent);
+
+        HYDRO_LOG(Shader, Verbosity::Trace, "Preprocessing shader \"{}\"", ShaderName);
+        if(!Preprocess(m_Source.Vertex) || !Preprocess(m_Source.Fragment))
+        {
+            HYDRO_LOG(Shader, Verbosity::Info, "Shader preprocess failed. File {}.", ShaderName);
+            return;
+        }
+        
+        HYDRO_LOG(Shader, Verbosity::Info, "Shader successfully loaded shader source from: {}", ShaderName);
+    }
+
     void Shader::SplitSources(const std::string& Source)
     {
         const std::string PragmaVertex = "#pragma vertex";

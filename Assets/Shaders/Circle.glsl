@@ -19,5 +19,5 @@ void main()
 {
     float circle = Circle(oTexCoord, vec2(0.0), uThickness, uSmoothness);
     vec4 coloredCirlcle = oColor * circle;
-    gl_FragColor = vec4(coloredCirlcle.xyz, 0.0);
+    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }

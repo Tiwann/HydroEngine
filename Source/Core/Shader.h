@@ -17,6 +17,22 @@ namespace Hydro
     {
     public:
         virtual ~Shader() = default;
+
+        virtual bool Reload()
+        {
+            Bind();
+            Delete();
+            LoadSource(m_Filepath, m_SourceLanguage);
+            bool Result = Compile();
+            if(!Result) return false;
+
+            Result = Link();
+            if(!Result) return false;
+
+            Result = Validate();
+            if(!Result) return false;
+            return true;
+        }
         virtual bool Compile() = 0;
         virtual bool Link() = 0;
         virtual bool Validate() = 0;
@@ -62,6 +78,7 @@ namespace Hydro
         bool Linked{false};
         bool Validated{false};
 
+        void LoadSource(Path Filepath, ShaderSourceLanguage Language);
         void SplitSources(const std::string& Source);
         bool Preprocess(std::string& Source);
         std::string GetName();

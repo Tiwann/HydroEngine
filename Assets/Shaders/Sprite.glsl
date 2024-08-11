@@ -14,12 +14,12 @@ out vec4 oColor;
 uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
-uniform mat3 uTextureScale;
+uniform mat3 uSpriteScale;
 
 
 void main()
 {
-    vec4 newPosition = uProjection * uView * uModel * vec4(uTextureScale * vPosition, 1.0);
+    vec4 newPosition = uProjection * uView * uModel * vec4(uSpriteScale * vPosition, 1.0);
     oPosition = newPosition.xyz;
     oTexCoord = vTexCoord;
     oNormal = vNormal;
