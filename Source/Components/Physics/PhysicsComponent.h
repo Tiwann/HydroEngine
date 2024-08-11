@@ -118,6 +118,12 @@ namespace Hydro
             if(m_ShowCollisions)
                 RenderCollisions(Renderer);
         }
+
+        void OnInspectorGUI(const ImGuiIO& IO) override
+        {
+            ImGui::Checkbox("Is Trigger", &m_IsTrigger);
+            ImGui::Checkbox("Draw Debug", &m_ShowCollisions);
+        }
         
         ColliderType m_Type{ColliderType::Static};
         PhysicsMaterial m_Material;
