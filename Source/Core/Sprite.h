@@ -1,5 +1,4 @@
 #pragma once
-#include "Filesystem.h"
 #include "Math/Vector2.h"
 #include "SharedPointer.h"
 
@@ -24,6 +23,9 @@ namespace Hydro
         
         Ref<Texture2D> GetTexture() const;
         void SetTexture(const Ref<Texture2D>& texture);
+
+        static Sprite CreateFromTexture(const Ref<Texture2D>& Texture);
+        static Sprite CreateFromTexture(const Ref<Texture2D>& Texture, Vector2 Pos, Vector2 Size);
     private:
         Vector2 m_Position;
         Vector2 m_Size;

@@ -33,5 +33,14 @@ namespace Hydro
     {
         m_Texture = texture;
     }
-    
+
+    Sprite Sprite::CreateFromTexture(const Ref<Texture2D>& Texture)
+    {
+        return Texture->CreateSprite();
+    }
+
+    Sprite Sprite::CreateFromTexture(const Ref<Texture2D>& Texture, Vector2 Pos, Vector2 Size)
+    {
+        return Texture->CreateSprite(Pos, Size);
+    }
 }

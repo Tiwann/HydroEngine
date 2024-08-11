@@ -72,11 +72,11 @@ namespace Hydro
                 ? Vector2(1.0f, AspectRatio)
                 : Vector2(AspectRatio, 1.0f);
 
-            const Matrix3 TextureScale = Flags.Contains(SpriteRendererFlagBit::NormalizeSize)
+            const Matrix3 SpriteScale = Flags.Contains(SpriteRendererFlagBit::NormalizeSize)
             ? Math::Scale(Matrix3::Identity, NewSize)
             : Math::Scale(Matrix3::Identity, m_Sprite.GetSize() / (float)m_PixelsPerUnit);
             
-            m_Shader->SetUniformMat3("uTextureScale", TextureScale);
+            m_Shader->SetUniformMat3("uSpriteScale", SpriteScale);
             m_Shader->SetUniformTexture("uTexture", m_Sprite.GetTexture());
         }
         
@@ -97,10 +97,10 @@ namespace Hydro
 
         
         UI::Sprite(m_Sprite);
-        
-        ImGui::DragFloat2("Tiling", m_Tiling.ValuePtr());
-        ImGui::DragFloat2("Size", m_Size.ValuePtr());
 
+        UI::DragVector2<float>("Tiling", m_Tiling, 0.1f);
+        UI::DragVector2<float>("Size", m_Size, 0.1f);
+        
         const char* FlagNames[] = { "None",
                                     "Tile With Scale",
                                     "Flip Horizontal",
@@ -112,7 +112,6 @@ namespace Hydro
         {
             for(size_t i = 1; i < std::size(FlagNames); i++)
             {
-                
                 bool IsSelected = Flags.Contains(SpriteRendererFlags(1 << i));
                 if(ImGui::Selectable(FlagNames[i], &IsSelected))
                 {
@@ -123,7 +122,7 @@ namespace Hydro
         }
 
         ImGui::ColorEdit4("Tint", (float*)&m_ColorTint, ImGuiColorEditFlags_DisplayHex);
-        UI::DragValue<int>("Pixels Per Unit", m_PixelsPerUnit, 1, 0, 0, "%d");
+        UI::DragValue<int>("Pixels Per Unit", m_PixelsPerUnit, 1);
     }
 
     void SpriteRenderer::SetTiling(const Vector2& Tiling)

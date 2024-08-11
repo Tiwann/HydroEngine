@@ -3,10 +3,20 @@
 
 namespace Hydro
 {
-    Timer::Timer(float Duration, bool Loop, const std::function<void()>& Callback)
+    Timer::Timer(float Duration, bool Loop, const FinishedDelegate::DelegateType& Callback)
         : m_Started(false), m_Loop(Loop), m_Duration(Duration)
     {
-        OnTimerFinish += Callback;
+        FinishedEvent.Bind(Callback);
+    }
+
+    Timer::~Timer()
+    {
+        FinishedEvent.ClearAll();
+    }
+
+    void Timer::Reset()
+    {
+        m_Time = 0.0f;
     }
 
     void Timer::Start()
@@ -27,8 +37,18 @@ namespace Hydro
         if(m_Time >= m_Duration)
         {
             m_Time = 0.0f;
-            if(OnTimerFinish.IsBound()) OnTimerFinish.Broadcast();
+            FinishedEvent.BroadcastChecked();
             if(!m_Loop) m_Started = false;
         }
+    }
+
+    void Timer::SetLoop(bool Loop)
+    {
+        m_Loop = Loop;
+    }
+
+    void Timer::SetDuration(float Duration)
+    {
+        m_Duration = Duration;
     }
 }
