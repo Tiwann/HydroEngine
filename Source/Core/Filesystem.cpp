@@ -152,6 +152,22 @@ namespace Hydro
         return "";
     }
 
+    std::vector<Path> Directory::GetFiles(const Path& Directory)
+    {
+        if(!is_directory(Directory) || !Exists(Directory))
+            return {};
+
+        std::vector<Path> Result;
+        for(const auto& Filepath : std::filesystem::directory_iterator(Directory))
+        {
+            if(is_regular_file(Filepath))
+            {
+                Result.push_back(Filepath);
+            }
+        }
+        return Result;
+    }
+
     Path Directory::GetUserDirectory()
     {
 #if defined(HYDRO_PLATFORM_WINDOWS)

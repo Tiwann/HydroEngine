@@ -30,6 +30,7 @@ namespace Hydro
         static bool Exists(const Path& Directory);
         static bool Create(const Path& Directory);
         static Path OpenFolderDialog(const Path& DefaultPath, const std::string& Title);
+        static std::vector<Path> GetFiles(const Path& Directory);
         static Path GetUserDirectory();
     };
 }
