@@ -13,5 +13,6 @@ namespace Hydro
         
         Ref<Shader> Load(const std::string& Name, const Path& Filepath) override;
         Ref<Shader> Retrieve(const std::string& Name) override;
+        void ReloadAll();
     };
 }

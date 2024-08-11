@@ -40,4 +40,12 @@ namespace Hydro
         }
         return m_Data[Name];
     }
+
+    void ShaderManager::ReloadAll()
+    {
+        for(auto& [Name, Shader] : m_Data)
+        {
+            Shader->Reload();
+        }
+    }
 }

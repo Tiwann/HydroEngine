@@ -9,7 +9,20 @@ namespace Hydro
 {
     Ref<Texture2D> TextureManager::Load(const std::string& Name, const Path& Filepath)
     {
-        Ref<Texture2D> LoadedTexture = Texture2D::CreateFromFile(Name, Filepath);
+        constexpr TextureParams DefaultParams = {
+            .Filter = TextureFilter::Nearest,
+            .Wrap = TextureWrap::Repeat,
+        };
+        
+        Ref<Texture2D> LoadedTexture = Texture2D::CreateFromFile(Name, Filepath, DefaultParams);
+        if(!LoadedTexture) return nullptr;
+        m_Data[Name] = LoadedTexture;
+        return LoadedTexture;
+    }
+
+    Ref<Texture2D> TextureManager::Load(const std::string& Name, const Path& Filepath, const TextureParams& Params)
+    {
+        Ref<Texture2D> LoadedTexture = Texture2D::CreateFromFile(Name, Filepath, Params);
         if(!LoadedTexture) return nullptr;
         m_Data[Name] = LoadedTexture;
         return LoadedTexture;
