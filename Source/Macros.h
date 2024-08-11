@@ -63,3 +63,5 @@
 
 
 #define HYDRO_ARRAY_COUNT(Array) (sizeof((Array)) / sizeof(*(Array)))
+
+#define HYDRO_NAME_MAX_SIZE 128
