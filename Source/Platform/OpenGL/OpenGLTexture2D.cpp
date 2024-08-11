@@ -7,16 +7,16 @@
 
 namespace Hydro
 {
-    OpenGLTexture2D::OpenGLTexture2D(const std::string& Name, uint32_t Width, uint32_t Height, uint32_t Slot) : Texture2D(Name, Width, Height, Slot)
+    OpenGLTexture2D::OpenGLTexture2D(const std::string& Name, uint32_t Width, uint32_t Height, const TextureParams& Params, uint32_t Slot) : Texture2D(Name, Width, Height, Params, Slot)
     {
         glCreateTextures(GL_TEXTURE_2D, 1, &m_Handle);
         glActiveTexture(GL_TEXTURE0 + Slot);
         glBindTexture(GL_TEXTURE_2D, m_Handle);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetTextureFilter(m_Params.Filter));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetTextureFilter(m_Params.Filter));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GetTextureWrap(m_Params.Wrap));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GetTextureWrap(m_Params.Wrap));
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)m_Width, (GLsizei)m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     }
@@ -24,6 +24,18 @@ namespace Hydro
     OpenGLTexture2D::~OpenGLTexture2D()
     {
         glDeleteTextures(1, &m_Handle);
+    }
+
+    void OpenGLTexture2D::SetTextureParameters(const TextureParams& Params)
+    {
+        Bind();
+        m_Params = Params;
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetTextureFilter(m_Params.Filter));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetTextureFilter(m_Params.Filter));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GetTextureWrap(m_Params.Wrap));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GetTextureWrap(m_Params.Wrap));
+        Unbind();
     }
 
     void OpenGLTexture2D::SetData(uint8_t* Data, uint32_t Width, uint32_t Height, ImageFormat Format)
@@ -35,6 +47,7 @@ namespace Hydro
         const GLenum Type = FormatToType(m_Format);
         const GLenum Fmt = FormatToOpenGLFormat(m_Format);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)m_Width, (GLsizei)m_Height, 0, Fmt, Type, Data);
+        Unbind();
     }
 
 
@@ -46,6 +59,7 @@ namespace Hydro
         m_Format = Image->GetFormat();
         const uint32_t Type = FormatToType(m_Format);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)m_Width, (GLsizei)m_Height, 0, GL_RGBA, Type, Image->GetData());
+        Unbind();
         HYDRO_LOG(Texture2D, Verbosity::Info, "Texture \"{}\": Data was set. Width: {}. Height: {}. Format: {}. Size: {}.", m_Name, m_Width, m_Height, FormatToString(m_Format), File::BytesToString(Image->GetSize()));
     }
 
@@ -63,6 +77,7 @@ namespace Hydro
         glGetTextureImage(m_Handle, 0, GL_RGBA, FormatToType(m_Format), (GLsizei)Size, Data);
         Ref<Image> ImageData = CreateRef<Image>(m_Width, m_Height, m_Format, Data);
         HYDRO_FREE(Data);
+        Unbind();
         return ImageData;
     }
 
@@ -71,6 +86,11 @@ namespace Hydro
     {
         glActiveTexture(GL_TEXTURE0 + m_Slot);
         glBindTexture(GL_TEXTURE_2D, m_Handle);
+    }
+
+    void OpenGLTexture2D::Unbind() const
+    {
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     uintptr_t OpenGLTexture2D::GetHandle() const
@@ -84,6 +104,26 @@ namespace Hydro
         case ImageFormat::RGBA8: return GL_UNSIGNED_BYTE;
         case ImageFormat::RGBA16: return GL_UNSIGNED_SHORT;
         case ImageFormat::RGBA32F: return GL_FLOAT;
+        }
+        return 0;
+    }
+
+    GLint OpenGLTexture2D::GetTextureWrap(TextureWrap Wrap)
+    {
+        switch (Wrap) {
+        case TextureWrap::Clamp: return GL_CLAMP_TO_EDGE;
+        case TextureWrap::Repeat: return GL_REPEAT;
+        case TextureWrap::Mirror: return GL_MIRRORED_REPEAT;
+        }
+        return 0;
+    }
+
+    GLint OpenGLTexture2D::GetTextureFilter(TextureFilter Filter)
+    {
+        switch (Filter)
+        {
+        case TextureFilter::Nearest: return GL_NEAREST;
+        case TextureFilter::Linear: return GL_LINEAR;
         }
         return 0;
     }

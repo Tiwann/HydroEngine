@@ -13,22 +13,23 @@
 namespace Hydro
 
 {
-    Texture2D::Texture2D(std::string Name, uint32_t Width, uint32_t Height, uint32_t Slot) : m_Name(std::move(Name)),
-        m_Width(Width), m_Height(Height), m_Slot(Slot)
+    Texture2D::Texture2D(std::string Name, uint32_t Width, uint32_t Height, const TextureParams& Params, uint32_t Slot) : m_Name(std::move(Name)),
+        m_Width(Width), m_Height(Height), m_Params(Params), m_Slot(Slot)
     {
         
     }
     
     
-    Ref<Texture2D> Texture2D::Create(const std::string& Name, uint32_t Width, uint32_t Height, uint32_t Slot)
+    Ref<Texture2D> Texture2D::Create(const std::string& Name, uint32_t Width, uint32_t Height, const TextureParams& Params, uint32_t Slot)
     {
-        HYDRO_RHI_PLATFORM_RETURN(Texture2D, Name, Width, Height, Slot);
+        HYDRO_RHI_PLATFORM_RETURN(Texture2D, Name, Width, Height, Params, Slot);
     }
 
-    Ref<Texture2D> Texture2D::CreateFromFile(const std::string& Name, const Path& Filepath, uint32_t Slot)
+    Ref<Texture2D> Texture2D::CreateFromFile(const std::string& Name, const Path& Filepath, const TextureParams& Params, uint32_t Slot)
     {
-        Ref<Texture2D> Texture = Create(Name, 0, 0, Slot);
+        Ref<Texture2D> Texture = Create(Name, 0, 0, Params, Slot);
         ScopedBuffer RawImageData = File::ReadToBuffer(Filepath);
+        
         const Ref<Image> ImageData = CreateRef<Image>(RawImageData.AsBuffer(), ImageFormat::RGBA8);
         Texture->SetData(ImageData);
         return Texture;
@@ -59,7 +60,7 @@ namespace Hydro
         return { shared_from_this(), Position, Size };
     }
 
-    Sprite Texture2D::CreateDefaultSprite()
+    Sprite Texture2D::CreateSprite()
     {
         return { shared_from_this(), Vector2::Zero, GetSize() };
     }
