@@ -2,6 +2,8 @@
 #include <functional>
 #include <vector>
 
+#include "Assertion.h"
+
 #define HYDRO_BIND_EVENT(Event, Func) (Event).BindMember(this, (Func))
 #define HYDRO_BIND_EVENT_AS(Event, As, Func) (Event).BindMember<As>(this, (Func))
 
@@ -54,6 +56,20 @@ namespace Hydro
 		template<typename... Params>
 		void Broadcast(Params... Parameters)
 		{
+			for (const auto& Delegate : m_Subscribers)
+			{
+				Delegate(std::forward<Params>(Parameters)...);
+			}
+		}
+
+		template<typename... Params>
+		void BroadcastChecked(Params... Parameters)
+		{
+			for(const auto& Delegate : m_Subscribers)
+			{
+				HYDRO_ASSERT(Delegate, "Tried to broacast event but found a invalid subscriber");
+			}
+			
 			for (const auto& Delegate : m_Subscribers)
 			{
 				Delegate(std::forward<Params>(Parameters)...);
