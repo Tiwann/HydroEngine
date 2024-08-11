@@ -23,6 +23,7 @@ namespace Hydro
         void ClearDepthBuffer() override;
         void ClearColorBuffer(const Color& color) override;
         void SwapBuffers() override;
+        void SetViewportRect(Vector2 Position, Vector2 Size) override;
         void Draw(DrawMode Mode, const Vao& VAO, uint32_t NumVert, const Ref<Shader>& Shader) override;
         void DrawIndexed(DrawMode Mode, const Ref<VertexArray>& VAO, const Ref<VertexBuffer>& VBO, const Ref<IndexBuffer>& IBO, const Ref<Shader>& Shader) override;
         void DrawLine(const Vector3& PointA, const Vector3& PointB, float Thickness, const Color& Color) override;

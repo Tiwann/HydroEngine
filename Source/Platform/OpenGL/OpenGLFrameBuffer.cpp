@@ -9,15 +9,19 @@ namespace Hydro
     OpenGLFrameBuffer::OpenGLFrameBuffer()
     {
         glCreateFramebuffers(1, &m_Handle);
-        glBindFramebuffer(GL_FRAMEBUFFER, m_Handle);
     }
 
     OpenGLFrameBuffer::OpenGLFrameBuffer(FrameBufferAttachment Attachment) : FrameBuffer(Attachment)
     {
         glCreateFramebuffers(1, &m_Handle);
         glBindFramebuffer(GL_FRAMEBUFFER, m_Handle);
-        m_AttachedTexture = Texture2D::Create("OpenGLFrameBuffer", 0, 0);
-        m_AttachedTexture->Bind();
+
+        TextureParams TexParams;
+        TexParams.Filter = TextureFilter::Nearest;
+        TexParams.Wrap = TextureWrap::Clamp;
+        
+        m_AttachedTexture = Texture2D::Create("OpenGLFrameBuffer", 0, 0, TexParams);
+        m_AttachedTexture->SetData(nullptr, 0, 0, ImageFormat::RGBA8);
         GLenum BufferAttachment = GetOpenGLAttachment(m_Attachment);
         glFramebufferTexture2D(GL_FRAMEBUFFER, BufferAttachment, GL_TEXTURE_2D, (GLuint)m_AttachedTexture->GetHandle(), 0); 
     }
@@ -48,7 +52,8 @@ namespace Hydro
         m_AttachedTexture = Texture;
         m_Attachment = Attachment;
         GLenum BufferAttachment = GetOpenGLAttachment(m_Attachment);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, BufferAttachment, GL_TEXTURE_2D, (GLint)Texture->GetHandle(), 0); 
+        glFramebufferTexture2D(GL_FRAMEBUFFER, BufferAttachment, GL_TEXTURE_2D, (GLint)Texture->GetHandle(), 0);
+        Unbind();
     }
 
     void OpenGLFrameBuffer::DetachTexture()
@@ -57,10 +62,10 @@ namespace Hydro
         m_AttachedTexture = nullptr;
         m_Attachment = FrameBufferAttachment::None;
         glFramebufferTexture2D(GL_FRAMEBUFFER, GetOpenGLAttachment(m_Attachment), GL_TEXTURE_2D, 0, 0);
-        
+        Unbind();
     }
 
-    uint32_t OpenGLFrameBuffer::GetOpenGLAttachment(FrameBufferAttachment Attachment)
+    GLenum OpenGLFrameBuffer::GetOpenGLAttachment(FrameBufferAttachment Attachment)
     {
         switch (Attachment)
         {
@@ -73,9 +78,13 @@ namespace Hydro
         }
         return UINT_MAX;
     }
+    
 
     bool OpenGLFrameBuffer::Validate()
     {
-        return glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+        Bind();
+        GLenum Result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        Unbind();
+        return Result == GL_FRAMEBUFFER_COMPLETE;
     }
 }

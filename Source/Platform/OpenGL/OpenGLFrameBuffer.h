@@ -18,7 +18,7 @@ namespace Hydro
         bool Validate() override;
 
 
-        static uint32_t GetOpenGLAttachment(FrameBufferAttachment Attachment);
+        static GLenum GetOpenGLAttachment(FrameBufferAttachment Attachment);
 
     protected:
         uint32_t m_Handle;

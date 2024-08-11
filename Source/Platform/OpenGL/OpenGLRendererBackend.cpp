@@ -78,6 +78,11 @@ namespace Hydro
         glfwSwapBuffers(Application::GetCurrentApplication().GetWindow()->GetNativeWindow());
     }
 
+    void OpenGLRendererBackend::SetViewportRect(Vector2 Position, Vector2 Size)
+    {
+        glViewport((GLint)Position.x, (GLint)Position.y, (GLint)Size.x, (GLint)Size.y);
+    }
+
     void OpenGLRendererBackend::Draw(DrawMode Mode, const Vao& VAO, uint32_t NumVert, const Ref<Shader>& Shader)
     {
         VAO->Bind();
@@ -141,7 +146,7 @@ namespace Hydro
     {
         auto vao = VertexArray::Create();
         vao->Bind();
-        Vertex Points[] ={
+        Vertex Points[] = {
             { Position + Vector3(-HalfExtents.x, HalfExtents.y, 0.0f) , Vector2::Zero, Vector3::Zero, Color },    
             { Position + Vector3(+HalfExtents.x, HalfExtents.y, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
             { Position + Vector3(+HalfExtents.x, -HalfExtents.y, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
@@ -170,13 +175,24 @@ namespace Hydro
         auto vao = VertexArray::Create();
         vao->Bind();
         Vertex Points[] ={
-            { Position + Vector3(-Radius / 2.0f, +Radius / 2.0f, 0.0f) , Vector2::Zero, Vector3::Zero, Color },    
-            { Position + Vector3(+Radius / 2.0f, +Radius / 2.0f, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
-            { Position + Vector3(+Radius / 2.0f, -Radius / 2.0f, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
-            { Position + Vector3(-Radius / 2.0f, -Radius / 2.0f, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
+            { Position + Vector3(-Radius, +Radius, 0.0f) , {0.0f, 1.0f}, Vector3::Zero, Color },    
+            { Position + Vector3(+Radius, +Radius, 0.0f) , {1.0f, 1.0f}, Vector3::Zero, Color },
+            { Position + Vector3(+Radius, -Radius, 0.0f) , {1.0f, 0.0f}, Vector3::Zero, Color },
+            { Position + Vector3(-Radius, -Radius, 0.0f) , {0.0f, 0.0f}, Vector3::Zero, Color },
         };
         auto vbo = VertexBuffer::Create(Points, std::size(Points));
         auto ibo = IndexBuffer::Create({0, 1, 2, 3});
+
+        vao->SetBufferLayout(VertexBufferLayout::Default);
+        
+        auto shader = m_Application.GetShaderManager().Retrieve("Circle");
+        shader->Bind();
+        
+        shader->SetUniformMat4("uModel", Matrix4::Identity);
+        shader->SetUniformFloat("uThickness", 0.2f);
+        shader->SetUniformFloat("uSmoothness", 0.05f);
+
+        DrawIndexed(DrawMode::Triangles, vao, vbo, ibo, shader);
     }
 
     void OpenGLRendererBackend::SetCullMode(CullMode Mode)

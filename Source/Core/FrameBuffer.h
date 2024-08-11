@@ -1,5 +1,6 @@
 #pragma once
 #include "SharedPointer.h"
+#include "Math/Vector2.h"
 
 namespace Hydro
 {
@@ -26,9 +27,11 @@ namespace Hydro
         virtual void AttachTexture(const Ref<Texture2D>& Texture, FrameBufferAttachment Attachment) = 0;
         virtual void DetachTexture() = 0;
         virtual bool Validate() = 0;
+        virtual void Resize(Vector2 NewSize);
 
         Ref<Texture2D> GetAttachedTexture() const;
         FrameBufferAttachment GetAttachment() const;
+        
         
 
         static Ref<FrameBuffer> Create();
