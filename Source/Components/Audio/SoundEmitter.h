@@ -54,7 +54,5 @@ namespace Hydro
         
         FMOD::System* m_System = nullptr;
         FMOD::Channel* m_Channel = nullptr;
-
-        
     };
 }

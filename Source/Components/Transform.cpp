@@ -132,9 +132,9 @@ namespace Hydro
     void Transform::OnInspectorGUI(const ImGuiIO& IO)
     {
         Component::OnInspectorGUI(IO);
-        UI::DragVector3("Position", m_Position, 0.01f, 0, 0, "%.2f");
-        UI::DragVector3("Rotation", m_Rotation, 0.01f, 0, 360.0f, "%.2f");
-        UI::DragVector3("Scale", m_Scale, 0.01f, 0, 0, "%.2f");
+        UI::DragVector3<float>("Position", m_Position, 0.01f, 0, 0, "%.2f");
+        UI::DragVector3<float>("Rotation", m_Rotation, 0.01f, 0, 360.0f, "%.2f");
+        UI::DragVector3<float>("Scale", m_Scale, 0.01f, 0, 0, "%.2f");
     }
 }
 

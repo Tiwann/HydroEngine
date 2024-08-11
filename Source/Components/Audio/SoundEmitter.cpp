@@ -98,16 +98,16 @@ namespace Hydro
             UI::Text(fmt::format("GUID: {}", GUID));
             if(m_Sound)
             {
-                UI::Text(fmt::format("Num Channels: {}", m_Sound->GetChannels()));
+                UI::Text(fmt::format("Channels: {}", m_Sound->GetChannels()));
                 UI::Text(fmt::format("Sound Type: {}", SoundTypeToString(m_Sound->GetType())));
                 UI::Text(fmt::format("Sound Format: {}", SoundFormatToString(m_Sound->GetFormat())));
-                int Seconds = (int)m_Sound->GetDuration();
-                UI::Text(fmt::format("Duration: {:02}:{:02}", Seconds / 60.0f, Seconds % 60));
-                UI::Text(fmt::format("Duration: {}", m_Sound->GetDuration()));
+                const float Seconds = m_Sound->GetDuration();
+                const int Minutes = Math::IntegerPart(Seconds / 60.0f);
+                const int RemainSeconds = ((int)Seconds) % 60;
+                UI::Text(fmt::format("Duration: {:02}:{:02}", Minutes, RemainSeconds));
             }
             
-            
-            ImGui::NewLine();
+            ImGui::Separator();
             const bool Playing = IsPlaying();
             const char* Label = IsPlaying() ? "Stop" : "Play";
             
@@ -153,8 +153,8 @@ namespace Hydro
             ImGui::TreePop();
         }
         
-        ImGui::DragFloat("Volume", &m_Volume, 0.01f, 0.0f, 1.0f, "%.2f");
-        ImGui::DragFloat("Pitch", &m_Pitch, 0.01f, 0.0f, 10.0f, "%.2f");
+        UI::DragValue<float>("Volume", m_Volume, 0.01f, 0.0f, 1.0f, "%.2f");
+        UI::DragValue<float>("Pitch", m_Pitch, 0.01f, 0.0f, 10.0f, "%.2f");
         ImGui::Checkbox("Looping", &m_Looping);
     }
 

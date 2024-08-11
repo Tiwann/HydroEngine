@@ -7,6 +7,7 @@
 #include <box2d/b2_polygon_shape.h>
 
 #include "Core/Color.h"
+#include "Editor/EditorGUI.h"
 
 static constexpr char ComponentName[7] = "Box 2D";
 
@@ -21,11 +22,8 @@ namespace Hydro
     {
         Shape2D::OnInspectorGUI(IO);
         
-        ImGui::DragFloat2("Center", m_Center.ValuePtr());
-        ImGui::DragFloat2("Half Extents", m_HalfExtents.ValuePtr());
-        ImGui::Checkbox("Is Trigger", &m_IsTrigger);
-        ImGui::Checkbox("Draw Debug", &m_ShowCollisions);
-
+        UI::DragVector2<float>("Center", m_Center);
+        UI::DragVector2<float>("Half Extents", m_HalfExtents);
         const char* ColliderTypes[3] = { "Static", "Kinematic", "Dynamic" };
         
         if(ImGui::Combo("Collider Type", (int*)&m_Type, ColliderTypes, 3))

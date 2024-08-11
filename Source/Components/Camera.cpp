@@ -5,6 +5,7 @@
 #include "Core/Application.h"
 #include "Core/GameObject.h"
 #include "Core/Window.h"
+#include "Editor/EditorGUI.h"
 
 namespace Hydro
 {
@@ -25,20 +26,20 @@ namespace Hydro
     {
         Component::OnInspectorGUI(IO);
         
-        ImGui::DragFloat("Width", &Settings.Width);
-        ImGui::DragFloat("Height", &Settings.Height);
-        ImGui::DragFloat("Near Plane", &Settings.NearPlane);
-        ImGui::DragFloat("Far Plane", &Settings.FarPlane);
+        UI::DragValue<float>("Width", Settings.Width, 1, 0, 0, "%.0f");
+        UI::DragValue<float>("Height", Settings.Height, 1, 0, 0, "%.0f");
+        UI::DragValue<float>("Near Plane", Settings.NearPlane);
+        UI::DragValue<float>("Far Plane", Settings.FarPlane);
 
         const char* ProjectionTypes[2] = { "Perspective", "Orthographic" };
         ImGui::Combo("Projection", (int*)&Settings.Projection, ProjectionTypes, 2);
             
         if(Settings.Projection == CameraProjectionType::Orthographic)
         {
-            ImGui::DragFloat("Orthographic Size", &Settings.OrthoSize);
+            UI::DragValue<float>("Orthographic Size", Settings.OrthoSize);
         } else
         {
-            ImGui::DragFloat("Field Of View", &Settings.FieldOfView);
+            UI::DragValue<float>("Field Of View", Settings.FieldOfView);
         }
     }
 
