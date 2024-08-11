@@ -18,7 +18,7 @@ constexpr float NANOSECONDS = 1000000000.0f;
 
 namespace Hydro
 {
-    class ViewportWindow;
+    class ViewportPanel;
     class DetailsPanel;
     class TextureManager;
     class ShaderManager;
@@ -53,6 +53,7 @@ namespace Hydro
 
         /* Application Interface */
         virtual void OnInit();
+        virtual void OnLoadResources(Ref<ShaderManager> ShaderManager, Ref<TextureManager> TextureManager, Ref<SoundManager> SoundManager);
         virtual void OnStart();
         virtual void OnExit();
         virtual void OnRender(const Ref<RendererBackend>& Renderer);
@@ -97,25 +98,31 @@ namespace Hydro
         Ref<Scene> m_Scene;
         Ref<AudioEngine> m_AudioEngine;
         
-        // Ref<FrameBuffer> m_FrameBuffer;
-        // Ref<Texture2D> m_FrameBufferTexture;
-
+    protected:
         /* Resources Managers */
         Ref<ShaderManager> m_ShaderManager;
         Ref<TextureManager> m_TextureManager;
         Ref<SoundManager> m_SoundManager;
+    private:
 
         /* UI Components */
         TreeNode<MenuItem> m_MenuBar;
         Ref<SceneHierarchyPanel> m_SceneHierarchyPanel;
         Ref<DetailsPanel> m_DetailsPanel;
-        Ref<ViewportWindow> m_ViewportWindow;
+        Ref<ViewportPanel> m_ViewportPanel;
 
+    public:
+        Ref<SceneHierarchyPanel> GetSceneHierarchyPanel() const;
+        Ref<DetailsPanel> GetDetailsPanel() const;
+        Ref<ViewportPanel> GetViewportPanel() const;
+
+    private:
         static Application* s_Instance;
         Color m_ClearColor{Color::Black};
         ApplicationConfiguration m_Configuration;
         bool m_IsRunning = true;
         bool m_Start = false;
+        bool m_ShowImGuiDemoWindow = false;
         float m_DeltaTime = 0.0f;
         
         bool PreInitialize();

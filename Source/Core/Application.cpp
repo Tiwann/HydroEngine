@@ -13,11 +13,12 @@
 
 
 #include <GLFW/glfw3.h>
-#include <imgui_impl_glfw.h>
+
 
 #include "CameraSettings.h"
 #include "CullMode.h"
 #include "MemoryData.h"
+#include "ScopedTimer.h"
 #include "TreeNode.h"
 #include "ResourceManager/ShaderManager.h"
 #include "ResourceManager/TextureManager.h"
@@ -27,12 +28,14 @@
 #include "Platform/PlatformImGui.h"
 #include "Components/Camera.h"
 #include "Components/Physics/PhysicsComponent.h"
+
+
 #include "Editor/DetailsPanel.h"
 #include "Editor/EditorGUI.h"
 #include "Editor/SceneHierarchyPanel.h"
 #include "Editor/Selection.h"
 #include "Editor/ViewportWindow.h"
-#include "imgui/imgui_internal.h"
+
 #include "Serialization/SceneSerializer.h"
 
 
@@ -58,62 +61,29 @@ namespace Hydro
 
         m_Window->Show();
         OnInit();
-
+        
         while(m_IsRunning)
         {
             ApplicationDelegates::OnFrameBegin.Broadcast();
             Input::ResetInputStates();
             glfwPollEvents();
-            using namespace std::chrono;
-            const auto StartClock = high_resolution_clock::now();
-           
-            
-            /*if(!m_Configuration.WithEditor)
-                m_Start = true;
 
-            static bool hasStarted;
-            if(m_Start)
-            {
-                if(hasStarted)
-                {
-                    OnUpdate(m_DeltaTime * Time::Scale);
-                } else
-                {
-                    OnStart();
-                    hasStarted = true;
-                    ApplicationDelegates::OnStartEvent.Broadcast();
-                }
-            }
-            else
-            {
-                if(hasStarted)
-                {
-                    m_Scene->OnDestroy();
-                    m_Scene->OnInit();
-                    hasStarted = false;
-                    ApplicationDelegates::OnStopEvent.Broadcast();
-                }
-            }*/
+            ScopedTimer<std::chrono::nanoseconds> FrameTimer([this](const float Duration) { m_DeltaTime = Duration; });
             
             OnUpdate(m_DeltaTime * Time::Scale);
             OnRender(m_Renderer);
-
+            
             if(m_Configuration.WithEditor)
             {
                 UI::BeginFrame();
-                DockNodeFlags Flags = DockNodeFlagBit::PassthruCentralNode ;
+                DockNodeFlags Flags = DockNodeFlagBit::PassthruCentralNode;
                 ImGui::DockSpaceOverViewport(ImGui::GetID("Dockspace"), ImGui::GetMainViewport(), Flags.As<ImGuiDockNodeFlags>());
-    
-                if(!m_Window->m_Minimized)
-                    OnGui();
+                OnGui();
                 UI::EndFrame();
                 UI::Draw();
             }
             
             m_Renderer->SwapBuffers();
-            const auto EndClock = high_resolution_clock::now();
-            const auto FrameDuration = duration_cast<nanoseconds>(EndClock - StartClock).count();
-            m_DeltaTime = (float)FrameDuration / NANOSECONDS;
             ApplicationDelegates::OnFrameEnd.Broadcast();
         }
         
@@ -125,10 +95,6 @@ namespace Hydro
         m_ShaderManager->Load("Sprite", "Engine/Assets/Shaders/Sprite.glsl");
         m_ShaderManager->Load("UniformColor", "Engine/Assets/Shaders/UniformColor.glsl");
         m_ShaderManager->Load("Circle", "Engine/Assets/Shaders/Circle.glsl");
-
-        // m_FrameBuffer = FrameBuffer::Create();
-        // m_FrameBufferTexture = Texture2D::Create("Framebuffer", m_Window->GetWidth<uint32_t>(), m_Window->GetHeight<uint32_t>());
-        // m_FrameBuffer->AttachTexture(m_FrameBufferTexture, FrameBufferAttachment::Color);
         
         m_Scene = CreateRef<Scene>();
         m_Scene->SetName("Default Scene");
@@ -136,19 +102,23 @@ namespace Hydro
 
         m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene.get());
         m_DetailsPanel = CreateRef<DetailsPanel>(m_Scene.get());
-        m_ViewportWindow = CreateRef<ViewportWindow>();
+        m_ViewportPanel = CreateRef<ViewportPanel>();
         
-
         m_DetailsPanel->OnInit();
         m_SceneHierarchyPanel->OnInit();
-        m_ViewportWindow->OnInit();
+        m_ViewportPanel->OnInit();
 
+        static const char* HydroSceneFilter = "Hydro Engine Scene (.htscn)\0*.htscn\0\0";
         auto& File = m_MenuBar.AddChild({ "File" });
-        File.AddChild({ "Open Scene" , nullptr,});
+        File.AddChild({ "Open Scene" , nullptr, [this]
+        {
+            const Path Filepath = File::OpenFileDialog("Open Scene", "", HydroSceneFilter);
+            OpenScene(Filepath);
+        }});
         File.AddChild({ "Save Scene" });
         File.AddChild({ "Save Scene As", nullptr, [this]
         {
-            const Path Filepath = File::SaveFileDialog("Save scene as...", "", "Hydro Engine Text Scene (.htscn)\0*.htscn\0\0");
+            const Path Filepath = File::SaveFileDialog("Save scene as...", "", HydroSceneFilter);
             SaveSceneAs(Filepath);
         }});
         File.AddChild({ "Exit", nullptr, [this]{ RequireExit(); } });
@@ -158,38 +128,40 @@ namespace Hydro
         Edit.AddChild({ "Redo" });
         Edit.AddChild({ "Preferences" });
 
+        
         auto& View = m_MenuBar.AddChild({ "View" });
         View.AddChild({ "Details Panel", m_DetailsPanel->OpenedPtr() });
         View.AddChild({ "Scene Hierarchy", m_SceneHierarchyPanel->OpenedPtr() });
-        View.AddChild({ "Viewport Window", m_ViewportWindow->OpenedPtr() });
+        View.AddChild({ "Viewport Window", m_ViewportPanel->OpenedPtr() });
+        View.AddChild({ "ImGui Demo Window" , &m_ShowImGuiDemoWindow});
         
         auto& Scene = m_MenuBar.AddChild({ "Scene "});
         Scene.AddChild({ "Rename" });
-        auto& GameObject = Scene.AddChild({ "Game Object" });
-        GameObject.AddChild({ "Create", nullptr, [this]
+        Scene.AddChild({ "Create Object", nullptr, [this]
         {
             const Ref<class GameObject> Object = CreateObject("New Object");
             Selection::SetGameObject(Object);
         }});
-
-        static bool ShowAllCollisions;
-        auto& Misc = m_MenuBar.AddChild({ "Misc" });
-        Misc.AddChild({ "Show/Hide Collision", &ShowAllCollisions, [this]
+        Scene.AddChild({ "Create Camera", nullptr, [this]
         {
-            m_Scene->ForEach([](const Ref<class GameObject>& Object)
-            {
-                Object->ForEach([](const Ref<Component>& Component)
-                {
-                   if(Ref<PhysicsComponent> Physics = Cast<PhysicsComponent>(Component))
-                   {
-                       ShowAllCollisions = !ShowAllCollisions;
-                       Physics->SetShowCollisions(ShowAllCollisions);
-                   }
-                });
-            });
-        }}); 
+            const Ref<class GameObject> Camera = CreateCamera();
+            Selection::SetGameObject(Camera);
+        }});
+        
+        auto& Misc = m_MenuBar.AddChild({ "Misc" });
+        Misc.AddChild({ "Reload All Shaders", nullptr, [this]
+        {
+            m_ShaderManager->ReloadAll();
+        }});
+        
         
         ApplicationDelegates::OnInitEvent.Broadcast();
+        OnLoadResources(m_ShaderManager, m_TextureManager, m_SoundManager);
+    }
+
+    void Application::OnLoadResources(Ref<ShaderManager> ShaderManager, Ref<TextureManager> TextureManager,
+        Ref<SoundManager> SoundManager)
+    {
     }
 
     void Application::OnStart()
@@ -206,33 +178,28 @@ namespace Hydro
 
         if(m_Configuration.WithEditor)
             UI::Shutdown();
-
-        // m_FrameBuffer->Destroy();
+        
         m_TextureManager->UnloadAll();
         m_ShaderManager->UnloadAll();
         m_SoundManager->UnloadAll();
         
-        m_AudioEngine->OnDestroy();
-        
+        m_AudioEngine->Destroy();
         m_Renderer->Destroy();
         m_Window->Destroy();
+        
         glfwTerminate();
         ApplicationDelegates::OnExit.Broadcast();
     }
 
     void Application::OnRender(const Ref<RendererBackend>& Renderer)
     {
-        m_Renderer->ClearDepthBuffer();
-        m_Renderer->ClearColorBuffer(m_ClearColor);
-        /*if(m_FrameBuffer)
-        {
-            const Vector2 ViewportSize = m_Viewport->GetSize();
-            glViewport(0, 0, (int)ViewportSize.x, (int)ViewportSize.y);
-            m_FrameBuffer->Bind();
-            
-            m_FrameBuffer->Unbind();
-        }*/
+        Renderer->ClearColorBuffer(m_ClearColor.WithOpacity(1.0f));
+        m_ViewportPanel->GetFrameBuffer()->Bind();
+        m_Renderer->GetCurrentCamera()->Settings.SetDimensions(m_ViewportPanel->GetSize()); // Temp
+        Renderer->SetViewportRect(Vector2::Zero, m_ViewportPanel->GetSize());
+        Renderer->ClearColorBuffer({0.08f, 0.08f, 0.08f, 1.0f});
         m_Scene->OnRender(Renderer);
+        m_ViewportPanel->GetFrameBuffer()->Unbind();
     }
 
     static void UpdateWindowName(float Delta, const Application* Application)
@@ -275,21 +242,18 @@ namespace Hydro
         m_Scene->OnUpdate(Delta);
         m_DetailsPanel->OnUpdate(Delta);
         m_SceneHierarchyPanel->OnUpdate(Delta);
-        m_ViewportWindow->OnUpdate(Delta);
-
-        
+        m_ViewportPanel->OnUpdate(Delta);
     }
     
     void Application::OnGui()
     {
-        ImGuiIO& IO = ImGui::GetIO();
-        
-        UI::MenuBar(m_MenuBar);
-        
-        m_SceneHierarchyPanel->OnInspectorGUI(IO);
+        const ImGuiIO& IO = ImGui::GetIO();
+
+        UI::MainMenuMenuBar(m_MenuBar);
         m_DetailsPanel->OnInspectorGUI(IO);
-        m_ViewportWindow->OnInspectorGUI(IO);
-        
+        m_SceneHierarchyPanel->OnInspectorGUI(IO);
+        m_ViewportPanel->OnInspectorGUI(IO);
+        ImGui::ShowDemoWindow(&m_ShowImGuiDemoWindow);
     }
 
     bool Application::SaveSceneAs(const Path& Filepath)
@@ -301,7 +265,8 @@ namespace Hydro
 
     bool Application::OpenScene(const Path& Filepath)
     {
-        return false;
+        SceneSerializer Serializer(Filepath);
+        return Serializer.Deserialize(*m_Scene);
     }
 
 
@@ -384,6 +349,21 @@ namespace Hydro
     const Ref<AudioEngine>& Application::GetAudioEngine() const
     {
         return m_AudioEngine;
+    }
+
+    Ref<SceneHierarchyPanel> Application::GetSceneHierarchyPanel() const
+    {
+        return m_SceneHierarchyPanel;
+    }
+
+    Ref<DetailsPanel> Application::GetDetailsPanel() const
+    {
+        return m_DetailsPanel;
+    }
+
+    Ref<ViewportPanel> Application::GetViewportPanel() const
+    {
+        return m_ViewportPanel;
     }
 
     bool Application::PreInitialize()
@@ -482,8 +462,6 @@ namespace Hydro
             #endif
         });
         
-
-        //TODO: Create an event system to handle window input
         glfwSetKeyCallback(m_Window->GetNativeWindow(), [](GLFWwindow* window, int key, int, int action, int)
         {
             const Application* App = (Application*)glfwGetWindowUserPointer(window);
