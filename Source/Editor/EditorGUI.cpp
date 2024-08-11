@@ -7,6 +7,7 @@
 #include "Components/Audio/SoundEmitter.h"
 #include "Components/Audio/SoundListener.h"
 #include "Components/Physics/Box2D.h"
+#include "Components/Physics/Circle2D.h"
 #include "Components/Rendering/SpriteRenderer.h"
 #include "Core/Application.h"
 #include "ResourceManager/TextureManager.h"
@@ -23,65 +24,11 @@ namespace Hydro::UI
     }
     
 
-    void Text(std::string_view Str)
+    void Text(const std::string_view Str)
     {
         ImGui::Text(Str.data());
     }
     
-    bool SliderVector2(std::string_view Label, Vector2& Vec, float Min, float Max, std::string_view Format,
-                       SliderFlags Flags, bool Enabled)
-    {
-        ImGui::BeginDisabled(!Enabled);
-        const bool Result = ImGui::SliderFloat2(Label.data(), (float*)&Vec, Min, Max, Format.data(), Flags.As<ImGuiSliderFlags>());
-        ImGui::EndDisabled();
-        return Result;
-    }
-
-    bool SliderVector3(std::string_view Label, Vector3& Vec, float Min, float Max, std::string_view Format,
-        SliderFlags Flags, bool Enabled)
-    {
-        ImGui::BeginDisabled(!Enabled);
-        const bool Result = ImGui::SliderFloat3(Label.data(), (float*)&Vec, Min, Max, Format.data(), Flags.As<ImGuiSliderFlags>());
-        ImGui::EndDisabled();
-        return Result;
-    }
-    bool SliderVector4(std::string_view Label, Vector4& Vec, float Min, float Max, std::string_view Format,
-        SliderFlags Flags, bool Enabled)
-    {
-        ImGui::BeginDisabled(!Enabled);
-        const bool Result = ImGui::SliderFloat4(Label.data(), (float*)&Vec, Min, Max, Format.data(), Flags.As<ImGuiSliderFlags>());
-        ImGui::EndDisabled();
-        return Result;
-    }
-    
-
-    bool DragVector2(std::string_view Label, Vector2& Vec, float Speed, float Min, float Max, std::string_view Format,
-                     SliderFlags Flags, bool Enabled)
-    {
-        ImGui::BeginDisabled(!Enabled);
-        const bool Result = ImGui::DragFloat2(Label.data(), (float*)&Vec, Speed, Min, Max, Format.data(), Flags.As<ImGuiSliderFlags>());
-        ImGui::EndDisabled();
-        return Result;
-    }
-
-    bool DragVector3(std::string_view Label, Vector3& Vec, float Speed, float Min, float Max, std::string_view Format,
-        SliderFlags Flags, bool Enabled)
-    {
-        ImGui::BeginDisabled(!Enabled);
-        const bool Result = ImGui::DragFloat3(Label.data(), (float*)&Vec, Speed, Min, Max, Format.data(), Flags.As<ImGuiSliderFlags>());
-        ImGui::EndDisabled();
-        return Result;
-    }
-
-    bool DragVector4(std::string_view Label, Vector4& Vec, float Speed, float Min, float Max, std::string_view Format,
-        SliderFlags Flags, bool Enabled)
-    {
-        ImGui::BeginDisabled(!Enabled);
-        const bool Result = ImGui::DragFloat4(Label.data(), (float*)&Vec, Speed, Min, Max, Format.data(), Flags.As<ImGuiSliderFlags>());
-        ImGui::EndDisabled();
-        return Result;
-    }
-
     bool Button(std::string_view Label, Vector2 Size, bool Enabled)
     {
         ImGui::BeginDisabled(!Enabled);
@@ -90,7 +37,7 @@ namespace Hydro::UI
         return Result;
     }
     
-    void MenuBar(const TreeNode<MenuItem>& RootNode)
+    void MainMenuMenuBar(const TreeNode<MenuItem>& RootNode)
     {
         if (ImGui::BeginMainMenuBar())
         {
@@ -145,6 +92,7 @@ namespace Hydro::UI
                 "Sound Listener",
                 "Sprite Renderer",
                 "Box 2D",
+                "Circle 2D"
             };
 
             ImGui::SeparatorText("Add Component");
@@ -159,6 +107,7 @@ namespace Hydro::UI
                     case 2: Object->AddComponent<SoundListener>(); break;
                     case 3: Object->AddComponent<SpriteRenderer>(); break;
                     case 4: Object->AddComponent<Box2D>(); break;
+                    case 5: Object->AddComponent<Circle2D>(); break;
                     }
                     ShowListBox = false;
                 }
@@ -191,7 +140,7 @@ namespace Hydro::UI
                 TextureManager& Manager = Application::GetCurrentApplication().GetTextureManager();
                 const std::string Name = Filepath.filename().string();
                 const Ref<Texture2D> NewTexture = Manager.Load(Name, Filepath);
-                InOutSprite = NewTexture->CreateDefaultSprite();
+                InOutSprite = NewTexture->CreateSprite();
             }
             ImGui::TreePop();
         }

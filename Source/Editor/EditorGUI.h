@@ -108,8 +108,6 @@ namespace Hydro
 
     namespace UI
     {
-        inline ImGuiID DockspaceID = 0;
-        
         /* Window */
         void NewWindow(std::string_view Label, bool& Opened, WindowFlags Flags, const std::function<void()>& Content);
         
@@ -118,53 +116,186 @@ namespace Hydro
         
         /* Sliders */
         template<typename T, typename = std::enable_if<std::is_arithmetic_v<T>>>
-        bool SliderValue(std::string_view Label, T& Val, T Min = 0, T Max = 0, std::string_view Format = "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
+        bool SliderValue(std::string_view Label, T& Val, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
         {
             bool Result = false;
             ImGui::BeginDisabled(!Enabled);
             if(std::is_integral_v<T>)
             {
-                Result = ImGui::SliderInt(Label.data(), (int*)&Val, Min, Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                int Temp = (int)Val;
+                Result = ImGui::SliderInt(Label.data(), &Temp, (int)Min, (int)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Val = (T)Temp;
             }
 
             if(std::is_floating_point_v<T>)
             {
-                Result = ImGui::SliderFloat(Label.data(), (float*)&Val, Min, Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Result = ImGui::SliderFloat(Label.data(), (float*)&Val, (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
             }
             ImGui::EndDisabled();
             return Result;
         }
         
-        bool SliderVector2(std::string_view Label, Vector2& Vec, float Min = 0, float Max = 0, std::string_view Format = "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true);
-        bool SliderVector3(std::string_view Label, Vector3& Vec, float Min = 0, float Max = 0, std::string_view Format = "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true);
-        bool SliderVector4(std::string_view Label, Vector4& Vec, float Min = 0, float Max = 0, std::string_view Format = "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true);
-
-        /* Drags */
         template<typename T, typename = std::enable_if<std::is_arithmetic_v<T>>>
-        bool DragValue(std::string_view Label, T& Val, T Speed, T Min = 0, T Max = 0, std::string_view Format = "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
+        bool SliderVector2(std::string_view Label, Vector2& Vec, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
         {
             bool Result = false;
             ImGui::BeginDisabled(!Enabled);
             if(std::is_integral_v<T>)
             {
-                Result = ImGui::DragInt(Label.data(), (int*)&Val, (int)Speed, Min, Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                int Temp[2] = { (int)Vec.x, (int)Vec.y };
+                Result = ImGui::SliderInt2(Label.data(), Temp, (int)Min, (int)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Vec.x = (T)Temp[0];
+                Vec.y = (T)Temp[1];
             }
 
             if(std::is_floating_point_v<T>)
             {
-                Result = ImGui::DragFloat(Label.data(), (float*)&Val, (float)Speed, Min, Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Result = ImGui::SliderFloat2(Label.data(), Vec.ValuePtr(), (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
             }
             ImGui::EndDisabled();
             return Result;
         }
-        bool DragVector2(std::string_view Label, Vector2& Vec, float Speed = 1, float Min = 0, float Max = 0, std::string_view Format = "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true);
-        bool DragVector3(std::string_view Label, Vector3& Vec, float Speed = 1, float Min = 0, float Max = 0, std::string_view Format = "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true);
-        bool DragVector4(std::string_view Label, Vector4& Vec, float Speed = 1, float Min = 0, float Max = 0, std::string_view Format = "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true);
+        
+        template<typename T, typename = std::enable_if<std::is_arithmetic_v<T>>>
+        bool SliderVector3(std::string_view Label, Vector3& Vec, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
+        {
+            bool Result = false;
+            ImGui::BeginDisabled(!Enabled);
+            if(std::is_integral_v<T>)
+            {
+                int Temp[3] = { (int)Vec.x, (int)Vec.y, (int)Vec.z };
+                Result = ImGui::SliderInt3(Label.data(), Temp, (int)Min, (int)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Vec.x = (T)Temp[0];
+                Vec.y = (T)Temp[1];
+                Vec.z = (T)Temp[2];
+            }
+
+            if(std::is_floating_point_v<T>)
+            {
+                Result = ImGui::SliderFloat3(Label.data(), Vec.ValuePtr(), (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+            }
+            ImGui::EndDisabled();
+            return Result;
+        }
+        
+        template<typename T, typename = std::enable_if<std::is_arithmetic_v<T>>>
+        bool SliderVector4(std::string_view Label, Vector4& Vec, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
+        {
+            bool Result = false;
+            ImGui::BeginDisabled(!Enabled);
+            if(std::is_integral_v<T>)
+            {
+                int Temp[4] = { (int)Vec.x, (int)Vec.y, (int)Vec.z, (int)Vec.w };
+                Result = ImGui::SliderInt4(Label.data(), Temp, (int)Min, (int)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Vec.x = (T)Temp[0];
+                Vec.y = (T)Temp[1];
+                Vec.z = (T)Temp[2];
+                Vec.w = (T)Temp[3];
+            }
+
+            if(std::is_floating_point_v<T>)
+            {
+                Result = ImGui::SliderFloat4(Label.data(), Vec.ValuePtr(), (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+            }
+            ImGui::EndDisabled();
+            return Result;
+        }
+        
+
+        /* Drags */
+        template<typename T, typename = std::enable_if<std::is_arithmetic_v<T>>>
+        bool DragValue(std::string_view Label, T& Val, float Speed = 1, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
+        {
+            bool Result = false;
+            ImGui::BeginDisabled(!Enabled);
+            if(std::is_integral_v<T>)
+            {
+                int Temp = (int)Val;
+                Result = ImGui::DragInt(Label.data(), &Temp, Speed, (int)Min, (int)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Val = (T)Temp;
+            }
+
+            if(std::is_floating_point_v<T>)
+            {
+                Result = ImGui::DragFloat(Label.data(), (float*)&Val, Speed, (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+            }
+            ImGui::EndDisabled();
+            return Result;
+        }
+
+        template<typename T, typename = std::enable_if<std::is_arithmetic_v<T>>>
+        bool DragVector2(std::string_view Label, Vector2& Vec, float Speed = 1, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
+        {
+            bool Result = false;
+            ImGui::BeginDisabled(!Enabled);
+            if(std::is_integral_v<T>)
+            {
+                int Temp[2] = { (int)Vec.x, (int)Vec.y };
+                Result = ImGui::DragInt2(Label.data(), Temp, Speed, (int)Min, (int)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Vec.x = (T)Temp[0];
+                Vec.y = (T)Temp[1];
+            }
+
+            if(std::is_floating_point_v<T>)
+            {
+                Result = ImGui::DragFloat2(Label.data(), Vec.ValuePtr(), Speed, (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+            }
+            ImGui::EndDisabled();
+            return Result;
+        }
+
+        template<typename T, typename = std::enable_if<std::is_arithmetic_v<T>>>
+        bool DragVector3(std::string_view Label, Vector3& Vec, float Speed = 1, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
+        {
+            bool Result = false;
+            ImGui::BeginDisabled(!Enabled);
+            if(std::is_integral_v<T>)
+            {
+                int Temp[3] = { (int)Vec.x, (int)Vec.y, (int)Vec.z };
+                Result = ImGui::DragInt3(Label.data(), Temp, Speed, (int)Min, (int)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Vec.x = (T)Temp[0];
+                Vec.y = (T)Temp[1];
+                Vec.z = (T)Temp[2];
+            }
+
+            if(std::is_floating_point_v<T>)
+            {
+                Result = ImGui::DragFloat3(Label.data(), Vec.ValuePtr(), Speed, (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+            }
+            ImGui::EndDisabled();
+            return Result;
+        }
+
+        template<typename T, typename = std::enable_if<std::is_arithmetic_v<T>>>
+        bool DragVector4(std::string_view Label, Vector4& Vec, float Speed = 1, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
+        {
+            bool Result = false;
+            ImGui::BeginDisabled(!Enabled);
+            if(std::is_integral_v<T>)
+            {
+                int Temp[4] = { (int)Vec.x, (int)Vec.y, (int)Vec.z, (int)Vec.w };
+                Result = ImGui::DragInt4(Label.data(), Temp, Speed, (int)Min, (int)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Vec.x = (T)Temp[0];
+                Vec.y = (T)Temp[1];
+                Vec.z = (T)Temp[2];
+                Vec.w = (T)Temp[3];
+                return Result;
+            }
+
+            if(std::is_floating_point_v<T>)
+            {
+                Result = ImGui::DragFloat4(Label.data(), Vec.ValuePtr(), Speed, (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+            }
+            ImGui::EndDisabled();
+            return Result;
+        }
+        
 
         
         bool Button(std::string_view Label, Vector2 Size = {0, 0}, bool Enabled = true);
         
-        void MenuBar(const TreeNode<MenuItem>& RootNode);
+        void MainMenuMenuBar(const TreeNode<MenuItem>& RootNode);
+        
         void AddComponent(const Ref<GameObject>& Object);
         
         void Sprite(class Sprite& InOutSprite);

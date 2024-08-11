@@ -3,6 +3,7 @@
 
 #include "EditorGUI.h"
 #include "Selection.h"
+#include "ViewportWindow.h"
 #include "Components/Camera.h"
 #include "Core/Application.h"
 #include "Core/RendererBackend.h"
@@ -37,12 +38,12 @@ namespace Hydro
     {
         EditorWindow::OnInspectorGUI(IO);
         if(!m_Opened) return;
-        
-        UI::NewWindow(m_Name, m_Opened, WindowFlagBits::None, [this]
+
+        if(ImGui::Begin(m_Name.data(), &m_Opened))
         {
             if(ImGui::Button("Create Object"))
             {
-                m_CurrentScene->CreateObject("New Object");    
+                m_CurrentScene->CreateObject("Empty Object");    
             }
 
             static bool ShowContextMenu = false;
@@ -64,7 +65,6 @@ namespace Hydro
                     ImGui::OpenPopup("ContextMenu");
                     Selection::SetGameObject(Object);
                 }
-                
             });
 
             if (ShowContextMenu && ImGui::BeginPopup("ContextMenu"))
@@ -92,31 +92,36 @@ namespace Hydro
 
                 ImGui::EndPopup();
             }
-        });
 
-        if(Ref<GameObject> Object = Selection::GetGameObject())
-        {
-            Application& App = Application::GetCurrentApplication();
-            Vector2 Size = App.GetWindow()->GetSize();
-            Ref<Camera> Cam = App.GetRendererBackend()->GetCurrentCamera();
-
-            ImGuizmo::SetOrthographic(Cam->Settings.Projection == CameraProjectionType::Orthographic);
-            ImGuizmo::SetDrawlist(ImGui::GetBackgroundDrawList());
-            ImGuizmo::SetRect(0, 0, Size.x, Size.y);
-
-            Ref<Transform> Tr = Object->GetTransform();
-            Matrix4 Mat = Tr->GetLocalSpaceMatrix();
-            
-            ImGuizmo::Manipulate(Cam->GetViewMatrix().ValuePtr(), Cam->GetProjectionMatrix().ValuePtr(),
-                ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, Mat.ValuePtr());
-            if(ImGuizmo::IsUsing())
+            if(Ref<GameObject> Object = Selection::GetGameObject())
             {
-                Vector3 Pos, Rot, Sc;
-                ImGuizmo::DecomposeMatrixToComponents(Mat.ValuePtr(), Pos.ValuePtr(), Rot.ValuePtr(), Sc.ValuePtr());
-                Tr->SetPosition(Pos);
-                Tr->SetRotation(Rot);
-                Tr->SetScale(Sc);
+                Application& App = Application::GetCurrentApplication();
+                Vector2 Size = App.GetViewportPanel()->GetSize();
+                Ref<Camera> Cam = App.GetRendererBackend()->GetCurrentCamera();
+                if(!Cam) return;
+
+                ImGuizmo::SetOrthographic(Cam->Settings.Projection == CameraProjectionType::Orthographic);
+                ImGuizmo::SetDrawlist(App.GetViewportPanel()->GetDrawList());
+                ImGuizmo::SetRect(0, 0, Size.x, Size.y);
+
+                Ref<Transform> Tr = Object->GetTransform();
+                Matrix4 Mat = Tr->GetLocalSpaceMatrix();
+            
+                ImGuizmo::Manipulate(Cam->GetViewMatrix().ValuePtr(), Cam->GetProjectionMatrix().ValuePtr(),
+                    ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, Mat.ValuePtr());
+                if(ImGuizmo::IsUsing())
+                {
+                    Vector3 Pos, Rot, Sc;
+                    ImGuizmo::DecomposeMatrixToComponents(Mat.ValuePtr(), Pos.ValuePtr(), Rot.ValuePtr(), Sc.ValuePtr());
+                    Tr->SetPosition(Pos);
+                    Tr->SetRotation(Rot);
+                    Tr->SetScale(Sc);
+                }
             }
         }
+        ImGui::End();
+        
+
+       
     }
 }
