@@ -23,7 +23,7 @@ namespace Hydro
         static Ref<AudioEngine> Create();
 
         bool Init(uint32_t SampleRate);
-        void OnDestroy();
+        void Destroy();
         void OnUpdate();
 
         FMOD::Sound* CreateSound(const Path& Filepath, SoundFlags Flags);

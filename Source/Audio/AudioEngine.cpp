@@ -97,7 +97,7 @@ namespace Hydro
         return true;
     }
 
-    void AudioEngine::OnDestroy()
+    void AudioEngine::Destroy()
     {
         m_System->close();
         m_System->release();
