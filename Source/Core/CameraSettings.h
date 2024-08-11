@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CameraProjectionType.h"
+#include "Math/Vector2.h"
 
 namespace Hydro
 {
@@ -37,6 +38,12 @@ namespace Hydro
         CameraSettings WithNearFarPlanes(float Near, float Far) const
         {
             return { Projection, Width, Height, FieldOfView, OrthoSize, Near, Far };
+        }
+
+        void SetDimensions(Vector2 Size)
+        {
+            Width = Size.x;
+            Height = Size.y;
         }
     };    
 }
