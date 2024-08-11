@@ -11,13 +11,10 @@ project "HydroEngine"
     objdir (intermediate)
 	
 	
-	delete_assets = string.format("{RMDIR} %s", path.join(binaries, "Engine", "Assets"))
-	copy_assets = string.format("{COPYDIR} %s %s", path.join("%{libs.HydroEngine}", "Assets"), path.join(binaries, "Engine", "Assets"))
-	
 	postbuildcommands
 	{
-	    delete_assets,
-	    copy_assets
+	    string.format("{RMDIR} %s", path.join(binaries, "Engine")),
+	    string.format("{COPYDIR} %s %s", path.join("%{libs.HydroEngine}", "Assets"), path.join(binaries, "Engine", "Assets"))
 	}
 
 	files
