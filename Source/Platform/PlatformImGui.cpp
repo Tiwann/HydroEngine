@@ -114,7 +114,7 @@ namespace Hydro::UI
 
     void SetHydroStyle()
     {
-               ImGuiStyle& Style = ImGui::GetStyle();
+        ImGuiStyle& Style = ImGui::GetStyle();
         ImVec4* Colors = Style.Colors;
         Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
         Colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
