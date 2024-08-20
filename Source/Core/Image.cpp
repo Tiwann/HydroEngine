@@ -5,6 +5,13 @@
 
 namespace Hydro
 {
+    Image::Image(uint32_t Width, uint32_t Height, ImageFormat Format, const void* Pixels): m_Width(Width), m_Height(Height), m_Format(Format)
+    {
+        const size_t Size = m_Format == ImageFormat::RGBA8 ? 1 : m_Format == ImageFormat::RGBA16 ? 2 : 4;
+        m_Pixels = malloc((size_t)(m_Width * m_Height) * 4 * Size);
+        std::copy_n((const uint8_t*)Pixels, Size, (uint8_t*)m_Pixels);
+    }
+
     Image::Image(const std::filesystem::path& Filepath, ImageFormat Fmt): m_Format(Fmt), m_Pixels(nullptr)
     {
         stbi_set_flip_vertically_on_load(true);
@@ -79,7 +86,7 @@ namespace Hydro
 
     size_t Image::GetSize() const
     {
-        return m_Width * m_Height * 4 * (((m_Format == ImageFormat::RGBA8) ? 1 : (m_Format == ImageFormat::RGBA16)) ? 2 : 4);
+        return (size_t)(m_Width * m_Height) * 4 * (((m_Format == ImageFormat::RGBA8) ? 1 : (m_Format == ImageFormat::RGBA16)) ? 2 : 4);
     }
 
     const void* Image::GetData() const

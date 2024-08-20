@@ -27,13 +27,7 @@ namespace Hydro {
 	class Image
 	{
 	public:
-		Image(uint32_t Width, uint32_t Height, ImageFormat Format, const void* Pixels)
-			: m_Width(Width), m_Height(Height), m_Format(Format)
-		{
-			const size_t Size = m_Format == ImageFormat::RGBA8 ? 1 : m_Format == ImageFormat::RGBA16 ? 2 : 4;
-			m_Pixels = malloc(m_Width * m_Height * 4 * Size);
-			std::copy_n((uint8_t*)Pixels, Size, (uint8_t*)m_Pixels);
-		}
+		Image(uint32_t Width, uint32_t Height, ImageFormat Format, const void* Pixels);
 
 		Image(const Path& Filepath, ImageFormat Fmt);
 		Image(const Buffer<uint8_t>& Buffer, ImageFormat Fmt);
