@@ -10,10 +10,21 @@
 
 #include "Core/GUID.h"
 
+namespace Hydro
+{
+    class Vector3;
+}
+
 namespace ImGui
 {
     IMGUI_API void PushID(Hydro::GUID guid);
     IMGUI_API ImGuiID GetID(Hydro::GUID guid);
+}
+
+namespace ImGuizmo
+{
+    IMGUI_API void DecomposeMatrixToComponents(const float* matrix, Hydro::Vector3& translation, Hydro::Vector3& rotation, Hydro::Vector3& scale);
+    IMGUI_API void RecomposeMatrixFromComponents(const Hydro::Vector3& translation, const Hydro::Vector3& rotation, const Hydro::Vector3& scale, float* matrix);
 }
 
 namespace Hydro

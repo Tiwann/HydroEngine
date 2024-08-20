@@ -27,6 +27,7 @@ namespace Hydro::UI
 
        
         ImGuiContext* ImGuiContext = ImGui::CreateContext();
+        
         ImGuiIO& IO = ImGui::GetIO();
         IO.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         
@@ -263,3 +264,13 @@ namespace ImGui
     }  
 }
 
+void ImGuizmo::DecomposeMatrixToComponents(const float* matrix, Hydro::Vector3& translation, Hydro::Vector3& rotation, Hydro::Vector3& scale)
+{
+    ImGuizmo::DecomposeMatrixToComponents(matrix, translation.ValuePtr(), rotation.ValuePtr(), scale.ValuePtr());
+}
+
+void ImGuizmo::RecomposeMatrixFromComponents(const Hydro::Vector3& translation, const Hydro::Vector3& rotation,
+    const Hydro::Vector3& scale, float* matrix)
+{
+    ImGuizmo::RecomposeMatrixFromComponents(translation.ValuePtr(), rotation.ValuePtr(), scale.ValuePtr(), matrix);
+}
