@@ -1,5 +1,7 @@
 #pragma once
 #include "Core/Component.h"
+#include "Core/LogCategory.h"
+#include "Core/MulticastDelegate.h"
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(SoundEmitter, "SOUND EMITTER")
 
@@ -49,8 +51,8 @@ namespace Hydro
         float m_Volume = 1.0f;
         float m_Pitch = 1.0f;
         bool m_Looping = false;
-        uint32_t m_PlaybackPosition;
-        uint32_t m_Length;
+        uint32_t m_PlaybackPosition = 0;
+        uint32_t m_Length = 0;
         
         FMOD::System* m_System = nullptr;
         FMOD::Channel* m_Channel = nullptr;
