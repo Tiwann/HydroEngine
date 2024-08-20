@@ -1,4 +1,5 @@
 #pragma once
+#include "TypeTraits.h"
 
 #define HYDRO_ENUM_TYPE_V(Type, Value) std::underlying_type_t<Type>(Value)
 #define HYDRO_FLAG_APPEND(Left, Right) ((Left) | (Right))
@@ -22,7 +23,7 @@
 
 namespace Hydro
 {
-    template <typename Enum, typename = std::enable_if_t<std::is_enum_v<Enum>>>
+    template <typename Enum, typename = EnableIfType<IsEnumValue<Enum>>>
     struct Flags
     {
         Flags() : m_Value((Enum)0){}
