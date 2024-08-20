@@ -3,7 +3,7 @@
 
 #if !defined(HYDRO_ASSERT)
 		#if defined(HYDRO_DEBUG)
-			#include <cassert>
+			#include <assert.h>
 			#define HYDRO_ASSERT(condition, message) assert((condition) && (message))
 			#if defined HYDRO_PLATFORM_WINDOWS
 			#define HYDRO_BREAK()					 __debugbreak()
