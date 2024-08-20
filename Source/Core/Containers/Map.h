@@ -10,6 +10,8 @@ namespace Hydro
     {
     public:
         using SizeType = typename Array<PairType>::SizeType;
+        using Iterator = Iterator<PairType>;
+        using ConstIterator = ConstIterator<PairType>;
         
         Map() = default;
         Map(const Array<PairType>& Array) : m_Data(Array){}
@@ -67,10 +69,10 @@ namespace Hydro
             return -1;
         }
 
-        Iterator<PairType> begin() override { return m_Data.begin(); }
-        Iterator<PairType> end() override { return m_Data.begin(); }
-        ConstIterator<PairType> begin() const override { return m_Data.end(); }
-        ConstIterator<PairType> end() const override { return m_Data.end(); }
+        Iterator begin() override { return m_Data.begin(); }
+        Iterator end() override { return m_Data.begin(); }
+        ConstIterator begin() const override { return m_Data.end(); }
+        ConstIterator end() const override { return m_Data.end(); }
 
     private:
         Array<PairType> m_Data;
