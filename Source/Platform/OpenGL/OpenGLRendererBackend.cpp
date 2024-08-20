@@ -28,7 +28,7 @@ namespace Hydro
         Application& application = Application::GetCurrentApplication();
         HYDRO_LOG(OpenGL, Verbosity::Trace, "Creating OpenGL context");
         glfwMakeContextCurrent(application.GetWindow()->GetNativeWindow());
-        glfwSwapInterval(true);
+        glfwSwapInterval(1);
         
         if(!gladLoadGL(glfwGetProcAddress))
         {

@@ -5,6 +5,11 @@
 
 namespace Hydro
 {
+    OpenGLIndexBuffer::OpenGLIndexBuffer()
+    {
+        glCreateBuffers(1, &m_Handle);
+    }
+
     OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* Indices, size_t Count)
         : IndexBuffer(Indices, Count)
     {
@@ -30,7 +35,14 @@ namespace Hydro
 
     void OpenGLIndexBuffer::SendData(uint32_t* Indices, size_t Count)
     {
-        m_Data = {Indices, Count};
+        IndexBuffer::SendData(Indices, Count);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Handle);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)m_Data.Size(), m_Data.GetData(), GL_STATIC_DRAW);
+    }
+
+    void OpenGLIndexBuffer::SendData(const std::initializer_list<uint32_t>& List)
+    {
+        IndexBuffer::SendData(List);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Handle);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)m_Data.Size(), m_Data.GetData(), GL_STATIC_DRAW);
     }

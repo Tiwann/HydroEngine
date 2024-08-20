@@ -9,6 +9,7 @@ namespace Hydro
     class OpenGLVertexBuffer : public VertexBuffer
     {
     public:
+        OpenGLVertexBuffer();
         OpenGLVertexBuffer(Vertex* Data, size_t Count);
         ~OpenGLVertexBuffer() override;
         

@@ -5,6 +5,11 @@
 
 namespace Hydro
 {
+    OpenGLVertexBuffer::OpenGLVertexBuffer()
+    {
+        glCreateBuffers(1, &m_Handle);
+    }
+
     OpenGLVertexBuffer::OpenGLVertexBuffer(Vertex* Data, size_t Count)
     : VertexBuffer(Data, Count)
     {
@@ -20,7 +25,7 @@ namespace Hydro
 
     void OpenGLVertexBuffer::SendData(Vertex* Data, size_t Count)
     {
-        m_Data = {Data, Count};
+        VertexBuffer::SendData(Data, Count);
         glBindBuffer(GL_ARRAY_BUFFER, m_Handle);
         glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)m_Data.Size(), m_Data.GetData(), GL_STATIC_DRAW);
     }
