@@ -32,7 +32,7 @@
 #endif
 
 
-#define HYDRO_VOID ((void)0)
+#define HYDRO_VOID __noop
 #define HYDRO_NODISCARD [[nodiscard]]
 
 
