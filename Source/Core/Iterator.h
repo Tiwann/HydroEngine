@@ -14,8 +14,8 @@ namespace Hydro
     public:
         Iterator(PointerType Ptr) : m_Data(Ptr) {}
 
-        Iterator operator+(SizeType Count) { m_Data += Count; return *this; }
-        Iterator operator-(SizeType Count) { m_Data -= Count; return *this; }
+        Iterator& operator+(SizeType Count) { m_Data += Count; return *this; }
+        Iterator& operator-(SizeType Count) { m_Data -= Count; return *this; }
         
         Iterator& operator++() {  ++m_Data; return *this; }
         Iterator& operator--() {  ++m_Data; return *this; }
@@ -50,6 +50,11 @@ namespace Hydro
         {
             return m_Data == Other.m_Data;
         }
+
+        operator bool() const
+        {
+            return dynamic_cast<PointerType>(m_Data);
+        }
     
     private:
         PointerType m_Data;
@@ -66,6 +71,7 @@ namespace Hydro
         using ConstRefType = ElementType const&;
     public:
         ConstIterator(PointerType Ptr) : m_Data(Ptr) {}
+        ConstIterator(ConstPointerType Ptr) : m_Data(const_cast<PointerType>(Ptr)) {}
 
         ConstIterator operator+(SizeType Count) { m_Data += Count; return *this; }
         ConstIterator operator-(SizeType Count) { m_Data -= Count; return *this; }
