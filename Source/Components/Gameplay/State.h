@@ -4,9 +4,10 @@ namespace Hydro
 {
     class State
     {
-    protected:
+    public:
+        virtual ~State() = default;
         virtual void OnEnter() = 0;
-        virtual void OnUpdate() = 0;
+        virtual void OnUpdate(float Delta) = 0;
         virtual void OnExit() = 0;
     };
 }
