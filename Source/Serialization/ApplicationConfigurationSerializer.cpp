@@ -1,78 +1,92 @@
 ﻿#include "HydroPCH.h"
 #include "ApplicationConfigurationSerializer.h"
 
-#include <yaml-cpp/yaml.h>
+#include <nlohmann/json.hpp>
 
 namespace Hydro
 {
-    ApplicationConfigurationSerializer::ApplicationConfigurationSerializer(const Path& Filepath) : Serializer(Filepath)
+    
+    bool ApplicationConfigurationSerializer::Serialize(const ApplicationConfiguration& Configuration, const Path& Filepath)
     {
-
-    }
-
-    bool ApplicationConfigurationSerializer::Serialize(const ApplicationConfiguration& Configuration)
-    {
-        if(!m_Stream.is_open()) return false;
-        YAML::Emitter Yaml;
-        Yaml << YAML::BeginMap;
-        Yaml << YAML::Key << "Application Name" << YAML::Value << Configuration.AppName;
-        Yaml << YAML::Key << "Window Icon" << YAML::Value << Configuration.IconPath.string();
-        Yaml << YAML::Key << "Window Width" << YAML::Value << Configuration.WindowWidth;
-        Yaml << YAML::Key << "Window Height" << YAML::Value << Configuration.WindowHeight;
-        Yaml << YAML::Key << "Start Fullscreen" << YAML::Value << Configuration.StartFullscreen;
-        Yaml << YAML::Key << "Window Resizable" << YAML::Value << Configuration.WindowResizable;
-        Yaml << YAML::Key << "Show Graphics API Name" << YAML::Value << Configuration.ShowGraphicsAPIName;
-        Yaml << YAML::Key << "Show Configuration" << YAML::Value << Configuration.ShowConfiguration;
-        Yaml << YAML::Key << "Show OS Name" << YAML::Value << Configuration.ShowOSName;
-        Yaml << YAML::Key << "Show DeltaTime" << YAML::Value << Configuration.ShowDeltaTime;
-        Yaml << YAML::Key << "Show FPS" << YAML::Value << Configuration.ShowFPS;
-        Yaml << YAML::Key << "Window Title Update Time" << YAML::Value << Configuration.WindowTitleUpdateTime;
-        Yaml << YAML::Key << "With Editor" << YAML::Value << Configuration.WithEditor;
-        SerializeSwapchainBufferType(Yaml, Configuration.Graphics.BufferType);
-        Yaml << YAML::EndMap;
-        m_Stream << Yaml.c_str();
+        std::ofstream Stream(Filepath, std::fstream::out);
+        if(!Stream.is_open()) return false;
+        std::stringstream MemoryStream;
+        bool Result = SerializeMemory(Configuration, MemoryStream);
+        if(!Result) return false;
+        Stream << MemoryStream.rdbuf();
+        Stream.close();
         return true;
     }
 
-    bool ApplicationConfigurationSerializer::Deserialize(ApplicationConfiguration& OutConfiguration)
+    bool ApplicationConfigurationSerializer::Deserialize(ApplicationConfiguration& OutConfiguration, const Path& Filepath)
     {
-        if(!m_Stream.is_open()) return false;
-        YAML::Node Data = YAML::Load(m_Stream);
-        OutConfiguration.AppName = Data["Application Name"].as<std::string>();
-        OutConfiguration.IconPath = Path(Data["Window Icon"].as<std::string>());
-        OutConfiguration.WindowWidth = Data["Window Width"].as<uint32_t>();
-        OutConfiguration.WindowHeight = Data["Window Height"].as<uint32_t>();
-        OutConfiguration.StartFullscreen = Data["Start Fullscreen"].as<bool>();
-        OutConfiguration.WindowResizable = Data["Window Resizable"].as<bool>();
-        OutConfiguration.ShowGraphicsAPIName = Data["Show Graphics API Name"].as<bool>();
-        OutConfiguration.ShowConfiguration = Data["Show Configuration"].as<bool>();
-        OutConfiguration.ShowOSName = Data["Show OS Name"].as<bool>();
-        OutConfiguration.ShowDeltaTime = Data["Show DeltaTime"].as<bool>();
-        OutConfiguration.ShowFPS = Data["Show FPS"].as<bool>();
-        OutConfiguration.WindowTitleUpdateTime = Data["Window Title Update Time"].as<float>();
-        OutConfiguration.WithEditor = Data["With Editor"].as<bool>();
-        DeserializeSwapchainBufferType(Data, OutConfiguration.Graphics.BufferType);
+        std::ofstream Stream(Filepath, std::fstream::in);
+        if(!Stream.is_open()) return false;
+
+        std::stringstream MemoryStream;
+        MemoryStream << Stream.rdbuf();
+        const std::string& Content = MemoryStream.str();
         
+        nlohmann::json File = nlohmann::json::parse(Content);
+        OutConfiguration.AppName = File["Application Name"];
+        OutConfiguration.IconPath = Path(File["Window Icon"].get<std::string>());
+        OutConfiguration.WindowWidth = File["Window Width"].get<uint32_t>();
+        OutConfiguration.WindowHeight = File["Window Height"].get<uint32_t>();
+        OutConfiguration.StartFullscreen = File["Start Fullscreen"].get<bool>();
+        OutConfiguration.WindowResizable = File["Window Resizable"].get<bool>();
+        OutConfiguration.ShowGraphicsAPIName = File["Show Graphics API Name"].get<bool>();
+        OutConfiguration.ShowConfiguration = File["Show Configuration"].get<bool>();
+        OutConfiguration.ShowOSName = File["Show OS Name"].get<bool>();
+        OutConfiguration.ShowDeltaTime = File["Show DeltaTime"].get<bool>();
+        OutConfiguration.ShowFPS = File["Show FPS"].get<bool>();
+        OutConfiguration.WindowTitleUpdateTime = File["Window Title Update Time"].get<float>();
+        OutConfiguration.WithEditor = File["With Editor"].get<bool>();
+        OutConfiguration.Graphics.BufferType = File["SwapchainBufferType"].get<GraphicsSettings::SwapchainBufferType>();
+        MemoryStream.clear();
+        Stream.close();
         return true;
     }
 
-    void ApplicationConfigurationSerializer::ReOpen()
+    bool ApplicationConfigurationSerializer::SerializeMemory(const ApplicationConfiguration& Configuration, std::stringstream& OutStream)
     {
-        m_Stream.open(m_Filepath);
+        nlohmann::json File;
+        File["Application Name"] = Configuration.AppName;
+        File["Window Icon"] = Configuration.IconPath.string();
+        File["Window Width"] = Configuration.WindowWidth;
+        File["Window Height"] = Configuration.WindowHeight;
+        File["Start Fullscreen"] = Configuration.StartFullscreen;
+        File["Window Resizable"] = Configuration.WindowResizable;
+        File["Show Graphics API Name"] = Configuration.ShowGraphicsAPIName;
+        File["Show Configuration"] = Configuration.ShowConfiguration;
+        File["Show OS Name"] = Configuration.ShowOSName;
+        File["Show DeltaTime"] = Configuration.ShowDeltaTime;
+        File["Show FPS"] = Configuration.ShowFPS;
+        File["Window Title Update Time"] = Configuration.WindowTitleUpdateTime;
+        File["With Editor"] = Configuration.WithEditor;
+        File["SwapchainBufferType"] = Configuration.Graphics.BufferType;
+        OutStream.clear();
+        OutStream << File.dump(4);
+        return true;
     }
 
-    void ApplicationConfigurationSerializer::SerializeSwapchainBufferType(YAML::Emitter& Yaml, GraphicsSettings::SwapchainBufferType SwapchainBufferType)
+    bool ApplicationConfigurationSerializer::DeserializeMemory(const std::stringstream& Stream, ApplicationConfiguration& OutConfiguration)
     {
-        switch (SwapchainBufferType) {
-        case GraphicsSettings::SwapchainBufferType::DoubleBuffering: Yaml << YAML::Key << "SwapchainBufferType" << YAML::Value << "DoubleBuffering"; break;
-        case GraphicsSettings::SwapchainBufferType::TripleBuffering: Yaml << YAML::Key << "SwapchainBufferType" << YAML::Value << "TripleBuffering"; break;
-        }
-    }
-
-    void ApplicationConfigurationSerializer::DeserializeSwapchainBufferType(YAML::Node& Yaml, GraphicsSettings::SwapchainBufferType& OutSwapchainBufferType)
-    {
-        const std::string Value = Yaml["SwapchainBufferType"].as<std::string>();
-        if(Value == "DoubleBuffering") OutSwapchainBufferType = GraphicsSettings::SwapchainBufferType::DoubleBuffering;
-        if(Value == "TripleBuffering") OutSwapchainBufferType = GraphicsSettings::SwapchainBufferType::TripleBuffering;
+        const std::string& Content = Stream.str();
+        nlohmann::json File = nlohmann::json::parse(Content);
+        OutConfiguration.AppName = File["Application Name"];
+        OutConfiguration.IconPath = Path(File["Window Icon"].get<std::string>());
+        OutConfiguration.WindowWidth = File["Window Width"].get<uint32_t>();
+        OutConfiguration.WindowHeight = File["Window Height"].get<uint32_t>();
+        OutConfiguration.StartFullscreen = File["Start Fullscreen"].get<bool>();
+        OutConfiguration.WindowResizable = File["Window Resizable"].get<bool>();
+        OutConfiguration.ShowGraphicsAPIName = File["Show Graphics API Name"].get<bool>();
+        OutConfiguration.ShowConfiguration = File["Show Configuration"].get<bool>();
+        OutConfiguration.ShowOSName = File["Show OS Name"].get<bool>();
+        OutConfiguration.ShowDeltaTime = File["Show DeltaTime"].get<bool>();
+        OutConfiguration.ShowFPS = File["Show FPS"].get<bool>();
+        OutConfiguration.WindowTitleUpdateTime = File["Window Title Update Time"].get<float>();
+        OutConfiguration.WithEditor = File["With Editor"].get<bool>();
+        OutConfiguration.Graphics.BufferType = File["SwapchainBufferType"].get<GraphicsSettings::SwapchainBufferType>();
+        return true;
     }
 }

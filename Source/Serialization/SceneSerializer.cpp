@@ -1,49 +1,59 @@
-#include "HydroPCH.h"
+﻿#include "HydroPCH.h"
 #include "SceneSerializer.h"
 
-#include <yaml-cpp/yaml.h>
-#include "TransformSerializer.h"
-#include "Components/Transform.h"
+#include "ComponentSerializer.h"
 
-namespace Hydro
+bool Hydro::SceneSerializer::Serialize(const Ref<Scene>& Scene, const Path& Filepath)
 {
-    bool SceneSerializer::Serialize(const Scene& Scene)
-    {
-        YAML::Emitter out;
-        out << YAML::BeginMap;
-        out << YAML::Key << "Scene" << YAML::Value << Scene.GetName();
-        out << YAML::Key << "GameObjects" << YAML::Value;
+    std::ofstream Stream(Filepath, std::fstream::out);
+    if(!Stream.is_open()) return false;
+    std::stringstream MemoryStream;
+    bool Result = SerializeMemory(Scene, MemoryStream);
+    if(!Result) return false;
+    Stream << MemoryStream.rdbuf();
+    Stream.close();
+    return true;
+}
 
-        out << YAML::BeginMap;
-        Scene.ForEach([&out, this](const auto& Object)
+bool Hydro::SceneSerializer::Deserialize(Ref<Scene>& Scene, const Path& Filepath)
+{
+    return false;
+}
+
+bool Hydro::SceneSerializer::SerializeMemory(const Ref<Scene>& Scene, std::stringstream& Stream)
+{
+    File["Scene"] = {
+        { "Name", Scene->GetName() },
+        { "Guid", Scene->GetGuid().GetString() }
+    };
+
+    Scene->ForEach([this](const auto& Object)
+    {
+        nlohmann::json JsonGameObject{ "Game Object", {
+            { "Name", Object->GetName() },
+            { "Guid", Object->GetGuid().GetString() },
+        } };
+                
+        Object->ForEach([this, &JsonGameObject](const Ref<Component>& Component)
         {
-            out << YAML::Key << "GameObject" << YAML::Value << Object->GetName();
-                        
-            out << YAML::Key << "GUID" << YAML::Value << Object->GetGuid().GetString();
-            if(Object->HasParent()) out << YAML::Key << "Parent" << YAML::Value << Object->GetParent()->GetGuid().GetString();
-
-            out << YAML::Key << "Components" << YAML::Value;
-            out << YAML::BeginMap;
-            Object->ForEach([&out, this](const Ref<Component>& Component)
+            if(const auto& Tr = Cast<Transform>(Component))
             {
-                if(const Ref<Transform>& Tr = Cast<Transform>(Component))
-                {
-                    TransformSerializer Serializer(out);
-                    Serializer.Serialize(*Tr);
-                }
-                out << YAML::Key << YAML::Value << YAML::Newline;
-            });
-            out << YAML::EndMap;
+                std::stringstream ss;
+                TransformSerializer Serializer;
+                Serializer.SerializeMemory(Tr, ss);
+                JsonGameObject += nlohmann::json::parse(ss.str());
+            }
         });
-        out << YAML::EndMap;
-        
-        out << YAML::EndMap;
-        m_Stream << out.c_str();
-        return true;
-    }
 
-    bool SceneSerializer::Deserialize(Scene& Scene)
-    {
-        return true;
-    }
+        File["Scene"] += JsonGameObject;
+    });
+
+    Stream.clear();
+    Stream << File.dump(4);
+    return true;
+}
+
+bool Hydro::SceneSerializer::DeserializeMemory(const std::stringstream& Stream, Ref<Scene>& Scene)
+{
+    return false;
 }

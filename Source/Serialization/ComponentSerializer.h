@@ -1,19 +1,77 @@
-#pragma once
+﻿#pragma once
+#include "Serializer.h"
 #include "Core/Component.h"
-#include "yaml-cpp/emitter.h"
+#include <nlohmann/json.hpp>
+
+#include "Components/Transform.h"
 
 namespace Hydro
 {
-    template<typename T, typename = std::enable_if_t<std::is_base_of_v<Component, T>>>
-    class ComponentSerializer
+    template<typename ComponentType>
+    class ComponentSerializer : public Serializer<Ref<ComponentType>>
     {
     public:
-        ComponentSerializer(YAML::Emitter& Out) : m_Emitter(Out){}
+        bool Serialize(const Ref<ComponentType>& Comp, const Path& Filepath) override
+        {
+            return false;
+        }
         
-        virtual ~ComponentSerializer() = default;
-        virtual bool Serialize(const T& Component) = 0;
-        virtual bool Deserialize(T& Component) = 0;
+        bool Deserialize(Ref<ComponentType>& Comp, const Path& Filepath) override
+        {
+            return false;
+        }
+        
+        bool SerializeMemory(const Ref<ComponentType>& Comp, std::stringstream& Stream) override
+        {
+            File["Component"] = {
+                { "Name", Comp->GetName() },
+                { "GUID", Comp->GetGuid().GetString() }
+            };
+            return true;
+        }
+        
+        bool DeserializeMemory(const std::stringstream& Stream, Ref<ComponentType>&) override
+        {
+            return false;
+        }
+
     protected:
-        YAML::Emitter& m_Emitter;
+        nlohmann::json File;
+        
     };
+    
+    class TransformSerializer : public ComponentSerializer<Transform>
+    {
+    public:
+        bool Serialize(const Ref<Transform>& Comp, const Path& Filepath) override
+        {
+            return false;
+        }
+        
+        bool Deserialize(Ref<Transform>& Comp, const Path& Filepath) override
+        {
+            return false;
+        }
+        
+        bool SerializeMemory(const Ref<Transform>& Comp, std::stringstream& Stream) override
+        {
+            ComponentSerializer::SerializeMemory(Comp, Stream);
+            nlohmann::json Data{{ "Position", Comp->GetPosition() },
+                        { "Rotation", Comp->GetRotation() },
+                        { "Scale", Comp->GetScale() }};
+            
+            File.at("Component").emplace(Data);
+            Stream.clear();
+            Stream << File.dump(4);
+            return true;
+        }
+        
+        bool DeserializeMemory(const std::stringstream& Stream, Ref<Transform>&) override
+        {
+            return false;
+        }
+        
+    };
+
+
 }
