@@ -1,4 +1,5 @@
 ﻿#include "HydroPCH.h"
+#include "Core/GameObject.h"
 #include "SpriteAnimator.h"
 #include "SpriteRenderer.h"
 #include "Core/SpriteAnimation.h"
@@ -26,6 +27,8 @@ namespace Hydro
     {
         Component::OnUpdate(Delta);
         if(!m_SpriteRenderer) return;
+        if(!m_Animation) return;
+        
         m_Timer.SetDuration(1.0f / (float)m_Speed);
         m_Timer.Update(Delta);
     }
@@ -56,6 +59,16 @@ namespace Hydro
         m_Animation = Animation;
         m_Index = 0;
         m_Timer.Reset();
+    }
+
+    void SpriteAnimator::SetSpeed(int32_t Speed)
+    {
+        m_Speed = Math::Max(0, Speed);
+    }
+
+    int32_t SpriteAnimator::GetSpeed() const
+    {
+        return m_Speed;
     }
 
     void SpriteAnimator::OnSpriteChange()
