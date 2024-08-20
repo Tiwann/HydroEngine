@@ -1,9 +1,15 @@
 #include "HydroPCH.h"
-#include "ViewportWindow.h"
+#include "ViewportPanel.h"
 #include "EditorGUI.h"
 #include "StyleVar.h"
+#include "Core/Application.h"
 #include "Core/FrameBuffer.h"
 #include "Core/Texture2D.h"
+
+namespace
+{
+    inline const Hydro::Vector2 WindowStartSize(960, 540);
+}
 
 namespace Hydro
 {
@@ -12,7 +18,7 @@ namespace Hydro
         EditorWindow::OnInit();
 
         m_FrameBuffer = FrameBuffer::Create(FrameBufferAttachment::Color);
-        Ref<Texture2D> Texture = m_FrameBuffer->GetAttachedTexture();
+        m_FrameBuffer->Resize(WindowStartSize);
         if(!m_FrameBuffer->Validate())
         {
             HYDRO_LOG(ViewportWindow, Verbosity::Error, "Failed to validate framebuffer!");
@@ -28,22 +34,25 @@ namespace Hydro
     void ViewportPanel::OnInspectorGUI(const ImGuiIO& IO)
     {
         EditorWindow::OnInspectorGUI(IO);
-        if(!m_Opened) return;
 
-        
-        ImGui::PushID(m_guid);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-        if(ImGui::Begin(m_Name.data(), &m_Opened, WindowFlags(WindowFlagBits::NoScrollbar).As<ImGuiWindowFlags>()))
+
+        UI::ScopedStyleVarPusher WindowPadding(UI::StyleVar::WindowPadding, Vector2::Zero);
+        ImGui::SetNextWindowSize(WindowStartSize, ImGuiCond_Appearing);
+        UI::NewWindow(m_Name, m_Opened, WindowFlagBits::None, [this]
         {
             m_Size = ImGui::GetContentRegionAvail();
+            m_Position = ImGui::GetWindowPos();
             ImGui::Image(m_FrameBuffer->GetAttachedTexture()->As<ImTextureID>(), m_Size, {0, 1}, {1, 0});
             m_DrawList = ImGui::GetWindowDrawList();
-        }
-        ImGui::End();
-        ImGui::PopStyleVar();
-        ImGui::PopID();
+            if(!m_Available) m_Available = true;
+        });
     }
-    
+
+    bool ViewportPanel::IsAvailable() const
+    {
+        return m_Available;
+    }
+
 
     Vector2 ViewportPanel::GetSize() const
     {
