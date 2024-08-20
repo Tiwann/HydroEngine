@@ -146,11 +146,17 @@ namespace Hydro
     public:
         using Iterator = Type*;
         using ConstIterator = const Type*;
+        
         BufferView(const Type* Data, size_t Count) : m_Data(const_cast<Type*>(Data)), m_Count(Count){}
-        BufferView(Type* Data, size_t Count) : m_Data(Data), m_Count(Count){}
-        BufferView(Iterator Begin, Iterator End) : m_Data(Begin), m_Count(End - Begin){}
-        BufferView(ConstIterator Begin, ConstIterator End) : m_Data(const_cast<Type*>(Begin)), m_Count(const_cast<Type*>(End) - const_cast<Type*>(Begin)){}
         BufferView(const Buffer<Type>& Buff) : m_Data(const_cast<Type*>(Buff.GetData())), m_Count(Buff.Count()){}
+        BufferView(const BufferView& Buff) : m_Data(Buff.m_Data), m_Count(Buff.m_Count){}
+
+        BufferView& operator=(const BufferView& Buff)
+        {
+            m_Data = Buff.m_Data;
+            m_Count = Buff.m_Count;
+            return *this;
+        }
         
         ConstIterator Begin() const { return m_Data; }
         ConstIterator End() const { return m_Data + m_Count; }
