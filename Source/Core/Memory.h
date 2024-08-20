@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Macros.h"
+#include "Iterator.h"
 #include <cstring>
 #include <cstdint>
 
@@ -36,13 +37,22 @@ namespace Hydro::Memory
         return Result;
     }
 
-    inline void Free(void* Ptr)
+    template<typename T>
+    void Free(T* Ptr)
     {
         HYDRO_FREE(Ptr);
     }
 
+    
     inline void* Memcpy(void* Destination, const void* Source, size_t Size)
     {
         return std::memcpy(Destination, Source, Size);
     }
+    
+    template<typename T>
+    Iterator<T> Copy(Iterator<T> Begin, Iterator<T> End, Iterator<T> Destination)
+    {
+        return Iterator<T>(memcpy(Destination, Begin, End - Begin));
+    }
+    
 }
