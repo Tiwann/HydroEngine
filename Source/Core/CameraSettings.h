@@ -15,29 +15,43 @@ namespace Hydro
         static CameraSettings DefaultPerspective;
         static CameraSettings DefaultOrthographic;
 
-        CameraSettings WithDimension(float Width, float Height) const
+        CameraSettings& WithDimension(float Width, float Height)
         {
-            return { Projection, Width, Height, FieldOfView, OrthoSize, NearPlane, FarPlane };
+            this->Width = Width;
+            this->Height = Height;
+            return *this;
         }
 
-        CameraSettings WithFOV(float FOV) const
+        CameraSettings& WithDimensions(const Vector2& Dimensions)
         {
-            return { Projection, Width, Height, FOV, OrthoSize, NearPlane, FarPlane };
+            this->Width = Dimensions.x;
+            this->Height = Dimensions.y;
+            return *this;
         }
 
-        CameraSettings WithOrthoSize(float OrthographicSize) const
+        CameraSettings& WithFOV(float FOV)
         {
-            return { Projection, Width, Height, FieldOfView, OrthographicSize, NearPlane, FarPlane };
+            FieldOfView = FOV;
+            return *this;
         }
 
-        CameraSettings SetType(CameraProjectionType Type) const
+        CameraSettings& WithOrthoSize(float OrthographicSize)
         {
-            return { Type, Width, Height, FieldOfView, OrthoSize, NearPlane, FarPlane };
+            OrthoSize = OrthographicSize;
+            return *this;
         }
 
-        CameraSettings WithNearFarPlanes(float Near, float Far) const
+        CameraSettings& SetType(CameraProjectionType Type)
         {
-            return { Projection, Width, Height, FieldOfView, OrthoSize, Near, Far };
+            Projection = Type;
+            return *this;
+        }
+
+        CameraSettings& WithNearFarPlanes(float Near, float Far)
+        {
+            NearPlane = Near;
+            FarPlane = Far;
+            return *this;
         }
 
         void SetDimensions(Vector2 Size)
