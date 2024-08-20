@@ -15,12 +15,6 @@
 #include "Editor/EditorGUI.h"
 #include "ResourceManager/TextureManager.h"
 
-static Hydro::Vertex SpriteVertices[4] = {
-    {{-0.5f, +0.5f, 0.0f}, {0.0f, 1.0f}, Hydro::Vector3::Zero, Hydro::Color::White},
-    {{+0.5f, +0.5f, 0.0f}, {1.0f, 1.0f}, Hydro::Vector3::Zero, Hydro::Color::White},
-    {{+0.5f, -0.5f, 0.0f}, {1.0f, 0.0f}, Hydro::Vector3::Zero, Hydro::Color::White},
-    {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f}, Hydro::Vector3::Zero, Hydro::Color::White},
-};
 
 namespace Hydro
 {
@@ -32,16 +26,12 @@ namespace Hydro
     void SpriteRenderer::OnInit()
     {
         Renderer::OnInit();
-        
         m_VertexArray = VertexArray::Create();
         m_VertexArray->Bind();
         
-        m_VertexBuffer = VertexBuffer::Create(SpriteVertices, std::size(SpriteVertices));
-        
+        m_VertexBuffer = VertexBuffer::Create();
         m_IndexBuffer = IndexBuffer::Create({ 0, 2, 1, 0, 3, 2 });
         
-        m_VertexArray->SetBufferLayout(VertexBufferLayout::Default);
-
         ShaderManager& Manager = Application::GetCurrentApplication().GetShaderManager();
         m_Shader = Manager.Retrieve("Sprite");
     }
@@ -59,16 +49,39 @@ namespace Hydro
         Renderer::OnRender(Renderer);
         if(!m_Shader) return;
         if(!m_Sprite.GetTexture()) return;
+
+        const Vector2 Position = m_Sprite.GetPosition();
+        const Vector2 Size = m_Sprite.GetSize();
+        const float Width = m_Sprite.GetTexture()->GetSize().x;
+        const float Height = m_Sprite.GetTexture()->GetSize().y;
+        
+        const Vector2 Uv0 = {Position.x / Width, (Position.y + Size.y) / Height};
+        const Vector2 Uv1 = {(Position.x + Size.x) / Width, (Position.y + Size.y) / Height};
+        const Vector2 Uv2 = {(Position.x + Size.x) / Width, Position.y / Height};
+        const Vector2 Uv3 = {Position.x / Width, Position.y / Height};
+
+         
+        StaticArray<Vertex, 4> SpriteVertices = {
+            {{-0.5f, +0.5f, 0.0f}, Uv0, Vector3::Zero, Color::White},
+            {{+0.5f, +0.5f, 0.0f}, Uv1, Vector3::Zero, Color::White},
+            {{+0.5f, -0.5f, 0.0f}, Uv2, Vector3::Zero, Color::White},
+            {{-0.5f, -0.5f, 0.0f}, Uv3, Vector3::Zero, Color::White},
+        };
+        
+        m_VertexArray->Bind();
+        m_VertexBuffer->SendData(SpriteVertices.Data(), SpriteVertices.Count());
+        m_VertexArray->SetBufferLayout(VertexBufferLayout::Default);
+        
         
         m_Shader->Bind();
         m_Shader->SetUniformMat4("uModel", GetTransform()->GetWorldSpaceMatrix());
 
         if(m_Sprite.GetTexture())
         {
-            const Vector2 Size = m_Sprite.GetTexture()->GetSize();
-            const float AspectRatio = Size.x / Size.y;
+            const Vector2 TextureSize = m_Sprite.GetTexture()->GetSize();
+            const float AspectRatio = TextureSize.x / TextureSize.y;
             
-            const Vector2 NewSize = Size.x < Size.y
+            const Vector2 NewSize = TextureSize.x < TextureSize.y
                 ? Vector2(1.0f, AspectRatio)
                 : Vector2(AspectRatio, 1.0f);
 

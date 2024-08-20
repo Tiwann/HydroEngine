@@ -22,13 +22,13 @@ namespace Hydro
     {
         Shape2D::OnInspectorGUI(IO);
         
-        UI::DragVector2<float>("Center", m_Center);
-        UI::DragVector2<float>("Half Extents", m_HalfExtents);
+        UI::DragVector2<float>("Center", m_Center, 0.01f);
+        UI::DragVector2<float>("Half Extents", m_HalfExtents, 0.01f);
         const char* ColliderTypes[3] = { "Static", "Kinematic", "Dynamic" };
         
         if(ImGui::Combo("Collider Type", (int*)&m_Type, ColliderTypes, 3))
         {
-            RecreateFixture();
+            RecreatePhysicsState();
         }
     }
 

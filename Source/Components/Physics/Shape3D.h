@@ -8,12 +8,16 @@ namespace Hydro
     class Shape3D : public PhysicsComponent, public ICollisionResponse<Collision3D>
     {
     public:
+        friend class GameObject;
         Shape3D(GameObject* Owner, const std::string& Name) : PhysicsComponent(Owner, Name)
         {
             
         }
 
         void OnInit() override;
+        void OnStart() override;
+        void OnPhysicsUpdate(float Delta) override;
+        
 
         void SetGravityEnabled(bool Enabled) const override;
         void SetGravityScale(float Scale) override;
@@ -31,5 +35,14 @@ namespace Hydro
         void AddImpulse(const Vector3& Force) override;
         void AddForceAtPosition(const Vector3& Position, const Vector3& Force) override;
         void AddImpulseAtPosition(const Vector3& Position, const Vector3& Force) override;
+        
+        void RecreatePhysicsState() override;
+        void SetMaterial(const PhysicsMaterial& Material) override;
+        void SetConstraintsFlags(PhysicsConstraintsFlags Constraints) override;
+        void SetTrigger(bool IsTrigger) override;
+        void SetType(ColliderType Type) override;
+
+    protected:
+        
     };
 }

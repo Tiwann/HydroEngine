@@ -25,7 +25,7 @@ namespace Hydro
         
         if(ImGui::Combo("Collider Type", (int*)&m_Type, ColliderTypes, 3))
         {
-            RecreateFixture();
+            RecreatePhysicsState();
         }
     }
 
@@ -51,7 +51,7 @@ namespace Hydro
 
     void Circle2D::OnPhysicsUpdate(float Delta)
     {
-        RecreateFixture();
+        RecreatePhysicsState();
         Shape2D::OnPhysicsUpdate(Delta);
     }
 

@@ -45,6 +45,7 @@ namespace Hydro
             m_ShowCollisions = Enabled;
         }
 
+        virtual void RecreatePhysicsState() = 0;
         virtual void SetGravityEnabled(bool Enabled) const = 0;
         virtual void SetGravityScale(float Scale) = 0;
         virtual void SetLinearVelocity(const Vector3& Velocity) const = 0;

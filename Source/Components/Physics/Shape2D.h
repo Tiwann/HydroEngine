@@ -1,11 +1,12 @@
 #pragma once
 
-#include <box2d/b2_body.h>
-#include <box2d/b2_polygon_shape.h>
-#include <box2d/b2_fixture.h>
-
 #include "PhysicsComponent.h"
+#include "Math/Vector2.h"
 
+
+class b2Fixture;
+class b2Body;
+class b2Shape;
 
 namespace Hydro
 {
@@ -47,17 +48,16 @@ namespace Hydro
         void AddForceAtPosition(const Vector3& Position, const Vector3& Force) override;
         void AddImpulseAtPosition(const Vector3& Position, const Vector3& Force) override;
         void SetPosition(const Vector3& Position) const;
+        void SetRotation(float Rotation) const;
 
         void SetMaterial(const PhysicsMaterial& Material) override;
         void SetConstraintsFlags(PhysicsConstraintsFlags Constraints) override;
         void SetTrigger(bool IsTrigger) override;
         void SetType(ColliderType Type) override;
 
-        
+        void RecreatePhysicsState() override;
     protected:
         friend class Shape2DContactListener;
-
-        void RecreateFixture();
         b2Shape* m_Shape{nullptr};
         b2Body* m_Body{nullptr};
         b2Fixture* m_Fixture{nullptr};

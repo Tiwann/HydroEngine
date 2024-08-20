@@ -2,7 +2,6 @@
 #include "Macros.h"
 #include <string>
 
-#include "GameObject.h"
 #include "SharedPointer.h"
 #include "Core/GUID.h"
 #include "Platform/PlatformImGui.h"

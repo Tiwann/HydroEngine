@@ -1,7 +1,8 @@
 ﻿#include "HydroPCH.h"
 #include "Transform.h"
-
+#include "Core/GameObject.h"
 #include "Editor/EditorGUI.h"
+#include "Physics/PhysicsComponent.h"
 #include "Physics/Shape2D.h"
 
 namespace Hydro
@@ -132,9 +133,32 @@ namespace Hydro
     void Transform::OnInspectorGUI(const ImGuiIO& IO)
     {
         Component::OnInspectorGUI(IO);
-        UI::DragVector3<float>("Position", m_Position, 0.01f, 0, 0, "%.2f");
-        UI::DragVector3<float>("Rotation", m_Rotation, 0.01f, 0, 360.0f, "%.2f");
-        UI::DragVector3<float>("Scale", m_Scale, 0.01f, 0, 0, "%.2f");
+        
+        if(UI::DragVector3<float>("Position", m_Position, 0.01f, 0, 0, "%.2f"))
+        {
+            if(const auto& Shape = m_GameObject->GetComponent<Shape2D>())
+            {
+                Shape->SetPosition(m_Position);
+                Shape->RecreatePhysicsState();
+            }
+        }
+        
+        if(UI::DragVector3<float>("Rotation", m_Rotation, 0.01f, 0, 360.0f, "%.2f"))
+        {
+            if(const auto& Shape = m_GameObject->GetComponent<Shape2D>())
+            {
+                Shape->SetRotation(m_Rotation.z);
+                Shape->RecreatePhysicsState();
+            }
+        }
+        
+        if(UI::DragVector3<float>("Scale", m_Scale, 0.01f, 0, 0, "%.2f"))
+        {
+            if(const auto& Shape = m_GameObject->GetComponent<Shape2D>())
+            {
+                Shape->RecreatePhysicsState();
+            }
+        }
     }
 }
 

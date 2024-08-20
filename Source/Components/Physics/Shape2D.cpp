@@ -3,6 +3,7 @@
 
 #include <box2d/b2_world.h>
 #include <box2d/b2_math.h>
+
 #include "Core/Scene.h"
 #include "Components/Transform.h"
 #include "Collision2D.h"
@@ -85,19 +86,10 @@ namespace Hydro
         m_Fixture->SetRestitution(m_Material.Bounciness);
         m_Fixture->SetSensor(m_IsTrigger);
         
-        const Ref<Transform> Trans = GetTransform();
-        b2Vec2 Position = m_Body->GetPosition();
-        if(m_Type != ColliderType::Static)
-        {
-            Trans->SetPosition({Position.x, Position.y, Trans->GetPosition().z});
-            Trans->SetRotation({0.0f, 0.0f, m_Body->GetAngle()});
-        } else
-        {
-            Ref<Transform> Transform = GetTransform();
-            const Vector3 Position = Transform->GetPosition();
-            const Vector3 Rotation = Transform->GetRotation();
-            m_Body->SetTransform({Position.x, Position.y}, Rotation.z);
-        }
+        const Ref<Transform> Transform = GetTransform();
+        b2Vec2 NewPosition = m_Body->GetPosition();
+        Transform->SetPosition({NewPosition.x, NewPosition.y, Transform->GetPosition().z});
+        Transform->SetRotation({0.0f, 0.0f, m_Body->GetAngle()});
     }
     
     float Shape2D::GetGravityScale() const
@@ -127,7 +119,7 @@ namespace Hydro
 
     Vector3 Shape2D::GetLinearVelocity() const
     {
-        return Vector2(m_Body->GetLinearVelocity());
+        return {m_Body->GetLinearVelocity()};
     }
 
     float Shape2D::GetAngularVelocity() const
@@ -185,31 +177,36 @@ namespace Hydro
         m_Body->SetTransform((Vector2)Position, m_Body->GetAngle());
     }
 
+    void Shape2D::SetRotation(float Rotation) const
+    {
+        m_Body->SetTransform(m_Body->GetPosition(), Rotation);
+    }
+
     void Shape2D::SetMaterial(const PhysicsMaterial& Material)
     {
         PhysicsComponent::SetMaterial(Material);
-        RecreateFixture();
+        RecreatePhysicsState();
     }
 
     void Shape2D::SetConstraintsFlags(Flags<PhysicsConstraintsBits> Constraints)
     {
         PhysicsComponent::SetConstraintsFlags(Constraints);
-        RecreateFixture();
+        RecreatePhysicsState();
     }
 
     void Shape2D::SetTrigger(bool IsTrigger)
     {
         PhysicsComponent::SetTrigger(IsTrigger);
-        RecreateFixture();
+        RecreatePhysicsState();
     }
 
     void Shape2D::SetType(ColliderType Type)
     {
         PhysicsComponent::SetType(Type);
-        RecreateFixture();
+        RecreatePhysicsState();
     }
 
-    void Shape2D::RecreateFixture()
+    void Shape2D::RecreatePhysicsState()
     {
         m_Body->DestroyFixture(m_Fixture);
         delete m_Shape;
@@ -228,9 +225,10 @@ namespace Hydro
         m_Fixture = m_Body->CreateFixture(&FixtureDef);
     }
     
+    
     void Shape2D::OnTransformScaleSet(const Transform* const)
     {
-        RecreateFixture();
+        RecreatePhysicsState();
     }
     
 }

@@ -2,6 +2,7 @@
 #include "Core/Component.h"
 #include "Core/MulticastDelegate.h"
 #include "Math/LinearAlgebra.h"
+#include "Core/LogCategory.h"
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(Transform, "TRANSFORM")
 
