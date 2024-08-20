@@ -15,13 +15,14 @@ uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
 uniform mat3 uSpriteScale;
+uniform vec2 uTiling;
 
 
 void main()
 {
     vec4 newPosition = uProjection * uView * uModel * vec4(uSpriteScale * vPosition, 1.0);
     oPosition = newPosition.xyz;
-    oTexCoord = vTexCoord;
+    oTexCoord = vTexCoord * uTiling;
     oNormal = vNormal;
     oColor = vColor;
     gl_Position = newPosition;
@@ -36,12 +37,11 @@ in vec3 oNormal;
 in vec4 oColor;
 
 uniform sampler2D uTexture;
-uniform vec2 uTiling;
 uniform vec4 uColorTint;
 
 void main()
 {
-    vec4 colorTexture = texture(uTexture, oTexCoord * uTiling);
+    vec4 colorTexture = texture(uTexture, oTexCoord);
     if(colorTexture.a <= 0.0001)
         discard;
     gl_FragColor = colorTexture * uColorTint;
