@@ -1,9 +1,13 @@
 #pragma once
+#include "Core/Containers/String.h"
 
-struct MenuItem
+namespace Hydro
 {
-    std::string Name;
-    bool* Selected = nullptr;
-    std::function<void()> Callback = nullptr;
-    bool Enabled = true;
-};
+    struct MenuItem
+    {
+        String Name;
+        bool* Selected = nullptr;
+        std::function<void()> Callback = nullptr;
+        bool Enabled = true;
+    };
+}

@@ -19,6 +19,6 @@ namespace Hydro
     protected:
         std::string m_Name;
         bool m_Opened;
-        GUID m_guid;
+        GUID m_Guid;
     };
 }

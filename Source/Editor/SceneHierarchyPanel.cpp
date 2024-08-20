@@ -3,7 +3,7 @@
 
 #include "EditorGUI.h"
 #include "Selection.h"
-#include "ViewportWindow.h"
+#include "ViewportPanel.h"
 #include "Components/Camera.h"
 #include "Core/Application.h"
 #include "Core/RendererBackend.h"
@@ -95,27 +95,29 @@ namespace Hydro
 
             if(Ref<GameObject> Object = Selection::GetGameObject())
             {
-                Application& App = Application::GetCurrentApplication();
-                Vector2 Size = App.GetViewportPanel()->GetSize();
-                Ref<Camera> Cam = App.GetRendererBackend()->GetCurrentCamera();
+                const Application& App = Application::GetCurrentApplication();
+                const Vector2 ViewportSize = App.GetViewportPanel()->GetSize();
+                const Vector2 ViewportPos = App.GetViewportPanel()->GetPosition();
+                const Ref<Camera> Cam = App.GetRendererBackend()->GetCurrentCamera();
                 if(!Cam) return;
 
                 ImGuizmo::SetOrthographic(Cam->Settings.Projection == CameraProjectionType::Orthographic);
                 ImGuizmo::SetDrawlist(App.GetViewportPanel()->GetDrawList());
-                ImGuizmo::SetRect(0, 0, Size.x, Size.y);
+                ImGuizmo::SetRect(ViewportPos.x, ViewportPos.y, ViewportSize.x, ViewportSize.y);
 
-                Ref<Transform> Tr = Object->GetTransform();
-                Matrix4 Mat = Tr->GetLocalSpaceMatrix();
-            
-                ImGuizmo::Manipulate(Cam->GetViewMatrix().ValuePtr(), Cam->GetProjectionMatrix().ValuePtr(),
-                    ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, Mat.ValuePtr());
+                const Ref<Transform> Transform = Object->GetTransform();
+                Matrix4 ModelMatrix = Transform->GetLocalSpaceMatrix();
+                Matrix4 ViewMatrix = Cam->GetViewMatrix();
+                Matrix4 ProjectionMatrix = Cam->GetProjectionMatrix();
+                
+                ImGuizmo::Manipulate(*ViewMatrix, *ProjectionMatrix, ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, *ModelMatrix);
                 if(ImGuizmo::IsUsing())
                 {
                     Vector3 Pos, Rot, Sc;
-                    ImGuizmo::DecomposeMatrixToComponents(Mat.ValuePtr(), Pos.ValuePtr(), Rot.ValuePtr(), Sc.ValuePtr());
-                    Tr->SetPosition(Pos);
-                    Tr->SetRotation(Rot);
-                    Tr->SetScale(Sc);
+                    ImGuizmo::DecomposeMatrixToComponents(*ModelMatrix, Pos, Rot, Sc);
+                    Transform->SetPosition(Pos);
+                    Transform->SetRotation(Rot);
+                    Transform->SetScale(Sc);
                 }
             }
         }

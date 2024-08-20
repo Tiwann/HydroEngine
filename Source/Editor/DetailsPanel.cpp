@@ -15,7 +15,6 @@ namespace Hydro
     void DetailsPanel::OnInspectorGUI(const ImGuiIO& IO)
     {
         EditorWindow::OnInspectorGUI(IO);
-        if(!m_Opened) return;
         UI::NewWindow(m_Name, m_Opened, WindowFlagBits::None, [&IO]
         {
             Ref<GameObject> SelectedObject = Selection::GetGameObject();

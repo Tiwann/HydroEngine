@@ -2,7 +2,7 @@
 #include "Menu.h"
 #include "Platform/PlatformImGui.h"
 #include "Core/Flags.h"
-#include "Core/TreeNode.h"
+#include "Core/Containers/TreeNode.h"
 #include "Input/MouseButton.h"
 #include "Math/LinearAlgebra.h"
 
@@ -302,7 +302,22 @@ namespace Hydro
 
         /* Input */
         bool ItemClicked(MouseButton Button);
-        
+
+        class ScopedID
+        {
+        public:
+            ScopedID(const GUID& Guid) : m_Guid(Guid)
+            {
+                ImGui::PushID(m_Guid);
+            }
+
+            ~ScopedID()
+            {
+                ImGui::PopID();
+            }
+        private:
+            GUID m_Guid;
+        };
         
     }
     

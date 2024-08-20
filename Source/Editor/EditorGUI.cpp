@@ -16,6 +16,7 @@ namespace Hydro::UI
 {
     void NewWindow(std::string_view Label, bool& Opened, WindowFlags Flags, const std::function<void()>& Content)
     {
+        if(!Opened) return;
         if(ImGui::Begin(Label.data(), &Opened, Flags.As<ImGuiWindowFlags>()))
         {
             if(Content) Content();
@@ -36,6 +37,36 @@ namespace Hydro::UI
         ImGui::EndDisabled();
         return Result;
     }
+
+    static void MenuItemRecursive(const TreeNode<MenuItem>& Node)
+    {
+        for (const auto& ChildNode : Node)
+        {
+            const MenuItem& Item = ChildNode.GetValue();
+            if(!Item.Selected)
+            {
+                if (ImGui::MenuItem(Item.Name.Data(), nullptr, false, Item.Enabled))
+                {
+                    if (Item.Callback)
+                        Item.Callback();
+
+                    for(const auto& SubChild : ChildNode)
+                        MenuItemRecursive(SubChild);
+                }
+            } else
+            {
+                if (ImGui::MenuItem(Item.Name.Data(), nullptr, Item.Selected, Item.Enabled))
+                {
+                    if (Item.Callback)
+                        Item.Callback();
+
+                    for(const auto& SubChild : ChildNode)
+                        MenuItemRecursive(SubChild);
+                }
+            }
+                        
+        }
+    }
     
     void MainMenuMenuBar(const TreeNode<MenuItem>& RootNode)
     {
@@ -43,28 +74,9 @@ namespace Hydro::UI
         {
             for(const auto& FirstDegreeChild : RootNode)
             {
-                if (ImGui::BeginMenu(FirstDegreeChild.GetValue().Name.c_str()))
+                if (ImGui::BeginMenu(FirstDegreeChild.GetValue().Name.Data()))
                 {
-                    for (const auto& ItemNode : FirstDegreeChild)
-                    {
-                        const MenuItem& Item = ItemNode.GetValue();
-                        if(!Item.Selected)
-                        {
-                            if (ImGui::MenuItem(Item.Name.c_str(), nullptr, false, Item.Enabled))
-                            {
-                                if (Item.Callback)
-                                    Item.Callback();
-                            }
-                        } else
-                        {
-                            if (ImGui::MenuItem(Item.Name.c_str(), nullptr, Item.Selected, Item.Enabled))
-                            {
-                                if (Item.Callback)
-                                    Item.Callback();
-                            }
-                        }
-                        
-                    }
+                    MenuItemRecursive(FirstDegreeChild);
                     ImGui::EndMenu();
                 }
             }
@@ -131,7 +143,7 @@ namespace Hydro::UI
             {
                 ImGui::Image(InOutSprite.GetTexture()->As<ImTextureID>(),
                     InOutSprite.GetTexture()->GetSize(),
-                    ImVec2(1, 1), ImVec2(0, 0));
+                    ImVec2(0, 1), ImVec2(1, 0));
             }
 
             if(Button("Load Sprite"))
