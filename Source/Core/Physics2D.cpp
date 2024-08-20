@@ -17,7 +17,7 @@
 
 namespace Hydro
 {
-    Vector2 Physics2D::Gravity = { 0.0f, HYDRO_EARTH_GRAVITY };
+    Vector2 Physics2D::Gravity = { 0.0f, -9.81f };
     float Physics2D::TimeStep = 1.0f / 60.0f;
     
     bool Physics2D::CheckCircle(const Vector3& Center, float Radius)

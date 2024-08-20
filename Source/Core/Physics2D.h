@@ -3,7 +3,6 @@
 #include "Math/Vector2.h"
 #include "Core/RaycastHit.h"
 
-#define HYDRO_EARTH_GRAVITY (-9.81f)
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(Box2D, "BOX2D")
 
 namespace Hydro
