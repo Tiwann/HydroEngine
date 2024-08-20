@@ -1,5 +1,7 @@
 #pragma once
 #include "SharedPointer.h"
+#include "Core/Containers/DynamicArray.h"
+#include "Core/Containers/String.h"
 
 namespace Hydro
 {
@@ -19,9 +21,8 @@ namespace Hydro
     
     struct VertexAttribute
     {
-        std::string Name;
+        String Name;
         VertexAttributeType Type;
-
         bool operator==(const VertexAttribute&) const;
     };
 
@@ -30,7 +31,8 @@ namespace Hydro
     class VertexBufferLayout
     {
     public:
-        VertexBufferLayout(const std::vector<VertexAttribute>& Attributes);
+        VertexBufferLayout(const Array<VertexAttribute>& Attributes);
+        
         void AddAttribute(const VertexAttribute& Attribute);
         void Apply(const Ref<VertexArray>& Vao) const;
         
@@ -41,11 +43,12 @@ namespace Hydro
 
         VertexAttribute& operator[](size_t Index);
         const VertexAttribute& operator[](size_t Index) const;
-        constexpr std::vector<VertexAttribute>::iterator begin() { return m_Attributes.begin(); }
-        constexpr std::vector<VertexAttribute>::iterator end() { return m_Attributes.end(); }
+        
+        Array<VertexAttribute>::Iterator begin() { return m_Attributes.begin(); }
+        Array<VertexAttribute>::Iterator end() { return m_Attributes.end(); }
 
         static VertexBufferLayout Default;
     private:
-        std::vector<VertexAttribute> m_Attributes;
+        Array<VertexAttribute> m_Attributes;
     };
 }

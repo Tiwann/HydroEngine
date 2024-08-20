@@ -7,10 +7,10 @@ namespace Hydro
 {
     VertexBufferLayout VertexBufferLayout::Default = {
         {
-            { "Position", VertexAttributeType::Vector3 },
+           { "Position", VertexAttributeType::Vector3 },
            { "TexCoord", VertexAttributeType::Vector2 },
-           { "Normal", VertexAttributeType::Vector3 },
-           { "Color", VertexAttributeType::Vector4 }
+           { "Normal",   VertexAttributeType::Vector3 },
+           { "Color",    VertexAttributeType::Vector4 }
         }
     };
 
@@ -32,14 +32,14 @@ namespace Hydro
         return 0;
     }
 
-    VertexBufferLayout::VertexBufferLayout(const std::vector<VertexAttribute>& Attributes) : m_Attributes(Attributes)
+    VertexBufferLayout::VertexBufferLayout(const Array<VertexAttribute>& Attributes) : m_Attributes(Attributes)
     {
         
     }
 
     void VertexBufferLayout::AddAttribute(const VertexAttribute& Attribute)
     {
-        m_Attributes.push_back(Attribute);
+        m_Attributes.Add(Attribute);
     }
 
     void VertexBufferLayout::Apply(const Ref<VertexArray>& Vao) const
@@ -49,7 +49,7 @@ namespace Hydro
 
     size_t VertexBufferLayout::Count() const
     {
-        return m_Attributes.size();
+        return m_Attributes.Count();
     }
 
     size_t VertexBufferLayout::Stride() const
@@ -81,11 +81,12 @@ namespace Hydro
 
     size_t VertexBufferLayout::GetOffset(const VertexAttribute& Attribute) const
     {
-        const auto Iterator = std::ranges::find(m_Attributes, Attribute);
+        const Array<VertexAttribute>::SizeType Index = m_Attributes.Find(Attribute);
         size_t Result = 0;
-        for(auto It = m_Attributes.begin(); It != Iterator; ++It)
+        for(Array<VertexAttribute>::SizeType i = 0; i < Index; i++)
         {
-            Result += GetNumComponents(It->Type) * sizeof(float);
+            const VertexAttribute& Att = m_Attributes[i];
+            Result += GetNumComponents(Att.Type) * sizeof(float);
         }
         return Result;
     }
