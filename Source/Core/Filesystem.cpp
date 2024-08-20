@@ -135,6 +135,11 @@ namespace Hydro
         return buffer;
     }
 
+    Path File::GetDirectory(const Path& Filepath)
+    {
+        return Filepath.parent_path();
+    }
+
     bool Directory::Exists(const Path& Directory)
     {
         if(!std::filesystem::is_directory(Directory))

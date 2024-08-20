@@ -21,6 +21,7 @@ namespace Hydro
         static Path OpenFileDialog(const std::string& Title, const Path& DefaultPath, const char* Filters);
         static Path SaveFileDialog(const std::string& Title, const Path& DefaultPath, const char* Filters);
         static std::string BytesToString(uint64_t Bytes);
+        static Path GetDirectory(const Path& Filepath);
     };
 
     class Directory
