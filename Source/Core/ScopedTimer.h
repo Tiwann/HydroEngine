@@ -1,30 +1,30 @@
 ﻿#pragma once
 #include "MulticastDelegate.h"
+#include <GLFW/glfw3.h>
 
 namespace Hydro
 {
-    template<typename T = std::chrono::seconds>
     class ScopedTimer
     {
     public:
-        using ScopedTimerFinishedDelegate = MulticastDelegate<void(float Duration)>;
-        ScopedTimerFinishedDelegate FinishedEvent;
+        using FinishedDelegate = MulticastDelegate<void(float Duration)>;
+        FinishedDelegate FinishedEvent;
         
-        ScopedTimer(const ScopedTimerFinishedDelegate::DelegateType& OnFinished)
+        ScopedTimer(const FinishedDelegate::DelegateType& OnFinished)
         {
             FinishedEvent.Bind(OnFinished);
-            m_Start = std::chrono::high_resolution_clock::now();
+            m_Start = glfwGetTime();
         }
         
         ~ScopedTimer()
         {
-            m_End = std::chrono::high_resolution_clock::now();
-            const auto Duration = duration_cast<T>(m_End - m_Start).count();
-            FinishedEvent.BroadcastChecked((float)Duration / T::period::den);
+            m_End = glfwGetTime();
+            const float Duration = (float)(m_End - m_Start);
+            FinishedEvent.BroadcastChecked(Duration);
             FinishedEvent.ClearAll();
         }
     private:
-        std::chrono::time_point<std::chrono::high_resolution_clock> m_Start;
-        std::chrono::time_point<std::chrono::high_resolution_clock> m_End;
+        double m_Start;
+        double m_End;
     };
 }
