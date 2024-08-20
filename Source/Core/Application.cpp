@@ -19,7 +19,6 @@
 #include "CullMode.h"
 #include "MemoryData.h"
 #include "ScopedTimer.h"
-#include "TreeNode.h"
 #include "ResourceManager/ShaderManager.h"
 #include "ResourceManager/TextureManager.h"
 #include "Audio/AudioEngine.h"
@@ -28,14 +27,15 @@
 #include "Platform/PlatformImGui.h"
 #include "Components/Camera.h"
 #include "Components/Physics/PhysicsComponent.h"
+#include "Components/Rendering/SpriteRenderer.h"
 
 
 #include "Editor/DetailsPanel.h"
 #include "Editor/EditorGUI.h"
 #include "Editor/SceneHierarchyPanel.h"
 #include "Editor/Selection.h"
-#include "Editor/ViewportWindow.h"
-
+#include "Editor/ViewportPanel.h"
+#include "Serialization/ApplicationConfigurationSerializer.h"
 #include "Serialization/SceneSerializer.h"
 
 
@@ -67,8 +67,7 @@ namespace Hydro
             ApplicationDelegates::OnFrameBegin.Broadcast();
             Input::ResetInputStates();
             glfwPollEvents();
-
-            ScopedTimer<std::chrono::nanoseconds> FrameTimer([this](const float Duration) { m_DeltaTime = Duration; });
+            ScopedTimer FrameTimer([this](const float Duration) { m_DeltaTime = Duration; });
             
             OnUpdate(m_DeltaTime * Time::Scale);
             OnRender(m_Renderer);
@@ -92,9 +91,9 @@ namespace Hydro
 
     void Application::OnInit()
     {
-        m_ShaderManager->Load("Sprite", "Engine/Assets/Shaders/Sprite.glsl");
-        m_ShaderManager->Load("UniformColor", "Engine/Assets/Shaders/UniformColor.glsl");
-        m_ShaderManager->Load("Circle", "Engine/Assets/Shaders/Circle.glsl");
+        m_ShaderManager->Load("Sprite",         "Engine/Assets/Shaders/Sprite.glsl");
+        m_ShaderManager->Load("UniformColor",   "Engine/Assets/Shaders/UniformColor.glsl");
+        m_ShaderManager->Load("Circle",         "Engine/Assets/Shaders/Circle.glsl");
         
         m_Scene = CreateRef<Scene>();
         m_Scene->SetName("Default Scene");
@@ -135,7 +134,7 @@ namespace Hydro
         View.AddChild({ "Viewport Window", m_ViewportPanel->OpenedPtr() });
         View.AddChild({ "ImGui Demo Window" , &m_ShowImGuiDemoWindow});
         
-        auto& Scene = m_MenuBar.AddChild({ "Scene "});
+        auto& Scene = m_MenuBar.AddChild({ "Scene"});
         Scene.AddChild({ "Rename" });
         Scene.AddChild({ "Create Object", nullptr, [this]
         {
@@ -149,7 +148,8 @@ namespace Hydro
         }});
         
         auto& Misc = m_MenuBar.AddChild({ "Misc" });
-        Misc.AddChild({ "Reload All Shaders", nullptr, [this]
+        auto& Shaders = Misc.AddChild({ "Shaders" });
+        Shaders.AddChild({ "Reload All", nullptr, [this]
         {
             m_ShaderManager->ReloadAll();
         }});
@@ -159,47 +159,39 @@ namespace Hydro
         OnLoadResources(m_ShaderManager, m_TextureManager, m_SoundManager);
     }
 
-    void Application::OnLoadResources(Ref<ShaderManager> ShaderManager, Ref<TextureManager> TextureManager,
-        Ref<SoundManager> SoundManager)
+    void Application::OnLoadResources(Ref<ShaderManager> ShaderManager, Ref<TextureManager> TextureManager, Ref<SoundManager> SoundManager)
     {
     }
 
     void Application::OnStart()
     {
-        m_Scene->ForEach([](const auto& Object)
+        m_Scene->ForEach([](const Ref<GameObject>& Object)
         {
             Object->OnStart();
         });
     }
 
-    void Application::OnExit()
-    {
-        m_Scene->OnDestroy();
-
-        if(m_Configuration.WithEditor)
-            UI::Shutdown();
-        
-        m_TextureManager->UnloadAll();
-        m_ShaderManager->UnloadAll();
-        m_SoundManager->UnloadAll();
-        
-        m_AudioEngine->Destroy();
-        m_Renderer->Destroy();
-        m_Window->Destroy();
-        
-        glfwTerminate();
-        ApplicationDelegates::OnExit.Broadcast();
-    }
-
+    
     void Application::OnRender(const Ref<RendererBackend>& Renderer)
     {
-        Renderer->ClearColorBuffer(m_ClearColor.WithOpacity(1.0f));
-        m_ViewportPanel->GetFrameBuffer()->Bind();
-        m_Renderer->GetCurrentCamera()->Settings.SetDimensions(m_ViewportPanel->GetSize()); // Temp
-        Renderer->SetViewportRect(Vector2::Zero, m_ViewportPanel->GetSize());
-        Renderer->ClearColorBuffer({0.08f, 0.08f, 0.08f, 1.0f});
-        m_Scene->OnRender(Renderer);
-        m_ViewportPanel->GetFrameBuffer()->Unbind();
+        if(m_Configuration.WithEditor)
+        {
+            if(!m_ViewportPanel->IsAvailable()) return;
+            Renderer->ClearColorBuffer(m_ClearColor.WithOpacity(1.0f));
+            m_ViewportPanel->GetFrameBuffer()->Bind();
+
+            if(m_Renderer->GetCurrentCamera())
+                m_Renderer->GetCurrentCamera()->Settings.SetDimensions(m_ViewportPanel->GetSize()); // Temp
+            Renderer->SetViewportRect(Vector2::Zero, m_ViewportPanel->GetSize());
+            Renderer->ClearColorBuffer({0.08f, 0.08f, 0.08f, 1.0f});
+            m_Scene->OnRender(Renderer);
+            m_ViewportPanel->GetFrameBuffer()->Unbind();
+        }
+        else
+        {
+            Renderer->ClearColorBuffer(m_ClearColor.WithOpacity(1.0f));
+            m_Scene->OnRender(Renderer);
+        }
     }
 
     static void UpdateWindowName(float Delta, const Application* Application)
@@ -244,6 +236,7 @@ namespace Hydro
         m_SceneHierarchyPanel->OnUpdate(Delta);
         m_ViewportPanel->OnUpdate(Delta);
     }
+
     
     void Application::OnGui()
     {
@@ -251,22 +244,40 @@ namespace Hydro
 
         UI::MainMenuMenuBar(m_MenuBar);
         m_DetailsPanel->OnInspectorGUI(IO);
-        m_SceneHierarchyPanel->OnInspectorGUI(IO);
         m_ViewportPanel->OnInspectorGUI(IO);
-        ImGui::ShowDemoWindow(&m_ShowImGuiDemoWindow);
+        m_SceneHierarchyPanel->OnInspectorGUI(IO);
+        
+        if(m_ShowImGuiDemoWindow) ImGui::ShowDemoWindow(&m_ShowImGuiDemoWindow);
+    }
+
+    void Application::OnExit()
+    {
+        m_Scene->OnDestroy();
+
+        if(m_Configuration.WithEditor)
+            UI::Shutdown();
+        
+        m_TextureManager->UnloadAll();
+        m_ShaderManager->UnloadAll();
+        m_SoundManager->UnloadAll();
+        
+        m_AudioEngine->Destroy();
+        m_Renderer->Destroy();
+        m_Window->Destroy();
+        
+        glfwTerminate();
+        ApplicationDelegates::OnExit.Broadcast();
     }
 
     bool Application::SaveSceneAs(const Path& Filepath)
     {
-        if(!File::Exists(Filepath)) File::Create(Filepath);
-        SceneSerializer Serializer(Filepath);
-        return Serializer.Serialize(*m_Scene);
+        SceneSerializer Serializer;
+        return Serializer.Serialize(m_Scene, Filepath);
     }
 
     bool Application::OpenScene(const Path& Filepath)
     {
-        SceneSerializer Serializer(Filepath);
-        return Serializer.Deserialize(*m_Scene);
+        return false;
     }
 
 
@@ -336,6 +347,14 @@ namespace Hydro
         return CameraObj;
     }
 
+    Ref<GameObject> Application::CreateSprite() const
+    {
+        const auto& NewObject = CreateObject("New Sprite");
+        const auto& SpriteRend = NewObject->AddComponent<SpriteRenderer>();
+
+        return NewObject;
+    }
+
     const Ref<RendererBackend>& Application::GetRendererBackend() const
     {
         return m_Renderer;
@@ -387,7 +406,10 @@ namespace Hydro
         
         // Create Window, set its close callback
         HYDRO_LOG(Application, Verbosity::Trace, "Creating window...");
-        m_Configuration = CreateConfiguration();
+
+        ApplicationConfigurationSerializer Serializer;
+        m_Configuration = CreateConfiguration(Serializer);
+        
         if(m_Configuration.ShowGraphicsAPIName) m_Configuration.AppName = fmt::format("{} | {}", m_Configuration.AppName, HYDRO_RHI_NAME);
         if(m_Configuration.ShowOSName) m_Configuration.AppName = fmt::format("{} {}", m_Configuration.AppName, HYDRO_OS_NAME);
         if(m_Configuration.ShowConfiguration) m_Configuration.AppName = fmt::format("{}", m_Configuration.AppName, HYDRO_CONFIG_NAME);
@@ -395,14 +417,14 @@ namespace Hydro
 
         if(File::Exists(m_Configuration.IconPath))
         {
-            Ref<Image> Icon = Image::Create(m_Configuration.IconPath, ImageFormat::RGBA8);
+            const Ref<Image> Icon = Image::Create(m_Configuration.IconPath, ImageFormat::RGBA8);
             m_Window->SetIcon(Icon);
         } else
         {
             HYDRO_LOG(Application, Verbosity::Warning, "Failed to load custom window icon! Loading default from memory.");
             using namespace MemoryData;
             const BufferView DefaultIconData(HydroEngineLogo, std::size(HydroEngineLogo));
-            Ref<Image> DefaultIcon = Image::Create(DefaultIconData, ImageFormat::RGBA8);
+            const Ref<Image> DefaultIcon = Image::Create(DefaultIconData, ImageFormat::RGBA8);
             m_Window->SetIcon(DefaultIcon);
         }
         

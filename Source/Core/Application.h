@@ -5,7 +5,7 @@
 #include "FrameBuffer.h"
 #include "LogCategory.h"
 #include "Scene.h"
-#include "TreeNode.h"
+#include "Containers/TreeNode.h"
 #include "Editor/Menu.h"
 #include "ResourceManager/SoundManager.h"
 
@@ -18,6 +18,7 @@ constexpr float NANOSECONDS = 1000000000.0f;
 
 namespace Hydro
 {
+    class ApplicationConfigurationSerializer;
     class ViewportPanel;
     class DetailsPanel;
     class TextureManager;
@@ -63,7 +64,7 @@ namespace Hydro
         bool SaveSceneAs(const Path& Filepath);
         bool OpenScene(const Path& Filepath);
 
-        virtual ApplicationConfiguration CreateConfiguration() const = 0;
+        virtual ApplicationConfiguration CreateConfiguration(ApplicationConfigurationSerializer& Serializer) const = 0;
         
         const ApplicationConfiguration& GetConfiguration() const;
         const GraphicsSettings& GetGraphicsSettings() const;
@@ -91,6 +92,8 @@ namespace Hydro
         }
 
         Ref<GameObject> CreateCamera() const;
+
+        Ref<GameObject> CreateSprite() const;
     private:
         /* Core Components */
         Ref<Window> m_Window;
