@@ -29,6 +29,11 @@ namespace Hydro
         return CreateFromFiles(Filepaths.data(), Filepaths.size());
     }
 
+    void SpriteAnimation::ClearSprites()
+    {
+        m_Sprites.clear();
+    }
+
     void SpriteAnimation::AddSprite(const Sprite& Sprite)
     {
         m_Sprites.push_back(Sprite);
