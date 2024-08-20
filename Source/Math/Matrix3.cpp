@@ -1,5 +1,7 @@
 #include "HydroPCH.h"
 #include "Matrix3.h"
+
+#include "Functions.h"
 #include "Matrix2.h"
 #include "Core/Assertion.h"
 

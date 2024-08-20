@@ -1,5 +1,6 @@
 #pragma once
 #include "Functions.h"
+#include <nlohmann/json_fwd.hpp>
 
 namespace Hydro
 {
@@ -49,4 +50,7 @@ namespace Hydro
         static Vector4 Forward;
         static Vector4 Backward;
     };
+
+    void to_json(nlohmann::json& j, const Vector4& Vec);
+    void from_json(const nlohmann::json& j, Vector4& Vec);
 }

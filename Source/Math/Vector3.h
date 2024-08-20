@@ -1,8 +1,5 @@
 #pragma once
-#include <functional>
-
-#include "Functions.h"
-
+#include <nlohmann/json_fwd.hpp>
 
 struct b2Vec3;
 
@@ -30,6 +27,7 @@ namespace Hydro
         
         float Magnitude() const;
         float* ValuePtr();
+        const float* ValuePtr() const;
         float Dot(const Vector3& Vec) const;
 
         Vector3 WithX(float X) const;
@@ -43,7 +41,7 @@ namespace Hydro
         Vector3& operator-=(const Vector3& Vec);
         operator b2Vec3() const;
 
-        Vector3 Apply(const std::function<float(float)>& Func) const;
+        Vector3 Apply(float (*Function)(float)) const;
 
         friend Vector3 operator/(float Scalar, const Vector3& Vec);
         friend Vector3 operator/( const Vector3& Vec, float Scalar);
@@ -72,4 +70,7 @@ namespace Hydro
         static Vector3 Forward;
         static Vector3 Backward;
     };
+
+    void to_json(nlohmann::json& j, const Vector3& Vec);
+    void from_json(const nlohmann::json& j, Vector3& Vec);
 }

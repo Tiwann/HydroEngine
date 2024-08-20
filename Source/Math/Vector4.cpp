@@ -2,6 +2,7 @@
 #include "Vector4.h"
 #include "Vector3.h"
 #include "Core/Color.h"
+#include <nlohmann/json.hpp>
 
 namespace Hydro
 {
@@ -120,5 +121,18 @@ namespace Hydro
     Vector4::operator Color() const
     {
         return {r, g, b, a};
+    }
+
+    void to_json(nlohmann::json& j, const Vector4& Vec)
+    {
+        j = { {"x", Vec.x}, {"y", Vec.y}, {"z", Vec.z}, {"w", Vec.w} };
+    }
+
+    void from_json(const nlohmann::json& j, Vector4& Vec)
+    {
+        j["x"].get_to(Vec.x);
+        j["y"].get_to(Vec.y);
+        j["z"].get_to(Vec.z);
+        j["w"].get_to(Vec.w);
     }
 }

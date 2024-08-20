@@ -14,6 +14,10 @@ namespace Hydro
 
         float* ValuePtr();
         const float* ValuePtr() const;
+
+        const float* operator*() const { return (const float*)this; }
+        float* operator*() { return (float*)this; }
+        
         float Magnitude() const;
         float Determinant() const;
         Matrix4 Inverse() const;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector3.h"
+#include <nlohmann/json_fwd.hpp>
 
 struct b2Vec2;
 struct ImVec2;
@@ -53,4 +54,7 @@ namespace Hydro
         static Vector2 Left;
         static Vector2 Down;
     };
+
+    void to_json(nlohmann::json& j, const Vector2& Vec);
+    void from_json(const nlohmann::json& j, Vector2& Vec);
 }

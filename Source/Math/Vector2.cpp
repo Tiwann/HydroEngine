@@ -4,7 +4,8 @@
 #include "Functions.h"
 
 #include <box2d/b2_math.h>
-#include "imgui/imgui.h"
+#include <imgui/imgui.h>
+#include <nlohmann/json.hpp>
 
 
 namespace Hydro
@@ -123,5 +124,16 @@ namespace Hydro
     Vector2 Vector2::operator*(const Vector2& Vec) const
     {
         return {x * Vec.x, y * Vec.y};
+    }
+
+    void to_json(nlohmann::json& j, const Vector2& Vec)
+    {
+        j = { {"x", Vec.x}, {"y", Vec.y} };
+    }
+
+    void from_json(const nlohmann::json& j, Vector2& Vec)
+    {
+        j["x"].get_to(Vec.x);
+        j["y"].get_to(Vec.y);
     }
 }

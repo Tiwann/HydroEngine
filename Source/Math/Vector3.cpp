@@ -3,6 +3,7 @@
 #include "Vector2.h"
 #include "Vector4.h"
 #include <box2d/b2_math.h>
+#include <nlohmann/json.hpp>
 
 namespace Hydro
 {
@@ -48,6 +49,11 @@ namespace Hydro
     float* Vector3::ValuePtr()
     {
         return (float*)this;
+    }
+
+    const float* Vector3::ValuePtr() const
+    {
+        return (const float*)this;
     }
 
     float Vector3::Dot(const Vector3& Vec) const
@@ -111,9 +117,9 @@ namespace Hydro
         return {x, y, z};
     }
 
-    Vector3 Vector3::Apply(const std::function<float(float)>& Func) const
+    Vector3 Vector3::Apply(float (*Function)(float)) const
     {
-        return {Func(x), Func(y), Func(z)};
+        return {Function(x), Function(y), Function(z)};
     }
 
 
@@ -203,5 +209,17 @@ namespace Hydro
         const float y = Math::SmoothDamp(Current.y, Target.y, CurrentVelocity.y, SmoothTime, Delta, MaxSpeed);
         const float z = Math::SmoothDamp(Current.z, Target.z, CurrentVelocity.z, SmoothTime, Delta, MaxSpeed);
         return {x, y, z};
+    }
+
+    void to_json(nlohmann::json& j, const Vector3& Vec)
+    {
+        j = { {"x", Vec.x}, {"y", Vec.y}, {"z", Vec.z} };
+    }
+
+    void from_json(const nlohmann::json& j, Vector3& Vec)
+    {
+        j["x"].get_to(Vec.x);
+        j["y"].get_to(Vec.y);
+        j["z"].get_to(Vec.z);
     }
 }

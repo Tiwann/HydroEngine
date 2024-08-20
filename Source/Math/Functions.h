@@ -45,6 +45,18 @@ namespace Hydro
         {
             return A > B ? A : Max(B, std::forward<Args>(C)...);
         }
+
+        template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+        static constexpr T Max(T A, T B)
+        {
+            return A > B ? A : B;
+        }
+
+        template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+        static constexpr T Min(T A, T B)
+        {
+            return A < B ? A : B;
+        }
         
         static float Sign(float Val);
         static bool AreSame(float Lhs, float Rhs);
