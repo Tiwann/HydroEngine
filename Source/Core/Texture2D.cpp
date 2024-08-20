@@ -8,10 +8,12 @@
 #include "LogVerbosity.h"
 #include "Macros.h"
 #include "Sprite.h"
+#include "SpriteAnimation.h"
+#include "SpriteSheet.h"
 
 #include "Math/Vector2.h"
-namespace Hydro
 
+namespace Hydro
 {
     Texture2D::Texture2D(std::string Name, uint32_t Width, uint32_t Height, const TextureParams& Params, uint32_t Slot) : m_Name(std::move(Name)),
         m_Width(Width), m_Height(Height), m_Params(Params), m_Slot(Slot)
@@ -53,9 +55,9 @@ namespace Hydro
     Sprite Texture2D::CreateSprite(const Vector2& Position, const Vector2& Size)
     {
         HYDRO_ASSERT(Position.x >= 0 && Position.x < (float)m_Width &&
-                    Position.y >= 0 && Position.x < (float)m_Height &&
-                    Position.x + Size.x >= (float)m_Width && 
-                    Position.y + Size.y >= (float)m_Height, "Failed to created sprite");
+                    Position.y >= 0 && Position.y < (float)m_Height &&
+                    Position.x + Size.x <= (float)m_Width && 
+                    Position.y + Size.y <= (float)m_Height, "Failed to created sprite");
 
         return { shared_from_this(), Position, Size };
     }
@@ -63,5 +65,34 @@ namespace Hydro
     Sprite Texture2D::CreateSprite()
     {
         return { shared_from_this(), Vector2::Zero, GetSize() };
+    }
+
+    Ref<SpriteAnimation> Texture2D::CreateAnimation(uint32_t NumRows, uint32_t NumColumns, uint32_t NumSprites, uint32_t SpriteSize)
+    {
+        Ref<SpriteAnimation> Result = SpriteAnimation::Create();
+
+        uint32_t Processed = 0;
+        for(uint32_t Row = 0; Row < NumRows; Row++)
+        {
+            if(Processed >= NumSprites) break;
+            for(uint32_t Column = 0; Column < NumColumns; Column++)
+            {
+                if(Processed >= NumSprites) break;
+                const Vector2 Position = {(float)(Column * SpriteSize), (float)(Row * SpriteSize)};
+                const Vector2 Size = Vector2::One * (float)SpriteSize;
+                Sprite Sprite = CreateSprite(Position, Size);
+                Result->AddSprite(Sprite);
+                Processed++;
+            }
+        }
+        return Result;
+    }
+
+    Ref<SpriteAnimation> Texture2D::CreateAnimation(const SpriteSheet& SpriteSheet)
+    {
+        return CreateAnimation(SpriteSheet.NumRows,
+                               SpriteSheet.NumColumns,
+                               SpriteSheet.NumSprites,
+                               SpriteSheet.SpriteSize);
     }
 }

@@ -2,6 +2,7 @@
 #include "Image.h"
 #include "SharedPointer.h"
 #include "LogCategory.h"
+#include "SpriteSheet.h"
 
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(Texture2D, "TEXTURE2D");
@@ -11,6 +12,8 @@ namespace Hydro
     class Image;
     class Vector2;
     class Sprite;
+    class SpriteAnimation;
+    struct SpriteSheet;
 
     enum class TextureFilter
     {
@@ -72,7 +75,8 @@ namespace Hydro
 
         Sprite CreateSprite(const Vector2& Position, const Vector2& Size);
         Sprite CreateSprite();
-
+        Ref<SpriteAnimation> CreateAnimation(uint32_t NumRows, uint32_t NumColumns, uint32_t NumSprites, uint32_t SpriteSize);
+        Ref<SpriteAnimation> CreateAnimation(const SpriteSheet& SpriteSheet);
     protected:
         std::string m_Name;
         uint32_t m_Width{0}, m_Height{0};
