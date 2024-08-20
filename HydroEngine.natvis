@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AutoVisualizer>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
     
     <!-- Hydro::Buffer<T> -->
     <Type Name="Hydro::Buffer&lt;*&gt;">
         <DisplayString>{{Count = {m_Count}}}</DisplayString>
+        <Expand>
+            <ArrayItems>
+                <Size>m_Count</Size>
+                <ValuePointer>m_Data</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>
+
+    <Type Name="Hydro::Array&lt;*&gt;">
+        <DisplayString>{{Count = {m_Count}}}</DisplayString>
+        <Expand>
+            <ArrayItems Condition="m_Count!=0">
+                <Size>m_Count</Size>
+                <ValuePointer>m_Data</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>
+
+    <Type Name="Hydro::StringBase&lt;*,*&gt;">
+        <DisplayString>{m_Data}</DisplayString>
         <Expand>
             <ArrayItems>
                 <Size>m_Count</Size>
@@ -24,17 +44,17 @@
     </Type>
 
     <!-- Hydro::Vector2 -->
-    <Type Name="Hydro::Vector2&lt;*&gt;">
-        <DisplayString>{{X = {x}, Y = {y}}</DisplayString>
+    <Type Name="Hydro::Vector2">
+        <DisplayString>{X = {x}, Y = {y}}</DisplayString>
     </Type>
 
     <!-- Hydro::Vector3 -->
-    <Type Name="Hydro::Vector3&lt;*&gt;">
+    <Type Name="Hydro::Vector3">
         <DisplayString>{{X = {x}, Y = {y}, Z = {z}}</DisplayString>
     </Type>
 
     <!-- Hydro::Vector4 -->
-    <Type Name="Hydro::Vector4&lt;*&gt;">
+    <Type Name="Hydro::Vector4">
         <DisplayString>{{X = {x}, Y = {y}, Z = {z}, W = {w}</DisplayString>
     </Type>
 
