@@ -27,8 +27,8 @@ project "HydroEngine"
 		"HydroEngine.natvis"
 	}
 	
-	pchheader "HydroPCH.h"
-	pchsource "Source/HydroPCH.cpp"
+	--pchheader "HydroPCH.h"
+	--pchsource "Source/HydroPCH.cpp"
 
 	includedirs
 	{
