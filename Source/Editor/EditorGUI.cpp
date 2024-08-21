@@ -151,7 +151,7 @@ namespace Hydro::UI
                 const Path Filepath = File::OpenFileDialog("Choose an image file", "", "Image Files (*.png)|*.png");
                 TextureManager& Manager = Application::GetCurrentApplication().GetTextureManager();
                 const std::string Name = Filepath.filename().string();
-                const Ref<Texture2D> NewTexture = Manager.Load(Name, Filepath);
+                const Ref<Texture2D> NewTexture = Manager.Load(Name.c_str(), Filepath);
                 InOutSprite = NewTexture->CreateSprite();
             }
             ImGui::TreePop();
