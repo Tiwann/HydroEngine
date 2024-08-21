@@ -14,7 +14,6 @@ namespace Hydro
     void Transform::OnDestroy()
     {
         Component::OnDestroy();
-        OnScaleSet.ClearAll();
     }
 
     const Vector3& Transform::GetPosition() const
@@ -65,7 +64,6 @@ namespace Hydro
     void Transform::SetScale(const Vector3& Scale)
     {
         m_Scale = Scale;
-        if(OnScaleSet.IsBound()) OnScaleSet.Broadcast(this);
     }
 
     void Transform::Translate(const Vector3& Translation)

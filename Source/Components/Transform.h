@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "Core/Component.h"
-#include "Core/MulticastDelegate.h"
 #include "Math/LinearAlgebra.h"
 #include "Core/LogCategory.h"
 
@@ -41,9 +40,7 @@ namespace Hydro
         Matrix4 GetWorldSpaceMatrix() const;
         Matrix4 GetLocalSpaceMatrix() const;
         void OnInspectorGUI(const ImGuiIO& IO) override;
-
-        using ScaleSetDelegate = MulticastDelegate<void(const Transform*)>;
-        ScaleSetDelegate OnScaleSet;
+        
     private:
         Vector3 m_Position{Vector3::Zero};
         Vector3 m_Rotation{Vector3::Zero};
