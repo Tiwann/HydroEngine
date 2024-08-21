@@ -87,6 +87,7 @@ namespace Hydro
         Ref<Transform> GetTransform() const;
 
         const Scene& GetScene() const;
+        Scene& GetScene();
         const std::string& GetName() const { return m_Name; }
 
         

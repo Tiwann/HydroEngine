@@ -70,7 +70,12 @@ namespace Hydro
     {
         return *m_Scene;
     }
-    
+
+    Scene& GameObject::GetScene()
+    {
+        return *m_Scene;
+    }
+
 
     void GameObject::OnInit()
     {
