@@ -2,15 +2,15 @@
 #include "StaticArray.h"
 #include "Core/Iterator.h"
 #include "Core/Assertion.h"
-#include "Math/Functions.h"
+#include "Core/TypeTraits.h"
+
+#include <spdlog/fmt/bundled/core.h>
+
+#include <spdlog/fmt/bundled/format.h>
 
 namespace Hydro
 {
-    template<typename T>
-    constexpr bool IsCharacter = std::is_same_v<T, char> || std::is_same_v<T, char16_t> ||
-            std::is_same_v<T, char32_t> || std::is_same_v<T, wchar_t>;
-        
-    template<typename T, typename = std::enable_if_t<IsCharacter<T>>>
+    template<typename T, typename = EnableIfType<IsCharacterValue<T>>>
     class StringBase : public Iterable<T>
     {
     public:
@@ -34,7 +34,7 @@ namespace Hydro
             m_Data = new CharacterType[m_Count + 1]{};
             memcpy(m_Data, Data, m_Count * CharacterSize);
         }
-        
+
         StringBase(CharacterType* Data, SizeType Count)
         {
             HYDRO_ASSERT(Data, "Cannot construct string with nullptr!");
@@ -124,7 +124,7 @@ namespace Hydro
 
         const CharacterType* Data() const { return m_Data; }
         
-        SizeType Count() { return m_Count; }
+        SizeType Count() const { return m_Count; }
         
         StringBase& Append(StringLiteralType Data)
         {
@@ -162,13 +162,18 @@ namespace Hydro
             return {NewData, NewCount};
         }
         
-        SizeType IndexOf(CharacterType Char)
+        SizeType Find(CharacterType Char)
         {
             for(SizeType i = 0; i < m_Count; ++i)
             {
                 if(m_Data[i] == Char)
                     return i;
             }
+            return -1;
+        }
+
+        SizeType Find(const StringBase& Str)
+        {
             return -1;
         }
         
@@ -184,6 +189,11 @@ namespace Hydro
             return Result; 
         }
 
+        StringBase& Replace(const StringBase& From, const StringBase& To)
+        {
+            return *this;
+        }
+
         const CharacterType* operator*() const { return m_Data; }
         
 
@@ -191,13 +201,7 @@ namespace Hydro
         Iterator<T> end() override { return m_Data + m_Count; }
         ConstIterator<T> begin() const override { return m_Data; }
         ConstIterator<T> end() const override { return m_Data + m_Count; }
-
-        template<typename ... Args>
-        static StringBase Format(StringLiteralType Fmt, Args... Arguments)
-        {
-            return {};
-        }
-
+    
     private:
         CharacterType* m_Data = nullptr;
         size_t m_Count = 0;
@@ -221,4 +225,19 @@ namespace Hydro
     using WideString = StringBase<wchar_t>;
 
     
+    template <typename... Args>
+    String Format(fmt::format_string<Args...> Fmt, Args&&... Arguments)
+    {
+        return fmt::vformat(Fmt, fmt::make_format_args(Arguments...)).c_str();
+    }
 }
+
+template<>
+struct fmt::formatter<Hydro::String> : formatter<string_view>
+{
+    format_context::iterator format(const Hydro::String& Str, format_context& Context) const
+    {
+        return formatter<string_view>::format(string_view(Str.Data(), Str.Count()), Context);
+    }
+};
+
