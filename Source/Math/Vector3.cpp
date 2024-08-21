@@ -2,7 +2,9 @@
 #include "Vector3.h"
 #include "Vector2.h"
 #include "Vector4.h"
+
 #include <box2d/b2_math.h>
+#include <Jolt/Math/Vec3.h>
 #include <nlohmann/json.hpp>
 
 namespace Hydro
@@ -38,6 +40,10 @@ namespace Hydro
     }
 
     Vector3::Vector3(const b2Vec3& Vec) : x(Vec.x), y(Vec.y), z(Vec.z)
+    {
+    }
+
+    Vector3::Vector3(const JPH::Vec3& Vec) : x(Vec.GetX()), y(Vec.GetY()), z(Vec.GetZ())
     {
     }
 
@@ -115,6 +121,11 @@ namespace Hydro
     Vector3::operator b2Vec3() const
     {
         return {x, y, z};
+    }
+
+    Vector3::operator JPH::Vec3() const
+    {
+        return JPH::Vec3(x, y, z);
     }
 
     Vector3 Vector3::Apply(float (*Function)(float)) const

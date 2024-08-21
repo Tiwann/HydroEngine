@@ -3,6 +3,11 @@
 
 struct b2Vec3;
 
+namespace JPH
+{
+    class Vec3;
+}
+
 namespace Hydro
 {
     class Vector2;
@@ -23,6 +28,7 @@ namespace Hydro
         Vector3(const Vector2& Vec, float Z);
         Vector3(const Vector4& Vec);
         Vector3(const b2Vec3& Vec);
+        Vector3(const JPH::Vec3& Vec);
         
         
         float Magnitude() const;
@@ -39,7 +45,9 @@ namespace Hydro
         Vector3 operator-() const;
         Vector3& operator+=(const Vector3& Vec);
         Vector3& operator-=(const Vector3& Vec);
+        
         operator b2Vec3() const;
+        operator JPH::Vec3() const;
 
         Vector3 Apply(float (*Function)(float)) const;
 
