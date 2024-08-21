@@ -5,6 +5,7 @@
 #include "Selection.h"
 #include "ViewportPanel.h"
 #include "Components/Camera.h"
+#include "Components/Physics/Shape2D.h"
 #include "Core/Application.h"
 #include "Core/RendererBackend.h"
 #include "Core/Scene.h"
@@ -118,6 +119,13 @@ namespace Hydro
                     Transform->SetPosition(Pos);
                     Transform->SetRotation(Rot);
                     Transform->SetScale(Sc);
+
+                    if(const auto& Shape = Object->GetComponent<Shape2D>())
+                    {
+                        Shape->SetPosition(Pos);
+                        Shape->SetRotation(Rot.z);
+                        Shape->RecreatePhysicsState();
+                    }
                 }
             }
         }
