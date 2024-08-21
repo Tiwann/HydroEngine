@@ -1,10 +1,11 @@
 #pragma once
-#include "ColliderType.h"
+#include "Core/Physics/PhysicsBodyType.h"
 #include "Constraints.h"
 #include "Core/Component.h"
 #include "Core/PhysicsMaterial.h"
 #include "Core/Flags.h"
 #include "Core/MulticastDelegate.h"
+
 namespace Hydro
 {
     class Vector3;
@@ -95,12 +96,12 @@ namespace Hydro
             m_IsTrigger = IsTrigger;
         }
 
-        ColliderType GetType() const
+        PhysicsBodyType GetType() const
         {
             return m_Type;
         }
 
-        virtual void SetType(ColliderType Type)
+        virtual void SetType(PhysicsBodyType Type)
         {
             m_Type = Type;
         }
@@ -126,7 +127,7 @@ namespace Hydro
             ImGui::Checkbox("Draw Debug", &m_ShowCollisions);
         }
         
-        ColliderType m_Type{ColliderType::Static};
+        PhysicsBodyType m_Type{PhysicsBodyType::Static};
         PhysicsMaterial m_Material;
         PhysicsConstraintsFlags m_ConstraintsFlags;
         bool m_IsTrigger{false};

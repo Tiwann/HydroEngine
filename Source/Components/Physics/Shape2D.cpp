@@ -9,6 +9,7 @@
 #include "Collision2D.h"
 #include "Core/MulticastDelegate.h"
 #include "Core/Shape2DContactListener.h"
+#include "Core/Physics/PhysicsWorld2D.h"
 
 namespace Hydro
 {
@@ -17,9 +18,6 @@ namespace Hydro
         HYDRO_BIND_EVENT_AS(OnCollisionEnterEvent, ICollisionResponse, &Shape2D::OnCollisionEnter);
         HYDRO_BIND_EVENT_AS(OnCollisionStayEvent, ICollisionResponse, &Shape2D::OnCollisionStay);
         HYDRO_BIND_EVENT_AS(OnCollisionExitEvent, ICollisionResponse, &Shape2D::OnCollisionExit);
-        
-        Transform::ScaleSetDelegate& ScaleSetEvent = Owner->GetTransform()->OnScaleSet;
-        HYDRO_BIND_EVENT(ScaleSetEvent, &Shape2D::OnTransformScaleSet);
     }
     void Shape2D::OnInit()
     {
@@ -27,6 +25,8 @@ namespace Hydro
 
         const Vector3 Position = GetTransform()->GetPosition();
         const Vector3 Rotation = GetTransform()->GetRotation();
+
+        
 
         b2BodyDef BodyDef{};
         BodyDef.position = Vector2(Position);
@@ -37,8 +37,18 @@ namespace Hydro
         UserData.pointer = (uintptr_t)this;
         BodyDef.userData = UserData;
 
-        b2World* World = m_GameObject->GetScene().m_Physics2DWorld;
-        m_Body = World->CreateBody(&BodyDef);
+        
+
+        Scene& Scene = m_GameObject->GetScene();
+        PhysicsWorld2D& World = Scene.GetPhysicsWorld2D();
+
+        const PhysicsBodyDefinition Definition { Position, Rotation, m_Type };
+        m_BODY = World.CreateBody(Definition);
+        
+
+        //b2World* World = m_GameObject->GetScene().m_Physics2DWorld;
+        //m_Body = World->CreateBody(&BodyDef);
+        
 
         m_Shape = CreateShape();
 
@@ -68,6 +78,11 @@ namespace Hydro
 
     void Shape2D::OnDestroy()
     {
+        Scene& Scene = m_GameObject->GetScene();
+        PhysicsWorld2D& World = Scene.GetPhysicsWorld2D();
+        World.DestroyBody(m_BODY);
+
+        
         m_Body->DestroyFixture(m_Fixture);
         m_GameObject->GetScene().m_Physics2DWorld->DestroyBody(m_Body);
         delete m_ContactListener;

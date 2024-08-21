@@ -1,5 +1,5 @@
 ﻿#include "HydroPCH.h"
-#include "Physics2D.h"
+#include "Core/Physics/Physics2D.h"
 
 #include "Application.h"
 #include "Buffer.h"
@@ -14,11 +14,12 @@
 
 #include "Ray.h"
 #include "Raycast2DCallback.h"
+#include "Core/Misc.h"
 
 namespace Hydro
 {
     Vector2 Physics2D::Gravity = { 0.0f, -9.81f };
-    float Physics2D::TimeStep = 1.0f / 60.0f;
+    float Physics2D::TimeStep = FPS<float>(60);
     
     bool Physics2D::CheckCircle(const Vector3& Center, float Radius)
     {

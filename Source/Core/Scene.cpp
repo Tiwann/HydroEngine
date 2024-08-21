@@ -3,7 +3,7 @@
 
 #include "Application.h"
 #include "GameObject.h"
-#include "Physics2D.h"
+#include "Core/Physics/Physics2D.h"
 #include "Time.h"
 #include "box2d/box2d.h"
 #include "Components/Transform.h"
@@ -13,28 +13,16 @@
 #include <Jolt/Core/Memory.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 
+#include "Core/Physics/Physics3D.h"
+
 namespace Hydro
 {
-    Scene::Scene(): m_Enabled(false), m_Physics2DWorld(nullptr), m_Physics3DWorld(nullptr)
-    {
-    }
-
-    Scene::~Scene()
-    {
-        
-    }
-
     void Scene::OnInit()
     {
-        m_Physics2DWorld = new b2World(Physics2D::Gravity);
-
-        JPH::RegisterDefaultAllocator();
-        JPH::Factory::sInstance = new JPH::Factory;
-        JPH::RegisterTypes();
+        m_PhysicsWorld2D.OnInit();
+        m_PhysicsWorld3D.OnInit();
         
-        m_Physics3DWorld = new JPH::PhysicsSystem;
-        //m_Physics3DWorld->Init(UINT16_MAX, 0, UINT16_MAX, 10240, )
-    
+        
         m_RendererBackend = Application::GetCurrentApplication().GetRendererBackend();
         
         for(const Ref<GameObject>& Object : m_GameObjects)
@@ -43,14 +31,15 @@ namespace Hydro
         }
     }
 
-    void Scene::OnUpdate(float Delta) const
+    void Scene::OnUpdate(float Delta)
     {
         for(const Ref<GameObject>& Object : m_GameObjects)
         {
             Object->OnUpdate(Delta);
         }
 
-        m_Physics2DWorld->Step(Physics2D::TimeStep * Time::Scale, 8, 3);
+        m_PhysicsWorld2D.Step(Physics2D::TimeStep);
+        m_PhysicsWorld3D.Step(Physics3D::TimeStep);
 
         for(const Ref<GameObject>& Object : m_GameObjects)
         {
@@ -72,17 +61,16 @@ namespace Hydro
         {
             Object->OnDestroy();
         }
-        delete m_Physics2DWorld;
-
-        delete m_Physics3DWorld;
-        JPH::UnregisterTypes();
-        delete JPH::Factory::sInstance;
+        
+        m_PhysicsWorld2D.OnDestroy();
+        m_PhysicsWorld3D.OnDestroy();
     }
     
     bool Scene::DestroyObject(Ref<GameObject>& Object)
     {
         Object->OnDestroy();
-        m_GameObjects.erase(std::ranges::find(m_GameObjects, Object));
+        const auto Index = std::ranges::find(m_GameObjects, Object);
+        m_GameObjects.erase(Index);
         Object.reset();
         return true;
     }

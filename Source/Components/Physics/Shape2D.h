@@ -1,8 +1,7 @@
 #pragma once
-
 #include "PhysicsComponent.h"
 #include "Math/Vector2.h"
-
+#include "Core/Physics/PhysicsBody2D.h"
 
 class b2Fixture;
 class b2Body;
@@ -63,7 +62,8 @@ namespace Hydro
         b2Fixture* m_Fixture{nullptr};
         Shape2DContactListener* m_ContactListener{nullptr};
         bool IsColliding = false;
-        void OnTransformScaleSet(const Transform*);
+
+        PhysicsBody* m_BODY;
         void RenderCollisions(const Ref<RendererBackend>& Renderer) const override = 0;
     };
 }

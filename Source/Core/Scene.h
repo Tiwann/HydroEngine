@@ -5,32 +5,28 @@
 #include "GUID.h"
 #include "GameObject.h"
 
+#include "Core/Physics/PhysicsWorld2D.h"
+#include "Core/Physics/PhysicsWorld3D.h"
+
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(Scene, "SCENE");
-
-class b2World;
-
-namespace JPH
-{
-    class PhysicsSystem;
-}
 
 namespace Hydro
 {
     class RendererBackend;
     class Vector3;
     
-    class Scene
+    class Scene final
     {
     public:
         using GameObjectIterator = std::vector<Ref<GameObject>>::iterator;
         using GameObjectConstIterator = std::vector<Ref<GameObject>>::const_iterator;
         friend class Physics2D;
-        Scene();
-        ~Scene();
-        
+
+        Scene() = default;
+        ~Scene() = default;
         void OnInit();
-        void OnUpdate(float Delta) const;
+        void OnUpdate(float Delta);
         void OnRender(const Ref<RendererBackend>& Renderer) const;
         void OnDestroy();
         
@@ -60,15 +56,34 @@ namespace Hydro
         std::string GetName() const { return m_Name; }
         bool DestroyObject(Ref<GameObject>& Object);
         void SetName(const std::string& Name);
+
+        const PhysicsWorld2D& GetPhysicsWorld2D() const
+        {
+            return m_PhysicsWorld2D;
+        }
+
+        const PhysicsWorld2D& GetPhysicsWorld3D() const
+        {
+            return m_PhysicsWorld3D;
+        }
+
+        PhysicsWorld2D& GetPhysicsWorld2D()
+        {
+            return m_PhysicsWorld2D;
+        }
+        
+        PhysicsWorld2D& GetPhysicsWorld3D()
+        {
+            return m_PhysicsWorld3D;
+        }
+
     private:
-        friend class Shape2D;
         GUID m_Guid;
         std::string m_Name;
         std::vector<Ref<GameObject>> m_GameObjects;
         
-        bool m_Enabled;
-        b2World* m_Physics2DWorld;
-        JPH::PhysicsSystem* m_Physics3DWorld;
+        PhysicsWorld2D m_PhysicsWorld2D;
+        PhysicsWorld2D m_PhysicsWorld3D;
         Ref<RendererBackend> m_RendererBackend;
     };
 }
