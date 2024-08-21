@@ -542,7 +542,7 @@ namespace Hydro
 
 
         m_AudioEngine = AudioEngine::Create();
-        if(!m_AudioEngine->Init(44100))
+        if(!m_AudioEngine->Init(44100, 1024))
         {
             HYDRO_LOG(Application, Verbosity::Error, "Failed to create audio engine!");
             return false;

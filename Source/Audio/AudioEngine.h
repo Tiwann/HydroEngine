@@ -22,7 +22,7 @@ namespace Hydro
         ~AudioEngine();
         static Ref<AudioEngine> Create();
 
-        bool Init(uint32_t SampleRate);
+        bool Init(uint32_t SampleRate, uint32_t CallbackBufferSize);
         void Destroy();
         void OnUpdate();
 

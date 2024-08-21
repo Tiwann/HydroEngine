@@ -51,7 +51,7 @@ namespace Hydro
     }
 
     // Logg errors
-    bool AudioEngine::Init(uint32_t SampleRate)
+    bool AudioEngine::Init(uint32_t SampleRate, uint32_t CallbackBufferSize)
     {
         FMOD_RESULT Result = FMOD::System_Create(&m_System);
         FMOD_CHECK(Result);
@@ -82,7 +82,7 @@ namespace Hydro
         Result = m_System->setOutput(FMOD_OUTPUTTYPE_AUTODETECT);
         FMOD_CHECK(Result);
 
-        Result = m_System->setDSPBufferSize(1024, 4);
+        Result = m_System->setDSPBufferSize(CallbackBufferSize, 4);
         FMOD_CHECK(Result);
 
         Result = m_System->set3DNumListeners(FMOD_MAX_LISTENERS);
