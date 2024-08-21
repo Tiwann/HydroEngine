@@ -5,10 +5,11 @@
 
 namespace Hydro
 {
-    template<typename KeyType, typename ValueType, typename PairType = Pair<KeyType, ValueType>>
-    class Map : public Iterable<PairType>
+    template<typename KeyType, typename ValueType, typename TPair = Pair<KeyType, ValueType>>
+    class Map : public Iterable<TPair>
     {
     public:
+        using PairType = TPair;
         using SizeType = typename Array<PairType>::SizeType;
         using Iterator = Iterator<PairType>;
         using ConstIterator = ConstIterator<PairType>;
@@ -28,7 +29,7 @@ namespace Hydro
             {
                 const PairType Pair{ .Key = Key };
                 m_Data.Add(Pair);
-                return m_Data.Last();
+                return m_Data.Last().Value;
             }
             return m_Data[Index].Value;
         }
@@ -40,12 +41,10 @@ namespace Hydro
             {
                 const PairType Pair{ .Key = Key };
                 m_Data.Add(Pair);
-                return m_Data.Last();
+                return m_Data.Last().Value;
             }
             return m_Data[Index].Value;
         }
-        
-        
 
         SizeType FindKey(const KeyType& Key)
         {
@@ -67,6 +66,11 @@ namespace Hydro
                     return i;
             }
             return -1;
+        }
+
+        bool Contains(const KeyType& Key)
+        {
+            return FindKey(Key) != -1;
         }
 
         Iterator begin() override { return m_Data.begin(); }
