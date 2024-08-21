@@ -6,7 +6,7 @@
 
 namespace Hydro
 {
-    Ref<Sound> SoundManager::Load(const std::string& Name, const Path& Filepath, SoundFlags Flags)
+    Ref<Sound> SoundManager::Load(const String& Name, const Path& Filepath, SoundFlags Flags)
     {
         Ref<Sound> LoadedSound = Load(Name, Filepath);
         if(!LoadedSound) return nullptr;
@@ -14,16 +14,16 @@ namespace Hydro
         return LoadedSound;
     }
 
-    Ref<Sound> SoundManager::Load(const std::string& Name, const Path& Filepath)
+    Ref<Sound> SoundManager::Load(const String& Name, const Path& Filepath)
     {
         Ref<Sound> LoadedSound = Sound::CreateFromFile(Filepath, SoundFlagBits::Default);
         m_Data[Name] = LoadedSound;
         return LoadedSound;
     }
 
-    Ref<Sound> SoundManager::Retrieve(const std::string& Name)
+    Ref<Sound> SoundManager::Retrieve(const String& Name)
     {
-        if(!m_Data.contains(Name))
+        if(!m_Data.Contains(Name))
         {
             HYDRO_LOG(SoundManager, Verbosity::Warning, "Sound \"{}\" not found!", Name);
             return nullptr;

@@ -1,6 +1,8 @@
 #pragma once
 #include "Core/Filesystem.h"
 #include "Core/SharedPointer.h"
+#include "Core/Containers/Map.h"
+#include "Core/Containers/String.h"
 
 
 namespace Hydro
@@ -11,18 +13,21 @@ namespace Hydro
     protected:
         ResourceManager() = default;
     public:
+        using MapType = Map<String, Ref<T>>;
+        using PairType = typename MapType::PairType;
+        
         virtual ~ResourceManager() = default;
-        virtual Ref<T> Load(const std::string& Name, const Path& Filepath) = 0;
-        virtual Ref<T> Retrieve(const std::string& Name) = 0;
+        virtual Ref<T> Load(const String& Name, const Path& Filepath) = 0;
+        virtual Ref<T> Retrieve(const String& Name) = 0;
 
         void UnloadAll()
         {
-            for (auto& Pair : m_Data)
+            for (PairType& Pair : m_Data)
             {
-                Pair.second.reset();
+                Pair.Value.reset();
             }
         }
     protected:
-        std::unordered_map<std::string, Ref<T>> m_Data;
+        MapType m_Data;
     };
 }

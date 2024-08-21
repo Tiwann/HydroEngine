@@ -11,9 +11,9 @@ namespace Hydro
     public:
         TextureManager() = default;
         
-        Ref<Texture2D> Load(const std::string& Name, const Path& Filepath) override;
-        Ref<Texture2D> Load(const std::string& Name, const Path& Filepath, const TextureParams& Params);
-        Ref<Texture2D> Retrieve(const std::string& Name) override;
+        Ref<Texture2D> Load(const String& Name, const Path& Filepath) override;
+        Ref<Texture2D> Load(const String& Name, const Path& Filepath, const TextureParams& Params);
+        Ref<Texture2D> Retrieve(const String& Name) override;
     };
 
     

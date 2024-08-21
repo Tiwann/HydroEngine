@@ -9,8 +9,8 @@ namespace Hydro
     class SoundManager : public ResourceManager<Sound>
     {
     public:
-        Ref<Sound> Load(const std::string& Name, const Path& Filepath, SoundFlags Flags);
-        Ref<Sound> Load(const std::string& Name, const Path& Filepath) override;
-        Ref<Sound> Retrieve(const std::string& Name) override;
+        Ref<Sound> Load(const String& Name, const Path& Filepath, SoundFlags Flags);
+        Ref<Sound> Load(const String& Name, const Path& Filepath) override;
+        Ref<Sound> Retrieve(const String& Name) override;
     };
 }
