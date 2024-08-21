@@ -97,4 +97,27 @@ namespace Hydro
 
     template<typename T>
     static constexpr bool IsEnumValue = IsEnum<T>::Value;
+
+
+    template<typename T>
+    struct IsCharacter : FalseType {};
+
+    template<>
+    struct IsCharacter<char> : TrueType {};
+
+    template<>
+    struct IsCharacter<char8_t> : TrueType {};
+
+    template<>
+    struct IsCharacter<char16_t> : TrueType {};
+
+    template<>
+    struct IsCharacter<char32_t> : TrueType {};
+
+    template<>
+    struct IsCharacter<wchar_t> : TrueType {};
+    
+    template<typename T>
+    static inline constexpr bool IsCharacterValue = IsCharacter<T>::Value;
+    
 }
