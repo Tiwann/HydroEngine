@@ -16,7 +16,7 @@
 namespace Hydro
 {
     Texture2D::Texture2D(std::string Name, uint32_t Width, uint32_t Height, const TextureParams& Params, uint32_t Slot) : m_Name(std::move(Name)),
-        m_Width(Width), m_Height(Height), m_Params(Params), m_Slot(Slot)
+        m_Width(Width), m_Height(Height), m_Slot(Slot), m_Params(Params)
     {
         
     }
