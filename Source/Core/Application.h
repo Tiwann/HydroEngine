@@ -2,25 +2,17 @@
 #include "ApplicationConfiguration.h"
 #include "SharedPointer.h"
 #include "Color.h"
-#include "FrameBuffer.h"
 #include "LogCategory.h"
 #include "Scene.h"
 #include "Containers/TreeNode.h"
 #include "Editor/Menu.h"
 #include "ResourceManager/SoundManager.h"
 
-
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(Application, "APPLICATION");
-
-constexpr float MILLISECONDS = 1000.0f;
-constexpr float MICROSECONDS = 1000000.0f;
-constexpr float NANOSECONDS = 1000000000.0f;
 
 namespace Hydro
 {
     class ApplicationConfigurationSerializer;
-    class ViewportPanel;
-    class DetailsPanel;
     class TextureManager;
     class ShaderManager;
     class RendererBackend;
@@ -29,7 +21,10 @@ namespace Hydro
     class Scene;
     class GameObject;
     class AudioEngine;
+    class ViewportPanel;
+    class DetailsPanel;
     class SceneHierarchyPanel;
+    class PhysicsSettingsPanel;
 
 
     struct ApplicationDelegates
@@ -92,8 +87,8 @@ namespace Hydro
         }
 
         Ref<GameObject> CreateCamera() const;
-
         Ref<GameObject> CreateSprite() const;
+        
     private:
         /* Core Components */
         Ref<Window> m_Window;
@@ -113,6 +108,7 @@ namespace Hydro
         Ref<SceneHierarchyPanel> m_SceneHierarchyPanel;
         Ref<DetailsPanel> m_DetailsPanel;
         Ref<ViewportPanel> m_ViewportPanel;
+        Ref<PhysicsSettingsPanel> m_PhysicsSettingsPanel;
 
     public:
         Ref<SceneHierarchyPanel> GetSceneHierarchyPanel() const;

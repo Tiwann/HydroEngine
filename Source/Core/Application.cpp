@@ -10,7 +10,7 @@
 #include "LogVerbosity.h"
 #include "Cursors.h"
 #include "Scene.h"
-
+#include "FrameBuffer.h"
 
 #include <GLFW/glfw3.h>
 
@@ -31,10 +31,12 @@
 
 
 #include "Editor/DetailsPanel.h"
-#include "Editor/EditorGUI.h"
 #include "Editor/SceneHierarchyPanel.h"
-#include "Editor/Selection.h"
 #include "Editor/ViewportPanel.h"
+#include "Editor/PhysicsSettingsPanel.h"
+
+#include "Editor/EditorGUI.h"
+#include "Editor/Selection.h"
 #include "Serialization/ApplicationConfigurationSerializer.h"
 #include "Serialization/SceneSerializer.h"
 
@@ -48,6 +50,79 @@ namespace Hydro
     Application::Application()
     {
         s_Instance = this;
+    }
+
+    void Application::OnInit()
+    {
+        m_ShaderManager->Load("Sprite",         "Engine/Assets/Shaders/Sprite.glsl");
+        m_ShaderManager->Load("UniformColor",   "Engine/Assets/Shaders/UniformColor.glsl");
+        m_ShaderManager->Load("Circle",         "Engine/Assets/Shaders/Circle.glsl");
+        
+        m_Scene = CreateRef<Scene>();
+        m_Scene->SetName("Default Scene");
+        m_Scene->OnInit();
+
+        m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene.get());
+        m_DetailsPanel = CreateRef<DetailsPanel>(m_Scene.get());
+        m_ViewportPanel = CreateRef<ViewportPanel>();
+        m_PhysicsSettingsPanel = CreateRef<PhysicsSettingsPanel>();
+        
+        m_DetailsPanel->OnInit();
+        m_SceneHierarchyPanel->OnInit();
+        m_ViewportPanel->OnInit();
+        m_PhysicsSettingsPanel->OnInit();
+
+        static const char* HydroSceneFilter = "Hydro Engine Scene (.htscn)\0*.htscn\0\0";
+        auto& File = m_MenuBar.AddChild({ "File" });
+        File.AddChild({ "Open Scene" , nullptr, [this]
+        {
+            const Path Filepath = File::OpenFileDialog("Open Scene", "", HydroSceneFilter);
+            OpenScene(Filepath);
+        }});
+        File.AddChild({ "Save Scene" });
+        File.AddChild({ "Save Scene As", nullptr, [this]
+        {
+            const Path Filepath = File::SaveFileDialog("Save scene as...", "", HydroSceneFilter);
+            SaveSceneAs(Filepath);
+        }});
+        File.AddChild({ "Exit", nullptr, [this]{ RequireExit(); } });
+
+        auto& Edit = m_MenuBar.AddChild({ "Edit" });
+        Edit.AddChild({ "Undo" });
+        Edit.AddChild({ "Redo" });
+        Edit.AddChild({ "Preferences" });
+
+        
+        auto& View = m_MenuBar.AddChild({ "View" });
+        View.AddChild({ "Details Panel", m_DetailsPanel->OpenedPtr() });
+        View.AddChild({ "Scene Hierarchy", m_SceneHierarchyPanel->OpenedPtr() });
+        View.AddChild({ "Viewport Window", m_ViewportPanel->OpenedPtr() });
+        View.AddChild({ "Physics Settings", m_PhysicsSettingsPanel->OpenedPtr() });
+        View.AddChild({ "ImGui Demo Window" , &m_ShowImGuiDemoWindow});
+
+        auto& Scene = m_MenuBar.AddChild({ "Scene"});
+        Scene.AddChild({ "Rename" });
+        Scene.AddChild({ "Create Object", nullptr, [this]
+        {
+            const Ref<class GameObject> Object = CreateObject("New Object");
+            Selection::SetGameObject(Object);
+        }});
+        Scene.AddChild({ "Create Camera", nullptr, [this]
+        {
+            const Ref<class GameObject> Camera = CreateCamera();
+            Selection::SetGameObject(Camera);
+        }});
+        
+        auto& Misc = m_MenuBar.AddChild({ "Misc" });
+        auto& Shaders = Misc.AddChild({ "Shaders" });
+        Shaders.AddChild({ "Reload All", nullptr, [this]
+        {
+            m_ShaderManager->ReloadAll();
+        }});
+        
+        
+        ApplicationDelegates::OnInitEvent.Broadcast();
+        OnLoadResources(m_ShaderManager, m_TextureManager, m_SoundManager);
     }
 
     void Application::Run()
@@ -87,76 +162,6 @@ namespace Hydro
         }
         
         OnExit();
-    }
-
-    void Application::OnInit()
-    {
-        m_ShaderManager->Load("Sprite",         "Engine/Assets/Shaders/Sprite.glsl");
-        m_ShaderManager->Load("UniformColor",   "Engine/Assets/Shaders/UniformColor.glsl");
-        m_ShaderManager->Load("Circle",         "Engine/Assets/Shaders/Circle.glsl");
-        
-        m_Scene = CreateRef<Scene>();
-        m_Scene->SetName("Default Scene");
-        m_Scene->OnInit();
-
-        m_SceneHierarchyPanel = CreateRef<SceneHierarchyPanel>(m_Scene.get());
-        m_DetailsPanel = CreateRef<DetailsPanel>(m_Scene.get());
-        m_ViewportPanel = CreateRef<ViewportPanel>();
-        
-        m_DetailsPanel->OnInit();
-        m_SceneHierarchyPanel->OnInit();
-        m_ViewportPanel->OnInit();
-
-        static const char* HydroSceneFilter = "Hydro Engine Scene (.htscn)\0*.htscn\0\0";
-        auto& File = m_MenuBar.AddChild({ "File" });
-        File.AddChild({ "Open Scene" , nullptr, [this]
-        {
-            const Path Filepath = File::OpenFileDialog("Open Scene", "", HydroSceneFilter);
-            OpenScene(Filepath);
-        }});
-        File.AddChild({ "Save Scene" });
-        File.AddChild({ "Save Scene As", nullptr, [this]
-        {
-            const Path Filepath = File::SaveFileDialog("Save scene as...", "", HydroSceneFilter);
-            SaveSceneAs(Filepath);
-        }});
-        File.AddChild({ "Exit", nullptr, [this]{ RequireExit(); } });
-
-        auto& Edit = m_MenuBar.AddChild({ "Edit" });
-        Edit.AddChild({ "Undo" });
-        Edit.AddChild({ "Redo" });
-        Edit.AddChild({ "Preferences" });
-
-        
-        auto& View = m_MenuBar.AddChild({ "View" });
-        View.AddChild({ "Details Panel", m_DetailsPanel->OpenedPtr() });
-        View.AddChild({ "Scene Hierarchy", m_SceneHierarchyPanel->OpenedPtr() });
-        View.AddChild({ "Viewport Window", m_ViewportPanel->OpenedPtr() });
-        View.AddChild({ "ImGui Demo Window" , &m_ShowImGuiDemoWindow});
-        
-        auto& Scene = m_MenuBar.AddChild({ "Scene"});
-        Scene.AddChild({ "Rename" });
-        Scene.AddChild({ "Create Object", nullptr, [this]
-        {
-            const Ref<class GameObject> Object = CreateObject("New Object");
-            Selection::SetGameObject(Object);
-        }});
-        Scene.AddChild({ "Create Camera", nullptr, [this]
-        {
-            const Ref<class GameObject> Camera = CreateCamera();
-            Selection::SetGameObject(Camera);
-        }});
-        
-        auto& Misc = m_MenuBar.AddChild({ "Misc" });
-        auto& Shaders = Misc.AddChild({ "Shaders" });
-        Shaders.AddChild({ "Reload All", nullptr, [this]
-        {
-            m_ShaderManager->ReloadAll();
-        }});
-        
-        
-        ApplicationDelegates::OnInitEvent.Broadcast();
-        OnLoadResources(m_ShaderManager, m_TextureManager, m_SoundManager);
     }
 
     void Application::OnLoadResources(Ref<ShaderManager> ShaderManager, Ref<TextureManager> TextureManager, Ref<SoundManager> SoundManager)
