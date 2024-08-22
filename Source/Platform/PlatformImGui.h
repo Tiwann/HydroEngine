@@ -17,8 +17,8 @@ namespace Hydro
 
 namespace ImGui
 {
-    IMGUI_API void PushID(Hydro::GUID guid);
-    IMGUI_API ImGuiID GetID(Hydro::GUID guid);
+    IMGUI_API void PushID(const Hydro::GUID& guid);
+    IMGUI_API ImGuiID GetID(const Hydro::GUID& guid);
 }
 
 namespace ImGuizmo

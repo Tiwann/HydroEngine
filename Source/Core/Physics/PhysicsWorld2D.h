@@ -16,8 +16,7 @@ namespace Hydro
         PhysicsBody2D* CreateBody(const PhysicsBodyDefinition& Definition, const PhysicsMaterial& Material) override;
         void DestroyBody(PhysicsBody2D* Body) override;
         void SetMaterial(PhysicsBody2D* Body, const PhysicsMaterial& Material) override;
-
-        
+    
     private:
         b2World* m_World = nullptr;
     };

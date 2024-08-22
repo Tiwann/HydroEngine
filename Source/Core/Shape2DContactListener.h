@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Components/Physics/Collider2D.h"
+#include "Components/Physics/RigidBody2D.h"
 #include <box2d/b2_world_callbacks.h>
 
 #include <box2d/b2_contact.h>
@@ -17,8 +17,8 @@ namespace Hydro
             if(!contact->IsTouching())
                 return;
             
-            Collider2D* ColliderA = (Collider2D*)contact->GetFixtureA()->GetUserData().pointer;
-            Collider2D* ColliderB = (Collider2D*)contact->GetFixtureB()->GetUserData().pointer;
+            RigidBody2D* ColliderA = (RigidBody2D*)contact->GetFixtureA()->GetUserData().pointer;
+            RigidBody2D* ColliderB = (RigidBody2D*)contact->GetFixtureB()->GetUserData().pointer;
             if(ColliderA->IsTrigger() || ColliderB->IsTrigger()) return;
             
             b2WorldManifold WorldManifold;
@@ -53,8 +53,8 @@ namespace Hydro
         {
             if(!contact->IsTouching()) return;
 
-            Collider2D* ColliderA = (Collider2D*)contact->GetFixtureA()->GetUserData().pointer;
-            Collider2D* ColliderB = (Collider2D*)contact->GetFixtureB()->GetUserData().pointer;
+            RigidBody2D* ColliderA = (RigidBody2D*)contact->GetFixtureA()->GetUserData().pointer;
+            RigidBody2D* ColliderB = (RigidBody2D*)contact->GetFixtureB()->GetUserData().pointer;
             if(ColliderA->IsTrigger() || ColliderB->IsTrigger()) return;
             
             b2WorldManifold WorldManifold;

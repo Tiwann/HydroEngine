@@ -65,11 +65,11 @@ JPH_ALLOC_SCOPE void JPH_ALLOC_FN(AlignedFree)(void *inBlock)
 
 #ifndef JPH_DISABLE_CUSTOM_ALLOCATOR
 
-AllocateFunction Allocate = nullptr;
-ReallocateFunction Reallocate = nullptr;
-FreeFunction Free = nullptr;
-AlignedAllocateFunction AlignedAllocate = nullptr;
-AlignedFreeFunction AlignedFree = nullptr;
+AllocateFunction Allocate = AllocateImpl;
+ReallocateFunction Reallocate = ReallocateImpl;
+FreeFunction Free = FreeImpl;
+AlignedAllocateFunction AlignedAllocate = AlignedAllocateImpl;
+AlignedFreeFunction AlignedFree = AlignedFreeImpl;
 
 void RegisterDefaultAllocator()
 {

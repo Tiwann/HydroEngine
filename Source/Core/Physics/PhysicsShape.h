@@ -27,7 +27,16 @@ namespace Hydro
     public:
         using HandleType = Handle;
         PhysicsShape() = default;
+        PhysicsShape(const PhysicsShape& Other) : m_Shape(Other.m_Shape){}
         PhysicsShape(PhysicsShape&& Other) noexcept : m_Shape(Other.m_Shape){ Other.m_Shape = nullptr; }
+        
+        PhysicsShape& operator=(const PhysicsShape& Other)
+        {
+            if(this == &Other)
+                return *this;
+            m_Shape = Other.m_Shape;
+            return *this;
+        }
         PhysicsShape& operator=(PhysicsShape&& Other) noexcept
         {
             if(this == &Other)
@@ -37,7 +46,11 @@ namespace Hydro
             return *this;
         }
         
-        virtual ~PhysicsShape() { Memory::FreeObject(m_Shape); }
+        virtual ~PhysicsShape()
+        {
+            delete m_Shape;
+            m_Shape = nullptr;
+        }
         
         Handle& GetShape() { return *m_Shape; }
         const Handle& GetShape() const { return *m_Shape; }
@@ -75,7 +88,7 @@ namespace Hydro
         explicit BoxShape2D(const Vector2& HalfExtents, const Vector2& Center, float Rotation)
         : m_HalfExtents(HalfExtents), m_Center(Center), m_Rotation(Rotation)
         {
-            m_Shape = Memory::MallocObject<b2PolygonShape>();
+            m_Shape = new b2PolygonShape();
             b2PolygonShape* AsPolygonShape = dynamic_cast<b2PolygonShape*>(m_Shape);
             const Vector3 Extents = m_HalfExtents;
             AsPolygonShape->SetAsBox(Extents.x, Extents.y, m_Center, m_Rotation);
@@ -95,7 +108,7 @@ namespace Hydro
         explicit CircleShape2D(float Radius, const Vector2& Center)
         : m_Radius(Radius), m_Center(Center)
         {
-            m_Shape = Memory::MallocObject<b2CircleShape>();
+            m_Shape = new b2CircleShape();
             b2CircleShape* AsCircleShape = dynamic_cast<b2CircleShape*>(m_Shape);
             AsCircleShape->m_p = m_Center;
             AsCircleShape->m_radius = m_Radius;
@@ -114,7 +127,7 @@ namespace Hydro
         explicit BoxShape3D(Vector3 Center, Vector3 HalfExtents, Vector3 Rotation)
         : m_Center(Center), m_HalfExtents(HalfExtents), m_Rotation(Rotation)
         {
-            m_Shape = Memory::MallocObject<JPH::BoxShape>(m_HalfExtents);
+            m_Shape = new JPH::BoxShape(m_HalfExtents);
         }
     private:
         Vector3 m_Center;
@@ -130,7 +143,7 @@ namespace Hydro
     public:
         explicit SphereShape3D(float Radius) : m_Radius(Radius)
         {
-            m_Shape = Memory::MallocObject<JPH::SphereShape>(m_Radius);
+            m_Shape = new JPH::SphereShape(m_Radius);
         }
     private:
         float m_Radius;

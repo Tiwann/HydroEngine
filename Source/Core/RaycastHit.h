@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "SharedPointer.h"
-#include "Components/Physics/Collider3D.h"
-#include "Components/Physics/Collider2D.h"
+#include "Components/Physics/RigidBody3D.h"
+#include "Components/Physics/RigidBody2D.h"
 #include "Math/Vector2.h"
 #include "Math/Vector3.h"
 
@@ -18,6 +18,6 @@ namespace Hydro
         Ref<Component> HitComponent;
     };
 
-    using RaycastHit2D = RaycastHit<Vector2, Collider2D>;
-    using RaycastHit3D = RaycastHit<Vector3, Collider3D>;
+    using RaycastHit2D = RaycastHit<Vector2, RigidBody2D>;
+    using RaycastHit3D = RaycastHit<Vector3, RigidBody3D>;
 }

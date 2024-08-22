@@ -22,7 +22,7 @@ namespace Hydro
     void PhysicsWorld3D::OnInit()
     {
         JPH::RegisterDefaultAllocator();
-        JPH::Factory::sInstance = Memory::Malloc<JPH::Factory>();
+        JPH::Factory::sInstance = new JPH::Factory();
         JPH::RegisterTypes();
         
         const JPH::Vec3 Gravity = { Physics3D::Gravity.x, Physics3D::Gravity.y, Physics3D::Gravity.z };
@@ -47,7 +47,7 @@ namespace Hydro
     {
         JPH::UnregisterTypes();
         
-        Memory::Free(JPH::Factory::sInstance);
+        delete JPH::Factory::sInstance;
         JPH::Factory::sInstance = nullptr;
     }
 
@@ -62,9 +62,9 @@ namespace Hydro
         Settings.mRestitution = Material.Bounciness;
         Settings.mIsSensor = Definition.IsTrigger;
         
-        const JPH::Body* BodyHandle = BodyInterface.CreateBody(Settings);
+        JPH::Body* BodyHandle = BodyInterface.CreateBody(Settings);
         BodyInterface.AddBody(BodyHandle->GetID(), JPH::EActivation::Activate);
-        PhysicsBody3D* CreatedBody = new PhysicsBody3D((uintptr_t)BodyHandle, *this);
+        PhysicsBody3D* CreatedBody = new PhysicsBody3D(BodyHandle, *this);
         m_Bodies.Add(CreatedBody);
         return CreatedBody;
     }
@@ -72,7 +72,7 @@ namespace Hydro
     void PhysicsWorld3D::DestroyBody(PhysicsBody3D* Body)
     {
         JPH::BodyInterface& BodyInterface = m_System.GetBodyInterface();
-        const JPH::Body* BodyHandle = Body->GetHandleAs<JPH::Body>();
+        const JPH::Body* BodyHandle = Body->GetHandle();
         const JPH::BodyID& BodyId = BodyHandle->GetID();
         BodyInterface.RemoveBody(BodyId);
         BodyInterface.DestroyBody(BodyId);

@@ -10,6 +10,14 @@ namespace Hydro
 {
     class PhysicsBody3D;
     class PhysicsShape3D;
+
+    class TempAllocator : public JPH::TempAllocator
+    {
+    public:
+        
+        void* Allocate(JPH::uint inSize) override;
+        void Free(void* inAddress, JPH::uint inSize) override;
+    };
     
     class PhysicsWorld3D : public PhysicsWorld<PhysicsBody3D, PhysicsShape3D>
     {

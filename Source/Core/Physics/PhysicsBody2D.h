@@ -7,15 +7,15 @@ namespace Hydro
     struct PhysicsMaterial;
     class PhysicsWorld2D;
     
-    class PhysicsBody2D : public PhysicsBody<PhysicsShape2D, PhysicsWorld2D>
+    class PhysicsBody2D : public PhysicsBody<PhysicsShape2D, PhysicsWorld2D, b2Body>
     {
     public:
-        PhysicsBody2D(uintptr_t Handle, PhysicsWorld2D& World) : PhysicsBody(Handle, World) { }
-
+        PhysicsBody2D(b2Body* Handle, PhysicsWorld2D& World) : PhysicsBody(Handle, World) { }
+        
         void SetUserPointer(void* User) override;
         void* GetUserPointer() const override;
     
-        void CreatePhysicsState(const PhysicsShape2D& Shape, const PhysicsMaterial& Material) override;
+        void CreatePhysicsState(PhysicsShape2D* Shape, const PhysicsMaterial& Material) override;
         void DestroyPhysicsState() override;
         void SetMaterial(const PhysicsMaterial& Material) override;
         

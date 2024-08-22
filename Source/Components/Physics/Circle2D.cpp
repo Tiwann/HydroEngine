@@ -1,24 +1,24 @@
 ﻿#include "HydroPCH.h"
 #include "Circle2D.h"
 
-#include <box2d/b2_circle_shape.h>
-
 #include "Components/Transform.h"
 #include "Core/Color.h"
+#include "Core/Memory.h"
 #include "Core/RendererBackend.h"
+#include "Core/Physics/PhysicsShape.h"
 #include "Editor/EditorGUI.h"
 
 
 namespace Hydro
 {
-    Circle2D::Circle2D(GameObject* Owner) : Collider2D(Owner, "Circle 2D")
+    Circle2D::Circle2D(GameObject* Owner) : RigidBody2D(Owner, "Circle 2D")
     {
         
     }
 
     void Circle2D::OnInspectorGUI(const ImGuiIO& IO)
     {
-        Collider2D::OnInspectorGUI(IO);
+        RigidBody2D::OnInspectorGUI(IO);
         UI::DragVector2<float>("Center", m_Center);
         UI::DragValue<float>("Radius", m_Radius);
         const char* ColliderTypes[3] = { "Static", "Kinematic", "Dynamic" };
@@ -27,6 +27,11 @@ namespace Hydro
         {
             RecreatePhysicsState();
         }
+    }
+
+    PhysicsShape2D* Circle2D::CreateShape()
+    {
+        return new CircleShape2D(m_Radius, m_Center);
     }
 
     Vector2 Circle2D::GetCenter() const
@@ -48,20 +53,7 @@ namespace Hydro
     {
         m_Radius = radius;
     }
-
-    void Circle2D::OnPhysicsUpdate(float Delta)
-    {
-        RecreatePhysicsState();
-        Collider2D::OnPhysicsUpdate(Delta);
-    }
-
-    b2Shape* Circle2D::CreateShape()
-    {
-        b2CircleShape* Shape = new b2CircleShape;
-        Shape->m_radius = m_Radius;
-        return Shape;
-    }
-
+    
     void Circle2D::RenderCollisions(const Ref<RendererBackend>& Renderer) const
     {
         const Vector3 TransformedCenter = GetTransform()->GetPosition() + m_Center;

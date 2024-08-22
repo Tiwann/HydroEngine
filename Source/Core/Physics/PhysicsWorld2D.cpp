@@ -6,8 +6,6 @@
 #include <box2d/b2_world.h>
 #include <box2d/b2_body.h>
 
-#include "PhysicsBody3D.h"
-
 namespace Hydro
 {
     void PhysicsWorld2D::OnInit()
@@ -32,15 +30,14 @@ namespace Hydro
         BodyDefinition.angle = Math::Radians(Definition.Rotation.z);
         BodyDefinition.type = (b2BodyType)Definition.Type;
         b2Body* BodyHandle = m_World->CreateBody(&BodyDefinition);
-        PhysicsBody2D* CreatedBody = new PhysicsBody2D((uintptr_t)BodyHandle, *this);
+        PhysicsBody2D* CreatedBody = new PhysicsBody2D(BodyHandle, *this);
         m_Bodies.Add(CreatedBody);
         return CreatedBody;
     }
 
     void PhysicsWorld2D::DestroyBody(PhysicsBody2D* Body)
     {
-        b2Body* BodyHandle = Body->GetHandleAs<b2Body>();
-        m_World->DestroyBody(BodyHandle);
+        m_World->DestroyBody(Body->GetHandle());
         m_Bodies.Remove(Body);
         delete Body;
         Body = nullptr;

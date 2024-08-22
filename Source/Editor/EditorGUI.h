@@ -5,7 +5,7 @@
 #include "Core/Containers/TreeNode.h"
 #include "Input/MouseButton.h"
 #include "Math/LinearAlgebra.h"
-
+#include <functional>
 
 namespace Hydro
 {

@@ -11,19 +11,19 @@ static constexpr char ComponentName[7] = "Box 2D";
 
 namespace Hydro
 {
-    Box2D::Box2D(GameObject* Owner) : Collider2D(Owner, ComponentName)
+    Box2D::Box2D(GameObject* Owner) : RigidBody2D(Owner, ComponentName)
     {
         
     }
 
     PhysicsShape2D* Box2D::CreateShape()
     {
-        return Memory::MallocObject<BoxShape2D>(m_HalfExtents, m_Center, 0.0f);
+        return new BoxShape2D(m_HalfExtents, m_Center, 0.0f);
     }
 
     void Box2D::OnInspectorGUI(const ImGuiIO& IO)
     {
-        Collider2D::OnInspectorGUI(IO);
+        RigidBody2D::OnInspectorGUI(IO);
         
         UI::DragVector2<float>("Center", m_Center, 0.01f);
         UI::DragVector2<float>("Half Extents", m_HalfExtents, 0.01f);

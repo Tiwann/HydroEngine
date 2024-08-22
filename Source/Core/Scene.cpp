@@ -20,7 +20,7 @@ namespace Hydro
     void Scene::OnInit()
     {
         m_PhysicsWorld2D.OnInit();
-        m_PhysicsWorld3D.OnInit();
+        //m_PhysicsWorld3D.OnInit();
         
         
         m_RendererBackend = Application::GetCurrentApplication().GetRendererBackend();
@@ -39,7 +39,7 @@ namespace Hydro
         }
 
         m_PhysicsWorld2D.Step(Physics2D::TimeStep);
-        m_PhysicsWorld3D.Step(Physics3D::TimeStep);
+        //m_PhysicsWorld3D.Step(Physics3D::TimeStep);
 
         for(const Ref<GameObject>& Object : m_GameObjects)
         {
@@ -63,7 +63,7 @@ namespace Hydro
         }
         
         m_PhysicsWorld2D.OnDestroy();
-        m_PhysicsWorld3D.OnDestroy();
+        //m_PhysicsWorld3D.OnDestroy();
     }
     
     bool Scene::DestroyObject(Ref<GameObject>& Object)

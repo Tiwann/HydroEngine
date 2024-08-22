@@ -1,49 +1,53 @@
 #pragma once
 #include "PhysicsComponent.h"
 
+
 namespace Hydro
 {
-    struct Collision3D;
+    class Vector3;
+    class Transform;
     struct PhysicsMaterial;
+    struct Collision2D;
+    class PhysicsBody2D;
+    class PhysicsShape2D;
     
-    class Collider3D : public PhysicsComponent, public ICollisionResponse<Collision3D>
+    class RigidBody2D : public PhysicsComponentInterface<PhysicsBody2D, PhysicsShape2D>, public ICollisionResponse<Collision2D>
     {
-    public:
+    protected:
         friend class GameObject;
-        Collider3D(GameObject* Owner, const std::string& Name) : PhysicsComponent(Owner, Name)
-        {
-            
-        }
-
+        RigidBody2D(GameObject* Owner, const std::string& Name);
+        
         void OnInit() override;
         void OnStart() override;
+        void OnDestroy() override;
         void OnPhysicsUpdate(float Delta) override;
-        
-
-        void SetGravityEnabled(bool Enabled) override;
+    
+    public:
+        float GetGravityScale() const override;
         void SetGravityScale(float Scale) override;
         void SetLinearVelocity(const Vector3& Velocity) override;
         void SetAngularVelocity(const Vector3& AngularVelocity) override;
         void SetLinearDamping(float LinearDamping) override;
         void SetAngularDamping(float AngularDamping) override;
-        float GetGravityScale() const override;
+        
         Vector3 GetLinearVelocity() const override;
-        float GetAngularVelocity() const override;
+        Vector3 GetAngularVelocity() const override;
         float GetLinearDamping() const override;
         float GetAngularDamping() const override;
         Vector3 GetLinearVelocityPoint(const Vector3& Point) const override;
+        
         void AddForce(const Vector3& Force) override;
         void AddImpulse(const Vector3& Force) override;
         void AddForceAtPosition(const Vector3& Position, const Vector3& Force) override;
         void AddImpulseAtPosition(const Vector3& Position, const Vector3& Force) override;
-        
-        void RecreatePhysicsState() override;
+        void SetPosition(const Vector3& Position);
+        void SetRotation(const Vector3& Rotation);
+
         void SetMaterial(const PhysicsMaterial& Material) override;
         void SetConstraintsFlags(PhysicsConstraintsFlags Constraints) override;
         void SetTrigger(bool IsTrigger) override;
         void SetPhysicsBodyType(PhysicsBodyType Type) override;
 
-    protected:
-        
+        void RecreatePhysicsState() override;
     };
 }

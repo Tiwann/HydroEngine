@@ -5,7 +5,7 @@
 #include "Selection.h"
 #include "ViewportPanel.h"
 #include "Components/Camera.h"
-#include "Components/Physics/Collider2D.h"
+#include "Components/Physics/RigidBody2D.h"
 #include "Core/Application.h"
 #include "Core/RendererBackend.h"
 #include "Core/Scene.h"
@@ -120,7 +120,7 @@ namespace Hydro
                     Transform->SetRotation(Rot);
                     Transform->SetScale(Sc);
 
-                    if(const auto& Shape = Object->GetComponent<Collider2D>())
+                    if(const auto& Shape = Object->GetComponent<RigidBody2D>())
                     {
                         Shape->SetPosition(Pos);
                         Shape->SetRotation(Rot.z);

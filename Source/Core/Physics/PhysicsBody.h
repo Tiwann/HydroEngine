@@ -1,16 +1,17 @@
 ﻿#pragma once
 #include "Math/Vector3.h"
+#include "Core/Physics/PhysicsMaterial.h"
 #include <cstdint>
+
+#include "PhysicsShape.h"
 
 namespace Hydro
 {
-    struct PhysicsMaterial;
-    
-    template<typename ShapeBase, typename WorldBase>
+    template<typename ShapeBase, typename WorldBase, typename BodyHandle>
     class PhysicsBody
     {
     public:
-        explicit PhysicsBody(const uintptr_t Handle, WorldBase& World) : m_Handle(Handle), m_World(&World){ }
+        explicit PhysicsBody(BodyHandle* Handle, WorldBase& World) : m_Handle(Handle), m_World(&World){ }
         virtual ~PhysicsBody() = default;
         PhysicsBody(const PhysicsBody&) = delete;
         PhysicsBody(PhysicsBody&&) noexcept = delete;
@@ -18,7 +19,12 @@ namespace Hydro
         PhysicsBody& operator=(PhysicsBody&&) noexcept = delete;
 
 
-        virtual void CreatePhysicsState(const ShapeBase& Shape, const PhysicsMaterial& Material) = 0;
+        virtual void CreatePhysicsState(ShapeBase* Shape, const PhysicsMaterial& Material)
+        {
+            m_Shape = dynamic_cast<ShapeBase*>(Shape);
+            m_Material = Material;
+        }
+        
         virtual void DestroyPhysicsState() = 0;
         
         virtual void SetUserPointer(void* User) = 0;
@@ -48,18 +54,23 @@ namespace Hydro
         virtual void AddForceAtPosition(const Vector3& Position, const Vector3& Force) = 0;
         virtual void AddImpulseAtPosition(const Vector3& Position, const Vector3& Force) = 0;
 
-        virtual void SetMaterial(const PhysicsMaterial& Material) = 0;
+        virtual void SetMaterial(const PhysicsMaterial& Material)
+        {
+            m_Material = Material;
+        }
 
-        template<typename T>
-        T* GetHandleAs() { return reinterpret_cast<T*>(m_Handle); }
+        BodyHandle* GetHandle() { return m_Handle; }
+        const BodyHandle* GetHandle() const { return m_Handle; }
 
-        template<typename T>
-        const T* GetHandleAs() const { return reinterpret_cast<T*>(m_Handle); }
-        
         WorldBase* GetWorld() { return m_World; }
         const WorldBase* GetWorld() const { return m_World; }
+
+        ShapeBase* GetShape() { return m_Shape; }
+        const ShapeBase* GetShape() const { return m_Shape; }
     private:
-        uintptr_t m_Handle = 0;
+        BodyHandle* m_Handle = nullptr;
         WorldBase* m_World = nullptr;
+        ShapeBase* m_Shape = nullptr;
+        PhysicsMaterial m_Material;
     };
 }

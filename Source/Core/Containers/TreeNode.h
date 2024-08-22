@@ -1,5 +1,8 @@
 #pragma once
 #include "Core/Iterator.h"
+#include <functional>
+#include <vector>
+#include <optional>
 
 namespace Hydro
 {

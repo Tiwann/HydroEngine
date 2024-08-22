@@ -62,7 +62,7 @@ namespace Hydro
             return m_PhysicsWorld2D;
         }
 
-        const PhysicsWorld2D& GetPhysicsWorld3D() const
+        const PhysicsWorld3D& GetPhysicsWorld3D() const
         {
             return m_PhysicsWorld3D;
         }
@@ -72,7 +72,7 @@ namespace Hydro
             return m_PhysicsWorld2D;
         }
         
-        PhysicsWorld2D& GetPhysicsWorld3D()
+        PhysicsWorld3D& GetPhysicsWorld3D()
         {
             return m_PhysicsWorld3D;
         }
@@ -83,7 +83,7 @@ namespace Hydro
         std::vector<Ref<GameObject>> m_GameObjects;
         
         PhysicsWorld2D m_PhysicsWorld2D;
-        PhysicsWorld2D m_PhysicsWorld3D;
+        PhysicsWorld3D m_PhysicsWorld3D;
         Ref<RendererBackend> m_RendererBackend;
     };
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include "Core/Iterator.h"
 #include "Core/Assertion.h"
+#include <initializer_list>
+#include <algorithm>
 
 namespace Hydro
 {

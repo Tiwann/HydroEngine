@@ -1,5 +1,6 @@
 #pragma once
 #include "Platform/PlatformImGui.h"
+#include <string>
 
 namespace Hydro
 {

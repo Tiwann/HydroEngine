@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Containers/String.h"
+#include <functional>
 
 namespace Hydro
 {

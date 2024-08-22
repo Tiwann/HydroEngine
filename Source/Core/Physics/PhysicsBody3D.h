@@ -8,15 +8,15 @@ namespace Hydro
     class PhysicsShape3D;
     class PhysicsWorld3D;
     
-    class PhysicsBody3D : public PhysicsBody<PhysicsShape3D, PhysicsWorld3D>
+    class PhysicsBody3D : public PhysicsBody<PhysicsShape3D, PhysicsWorld3D, JPH::Body>
     {
     public:
-        PhysicsBody3D(uintptr_t Handle, PhysicsWorld3D& World) : PhysicsBody(Handle, World) { }
+        PhysicsBody3D(JPH::Body* Handle, PhysicsWorld3D& World) : PhysicsBody(Handle, World) { }
         
         void SetUserPointer(void* User) override;
         void* GetUserPointer() const override;
 
-        void CreatePhysicsState(const PhysicsShape3D& Shape, const PhysicsMaterial& Material) override;
+        void CreatePhysicsState(PhysicsShape3D* Shape, const PhysicsMaterial& Material) override;
         void DestroyPhysicsState() override;
         void SetMaterial(const PhysicsMaterial& Material) override;
 
@@ -43,7 +43,5 @@ namespace Hydro
         void AddImpulse(const Vector3& Force) override;
         void AddForceAtPosition(const Vector3& Position, const Vector3& Force) override;
         void AddImpulseAtPosition(const Vector3& Position, const Vector3& Force) override;
-    private :
-        JPH::Shape* m_Shape = nullptr;
     };
 }
