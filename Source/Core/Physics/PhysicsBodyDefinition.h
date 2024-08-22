@@ -9,5 +9,6 @@ namespace Hydro
         Vector3 Position;
         Vector3 Rotation;
         PhysicsBodyType Type;
+        bool IsTrigger;
     };
 }

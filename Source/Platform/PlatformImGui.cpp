@@ -248,14 +248,14 @@ namespace Hydro::UI
 
 namespace ImGui
 {
-    void PushID(Hydro::GUID guid)
+    void PushID(const Hydro::GUID& guid)
     {
         const uint64_t* begin = guid.GetValues();
         const uint64_t* end = begin + 2;
         PushID((const char*)begin, (const char*)end);
     }
 
-    ImGuiID GetID(Hydro::GUID guid)
+    ImGuiID GetID(const Hydro::GUID& guid)
     {
         ImGuiWindow* window = GImGui->CurrentWindow;
         const uint64_t* begin = guid.GetValues();

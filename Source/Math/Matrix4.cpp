@@ -4,6 +4,9 @@
 #include "Vector3.h"
 #include "Core/Assertion.h"
 
+#include <Jolt/Jolt.h>
+#include <Jolt/Math/Mat44.h>
+
 namespace Hydro
 {
     Matrix4 Matrix4::Identity = Matrix4();
@@ -24,6 +27,14 @@ namespace Hydro
         Columns[1] = Col2;
         Columns[2] = Col3;
         Columns[3] = Col4;
+    }
+
+    Matrix4::Matrix4(const JPH::Mat44& Matrix)
+    {
+    	Columns[0] = Matrix.GetColumn4(0);
+    	Columns[1] = Matrix.GetColumn4(1);
+    	Columns[2] = Matrix.GetColumn4(2);
+    	Columns[3] = Matrix.GetColumn4(3);
     }
 
     float* Matrix4::ValuePtr()

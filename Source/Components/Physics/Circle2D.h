@@ -1,10 +1,10 @@
 ﻿#pragma once
-#include "Shape2D.h"
+#include "Collider2D.h"
 #include "Math/Vector2.h"
 
 namespace Hydro
 {
-    class Circle2D : public Shape2D
+    class Circle2D : public Collider2D
     {
     public:
         Circle2D(GameObject* Owner);

@@ -2,7 +2,6 @@
 #include "Color.h"
 #include "Math/Vector4.h"
 
-
 namespace Hydro
 {
     Color::Color()
@@ -20,12 +19,7 @@ namespace Hydro
     : r(red), g(green), b(blue), a(alpha)
     {
     }
-
-    Color::operator glm::vec4() const
-    {
-        return {r, g, b, a};
-    }
-
+    
     Color::operator Vector4() const
     {
         return { r, g, b, a };

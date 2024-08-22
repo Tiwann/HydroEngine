@@ -1,6 +1,4 @@
 #pragma once
-
-#include "Vector3.h"
 #include <nlohmann/json_fwd.hpp>
 
 struct b2Vec2;
@@ -9,7 +7,6 @@ struct ImVec2;
 namespace Hydro
 {
     class Vector3;
-
     
     class Vector2
     {

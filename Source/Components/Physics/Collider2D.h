@@ -1,40 +1,37 @@
 #pragma once
 #include "PhysicsComponent.h"
-#include "Math/Vector2.h"
-#include "Core/Physics/PhysicsBody2D.h"
 
-class b2Fixture;
-class b2Body;
-class b2Shape;
 
 namespace Hydro
 {
     class Vector3;
     struct Collision2D;
     class Transform;
+    class PhysicsBody2D;
+    struct PhysicsMaterial;
+    class PhysicsShape2D;
     
-    class Shape2D : public PhysicsComponent, public ICollisionResponse<Collision2D>
+    class Collider2D : public PhysicsComponent, public ICollisionResponse<Collision2D>
     {
     protected:
         friend class GameObject;
-        Shape2D(GameObject* Owner, const std::string& Name);
-        virtual b2Shape* CreateShape() = 0;
+        Collider2D(GameObject* Owner, const std::string& Name);
+        
+        virtual PhysicsShape2D* CreateShape() = 0;
         
         void OnInit() override;
         void OnStart() override;
         void OnDestroy() override;
         void OnPhysicsUpdate(float Delta) override;
-
-        
-
+    
     public:
         float GetGravityScale() const override;
         void SetGravityScale(float Scale) override;
-        void SetGravityEnabled(bool Enabled) const override;
-        void SetLinearVelocity(const Vector3& Velocity) const override;
-        void SetAngularVelocity(float AngularVelocity) const override;
-        void SetLinearDamping(float LinearDamping) const override;
-        void SetAngularDamping(float AngularDamping) const override;
+        void SetGravityEnabled(bool Enabled) override;
+        void SetLinearVelocity(const Vector3& Velocity) override;
+        void SetAngularVelocity(const Vector3& AngularVelocity) override;
+        void SetLinearDamping(float LinearDamping) override;
+        void SetAngularDamping(float AngularDamping) override;
         
         Vector3 GetLinearVelocity() const override;
         float GetAngularVelocity() const override;
@@ -52,18 +49,16 @@ namespace Hydro
         void SetMaterial(const PhysicsMaterial& Material) override;
         void SetConstraintsFlags(PhysicsConstraintsFlags Constraints) override;
         void SetTrigger(bool IsTrigger) override;
-        void SetType(ColliderType Type) override;
+        void SetPhysicsBodyType(PhysicsBodyType Type) override;
 
         void RecreatePhysicsState() override;
     protected:
         friend class Shape2DContactListener;
-        b2Shape* m_Shape{nullptr};
-        b2Body* m_Body{nullptr};
-        b2Fixture* m_Fixture{nullptr};
         Shape2DContactListener* m_ContactListener{nullptr};
         bool IsColliding = false;
-
-        PhysicsBody* m_BODY;
+        
+        PhysicsBody2D* m_PhysicsBody;
+        PhysicsShape2D* m_PhysicsShape;
         void RenderCollisions(const Ref<RendererBackend>& Renderer) const override = 0;
     };
 }

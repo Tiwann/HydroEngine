@@ -2,7 +2,7 @@
 #include "Core/Physics/PhysicsBodyType.h"
 #include "Constraints.h"
 #include "Core/Component.h"
-#include "Core/PhysicsMaterial.h"
+#include "Core/Physics/PhysicsMaterial.h"
 #include "Core/Flags.h"
 #include "Core/MulticastDelegate.h"
 
@@ -47,12 +47,12 @@ namespace Hydro
         }
 
         virtual void RecreatePhysicsState() = 0;
-        virtual void SetGravityEnabled(bool Enabled) const = 0;
+        virtual void SetGravityEnabled(bool Enabled) = 0;
         virtual void SetGravityScale(float Scale) = 0;
-        virtual void SetLinearVelocity(const Vector3& Velocity) const = 0;
-        virtual void SetAngularVelocity(float AngularVelocity) const = 0;
-        virtual void SetLinearDamping(float LinearDamping) const = 0;
-        virtual void SetAngularDamping(float AngularDamping) const = 0;
+        virtual void SetLinearVelocity(const Vector3& Velocity) = 0;
+        virtual void SetAngularVelocity(const Vector3& AngularVelocity) = 0;
+        virtual void SetLinearDamping(float LinearDamping) = 0;
+        virtual void SetAngularDamping(float AngularDamping) = 0;
 
         virtual float GetGravityScale() const = 0;
         virtual Vector3 GetLinearVelocity() const = 0;
@@ -101,7 +101,7 @@ namespace Hydro
             return m_Type;
         }
 
-        virtual void SetType(PhysicsBodyType Type)
+        virtual void SetPhysicsBodyType(PhysicsBodyType Type)
         {
             m_Type = Type;
         }

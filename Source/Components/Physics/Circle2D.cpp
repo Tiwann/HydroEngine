@@ -11,14 +11,14 @@
 
 namespace Hydro
 {
-    Circle2D::Circle2D(GameObject* Owner) : Shape2D(Owner, "Circle 2D")
+    Circle2D::Circle2D(GameObject* Owner) : Collider2D(Owner, "Circle 2D")
     {
         
     }
 
     void Circle2D::OnInspectorGUI(const ImGuiIO& IO)
     {
-        Shape2D::OnInspectorGUI(IO);
+        Collider2D::OnInspectorGUI(IO);
         UI::DragVector2<float>("Center", m_Center);
         UI::DragValue<float>("Radius", m_Radius);
         const char* ColliderTypes[3] = { "Static", "Kinematic", "Dynamic" };
@@ -52,7 +52,7 @@ namespace Hydro
     void Circle2D::OnPhysicsUpdate(float Delta)
     {
         RecreatePhysicsState();
-        Shape2D::OnPhysicsUpdate(Delta);
+        Collider2D::OnPhysicsUpdate(Delta);
     }
 
     b2Shape* Circle2D::CreateShape()

@@ -4,12 +4,12 @@
 
 namespace Hydro
 {
-    class Shape2D;
+    class Collider2D;
     
     struct Collision2D
     {
         Vector2 ImpactPoint;
         Vector2 Normal;
-        Ref<Shape2D> OtherCollider;
+        Ref<Collider2D> OtherCollider;
     };
 }

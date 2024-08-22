@@ -4,12 +4,13 @@
 namespace Hydro
 {
     struct Collision3D;
+    struct PhysicsMaterial;
     
-    class Shape3D : public PhysicsComponent, public ICollisionResponse<Collision3D>
+    class Collider3D : public PhysicsComponent, public ICollisionResponse<Collision3D>
     {
     public:
         friend class GameObject;
-        Shape3D(GameObject* Owner, const std::string& Name) : PhysicsComponent(Owner, Name)
+        Collider3D(GameObject* Owner, const std::string& Name) : PhysicsComponent(Owner, Name)
         {
             
         }
@@ -19,12 +20,12 @@ namespace Hydro
         void OnPhysicsUpdate(float Delta) override;
         
 
-        void SetGravityEnabled(bool Enabled) const override;
+        void SetGravityEnabled(bool Enabled) override;
         void SetGravityScale(float Scale) override;
-        void SetLinearVelocity(const Vector3& Velocity) const override;
-        void SetAngularVelocity(float AngularVelocity) const override;
-        void SetLinearDamping(float LinearDamping) const override;
-        void SetAngularDamping(float AngularDamping) const override;
+        void SetLinearVelocity(const Vector3& Velocity) override;
+        void SetAngularVelocity(const Vector3& AngularVelocity) override;
+        void SetLinearDamping(float LinearDamping) override;
+        void SetAngularDamping(float AngularDamping) override;
         float GetGravityScale() const override;
         Vector3 GetLinearVelocity() const override;
         float GetAngularVelocity() const override;
@@ -40,7 +41,7 @@ namespace Hydro
         void SetMaterial(const PhysicsMaterial& Material) override;
         void SetConstraintsFlags(PhysicsConstraintsFlags Constraints) override;
         void SetTrigger(bool IsTrigger) override;
-        void SetType(ColliderType Type) override;
+        void SetPhysicsBodyType(PhysicsBodyType Type) override;
 
     protected:
         

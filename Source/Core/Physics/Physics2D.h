@@ -1,5 +1,5 @@
 #pragma once
-#include "LogCategory.h"
+#include "Core/LogCategory.h"
 #include "Math/Vector2.h"
 #include "Core/RaycastHit.h"
 

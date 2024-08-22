@@ -2,6 +2,8 @@
 #include "Functions.h"
 #include <nlohmann/json_fwd.hpp>
 
+namespace JPH { class Vec4; }
+
 namespace Hydro
 {
     class Color;
@@ -20,6 +22,7 @@ namespace Hydro
         Vector4(float Value);
         Vector4(const Vector3& Vec);
         Vector4(const Vector3& Vec, float W);
+        Vector4(const JPH::Vec4& Vec);
         
         float Magnitude() const;
         float* ValuePtr();

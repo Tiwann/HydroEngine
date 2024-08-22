@@ -17,6 +17,12 @@ namespace Hydro::Memory
         return (T*)HYDRO_MALLOC(Count * sizeof(T));
     }
 
+    template<typename T, typename... Args>
+    HYDRO_NODISCARD T* MallocObject(Args&&... Arguments)
+    {
+        return new T(std::forward<Args>(Arguments)...);
+    }
+
     template<typename T>
     HYDRO_NODISCARD T* Realloc(T* Ptr, size_t Count = 1)
     {
@@ -41,6 +47,12 @@ namespace Hydro::Memory
     void Free(T* Ptr)
     {
         HYDRO_FREE(Ptr);
+    }
+
+    template<typename T>
+    void FreeObject(T* Ptr)
+    {
+        delete Ptr;
     }
 
     

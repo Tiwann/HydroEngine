@@ -25,7 +25,7 @@ namespace Hydro
     {
     }
 
-    uint64_t* GUID::GetValues()
+    const uint64_t* GUID::GetValues() const
     {
         return m_Values;
     }

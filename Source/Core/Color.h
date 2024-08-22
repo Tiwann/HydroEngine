@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include <glm/vec4.hpp>
 
 namespace Hydro
 {
@@ -14,7 +13,6 @@ namespace Hydro
         Color(uint32_t color);
         Color(float red, float green, float blue, float alpha);
 
-        operator glm::vec4() const;
         operator Vector4() const;
 
         static Color FromHSL(float hue, float saturation, float lightness, float alpha);

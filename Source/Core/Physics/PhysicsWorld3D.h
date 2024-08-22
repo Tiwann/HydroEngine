@@ -8,8 +8,10 @@
 
 namespace Hydro
 {
+    class PhysicsBody3D;
+    class PhysicsShape3D;
     
-    class PhysicsWorld3D : public PhysicsWorld
+    class PhysicsWorld3D : public PhysicsWorld<PhysicsBody3D, PhysicsShape3D>
     {
     public:
         PhysicsWorld3D();
@@ -17,8 +19,13 @@ namespace Hydro
         void Step(float TimeStep) override;
         void OnDestroy() override;
 
-        PhysicsBody* CreateBody(const PhysicsBodyDefinition& Definition) override;
-        void DestroyBody(PhysicsBody* Body) override;
+        PhysicsBody3D* CreateBody(const PhysicsBodyDefinition& Definition, const PhysicsMaterial& Material) override;
+        void DestroyBody(PhysicsBody3D* Body) override;
+        void SetMaterial(PhysicsBody3D* Body, const PhysicsMaterial& Material) override;
+
+        const JPH::PhysicsSystem& GetSystem() const;
+        JPH::PhysicsSystem& GetSystem();
+
     private:
         JPH::TempAllocatorImpl m_TempAllocator;
         JPH::JobSystemThreadPool m_JobSystem;

@@ -3,6 +3,8 @@
 #include "Vector3.h"
 #include "Core/Color.h"
 #include <nlohmann/json.hpp>
+#include <Jolt/Jolt.h>
+#include <Jolt/Math/Vec4.h>
 
 namespace Hydro
 {
@@ -29,6 +31,10 @@ namespace Hydro
     }
 
     Vector4::Vector4(const Vector3& Vec, float W) : x(Vec.x), y(Vec.y), z(Vec.z), w(W)
+    {
+    }
+
+    Vector4::Vector4(const JPH::Vec4& Vec) : x(Vec.GetX()), y(Vec.GetY()), z(Vec.GetZ()), w(Vec.GetW())
     {
     }
 

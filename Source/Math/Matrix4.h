@@ -2,6 +2,8 @@
 #include "Vector4.h"
 #include "Components/Transform.h"
 
+namespace JPH { class Mat44; }
+
 namespace Hydro
 {
     class Vector3;
@@ -11,7 +13,8 @@ namespace Hydro
     public:
         Matrix4();
         Matrix4(const Vector4& Col1, const Vector4& Col2, const Vector4& Col3, const Vector4& Col4);
-
+        Matrix4(const JPH::Mat44& Matrix);
+        
         float* ValuePtr();
         const float* ValuePtr() const;
 

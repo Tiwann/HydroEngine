@@ -1,9 +1,13 @@
 ﻿#pragma once
-#include "Core/Physics/PhysicsBody.h"
+#include "PhysicsBody3D.h"
 #include "Core/Physics/PhysicsBodyDefinition.h"
+#include "Core/Containers/DynamicArray.h"
 
 namespace Hydro
 {
+    struct PhysicsMaterial;
+    
+    template<typename BodyType, typename ShapeType>
     class PhysicsWorld
     {
     public:
@@ -12,8 +16,15 @@ namespace Hydro
         virtual void Step(float TimeStep) = 0;
         virtual void OnDestroy() = 0;
 
-        virtual PhysicsBody* CreateBody(const PhysicsBodyDefinition& Definition) = 0;
-        virtual void DestroyBody(PhysicsBody* Body) = 0;
+        
+        virtual BodyType* CreateBody(const PhysicsBodyDefinition& Definition, const PhysicsMaterial& Material) = 0;
+        virtual void DestroyBody(BodyType* Body) = 0;
+        virtual void SetMaterial(BodyType* Body, const PhysicsMaterial& Material) = 0;
+
+        // User can't modify this array neither modify the bodies contained in it
+        const Array<const BodyType*>& GetBodies() const { return m_Bodies; }
+    protected:
+        Array<const BodyType*> m_Bodies;
     };
     
 }

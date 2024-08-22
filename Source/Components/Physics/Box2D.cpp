@@ -3,30 +3,33 @@
 #include "Core/Scene.h"
 #include "Components/Transform.h"
 #include "Core/RendererBackend.h"
-
-#include <box2d/b2_polygon_shape.h>
-
 #include "Core/Color.h"
+#include "Core/Physics/PhysicsShape.h"
 #include "Editor/EditorGUI.h"
 
 static constexpr char ComponentName[7] = "Box 2D";
 
 namespace Hydro
 {
-    Box2D::Box2D(GameObject* Owner) : Shape2D(Owner, ComponentName)
+    Box2D::Box2D(GameObject* Owner) : Collider2D(Owner, ComponentName)
     {
         
     }
 
+    PhysicsShape2D* Box2D::CreateShape()
+    {
+        return Memory::MallocObject<BoxShape2D>(m_HalfExtents, m_Center, 0.0f);
+    }
+
     void Box2D::OnInspectorGUI(const ImGuiIO& IO)
     {
-        Shape2D::OnInspectorGUI(IO);
+        Collider2D::OnInspectorGUI(IO);
         
         UI::DragVector2<float>("Center", m_Center, 0.01f);
         UI::DragVector2<float>("Half Extents", m_HalfExtents, 0.01f);
-        const char* ColliderTypes[3] = { "Static", "Kinematic", "Dynamic" };
+        StaticArray<const char*, 3> BodyTypes = { "Static", "Kinematic", "Dynamic" };
         
-        if(ImGui::Combo("Collider Type", (int*)&m_Type, ColliderTypes, 3))
+        if(ImGui::Combo("Collider Type", (int*)&m_Type, BodyTypes.Data(), 3))
         {
             RecreatePhysicsState();
         }
@@ -52,22 +55,7 @@ namespace Hydro
     {
         m_HalfExtents = HalfExtents;
     }
-
-    b2Shape* Box2D::CreateShape()
-    {
-        b2PolygonShape* Shape = new b2PolygonShape;
-        const Vector3 Extents = m_HalfExtents;
-        const Vector3 TransformedExtents = GetTransform()->GetWorldSpaceMatrix() * Extents;
-        const float ZRotation = GetTransform()->GetRotation().z;
-        Shape->SetAsBox(TransformedExtents.x, TransformedExtents.y, m_Center, ZRotation);
-        return Shape;
-    }
-
-    void Box2D::OnPhysicsUpdate(float Delta)
-    {
-        Shape2D::OnPhysicsUpdate(Delta);
-    }
-
+    
     void Box2D::RenderCollisions(const Ref<RendererBackend>& Renderer) const
     {
         Vector3 TransformedCenter = GetTransform()->GetPosition() + m_Center;
