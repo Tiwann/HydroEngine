@@ -31,7 +31,7 @@ namespace Hydro
         }
     }
 
-    PhysicsShape2D* Circle2D::CreateShape()
+    PhysicsShape2D* Circle2D::CreateShape(Ref<Transform> Transform)
     {
         return new CircleShape2D(m_Radius, m_Center);
     }

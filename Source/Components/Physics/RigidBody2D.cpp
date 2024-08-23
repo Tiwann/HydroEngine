@@ -10,12 +10,7 @@
 
 namespace Hydro
 {
-    RigidBody2D::RigidBody2D(GameObject* Owner, const std::string& Name) : PhysicsComponentInterface(Owner, Name)
-    {
-        HYDRO_BIND_EVENT_AS(OnCollisionEnterEvent, ICollisionResponse, &RigidBody2D::OnCollisionEnter);
-        HYDRO_BIND_EVENT_AS(OnCollisionStayEvent, ICollisionResponse, &RigidBody2D::OnCollisionStay);
-        HYDRO_BIND_EVENT_AS(OnCollisionExitEvent, ICollisionResponse, &RigidBody2D::OnCollisionExit);
-    }
+    RigidBody2D::RigidBody2D(GameObject* Owner, const std::string& Name) : PhysicsComponentInterface(Owner, Name){ }
     
     void RigidBody2D::OnInit()
     {
@@ -23,13 +18,15 @@ namespace Hydro
         
         Scene& Scene = m_GameObject->GetScene();
         PhysicsWorld2D& World = Scene.GetPhysicsWorld2D();
-        
-        const Vector3 Position = GetTransform()->GetPosition();
-        const Vector3 Rotation = GetTransform()->GetRotation();
+
+        const Ref<Transform> Transform = GetTransform();
+        const Vector3 Position = Transform->GetPosition();
+        const Vector3 Rotation = Transform->GetRotation();
         
         const PhysicsBodyDefinition Definition { Position, Rotation, PhysicsBodyType::Static, false };
         m_PhysicsBody = World.CreateBody(Definition, PhysicsMaterial());
-        m_PhysicsShape = CreateShape();
+        m_PhysicsBody->SetGravityScale(1);
+        m_PhysicsShape = CreateShape(Transform);
         m_PhysicsBody->CreatePhysicsState(m_PhysicsShape, PhysicsMaterial());
     }
 

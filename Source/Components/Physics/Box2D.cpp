@@ -17,9 +17,11 @@ namespace Hydro
         
     }
 
-    PhysicsShape2D* Box2D::CreateShape()
+    PhysicsShape2D* Box2D::CreateShape(Ref<Transform> ObjectTransform)
     {
-        return new BoxShape2D(m_HalfExtents, m_Center, 0.0f);
+        const Matrix4 Transform = ObjectTransform->GetWorldSpaceMatrix();
+        const Vector2 TransformedHalfExtents = Transform * m_HalfExtents;
+        return new BoxShape2D(TransformedHalfExtents, m_Center, 0.0f);
     }
 
     void Box2D::OnInspectorGUI(const ImGuiIO& IO)

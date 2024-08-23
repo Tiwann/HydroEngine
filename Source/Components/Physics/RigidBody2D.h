@@ -11,7 +11,7 @@ namespace Hydro
     class PhysicsBody2D;
     class PhysicsShape2D;
     
-    class RigidBody2D : public PhysicsComponentInterface<PhysicsBody2D, PhysicsShape2D>, public ICollisionResponse<Collision2D>
+    class RigidBody2D : public PhysicsComponentInterface<PhysicsBody2D, PhysicsShape2D, Collision2D>
     {
     protected:
         friend class GameObject;

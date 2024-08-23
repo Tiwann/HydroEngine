@@ -4,37 +4,12 @@
 #include "Core/Physics/PhysicsConstraints.h"
 #include "Core/Physics/PhysicsMaterial.h"
 #include "Core/MulticastDelegate.h"
+#include "Core/Physics/PhysicsShape.h"
 
 namespace Hydro
 {
     class Vector3;
-
-    template<typename CollisionType>
-    class ICollisionResponse
-    {
-        using CollisionDelegate = MulticastDelegate<void(const CollisionType&)>;
-    public:
-        virtual ~ICollisionResponse()
-        {
-            ClearEvents();
-        }
-        
-        CollisionDelegate OnCollisionEnterEvent;
-        CollisionDelegate OnCollisionStayEvent;
-        CollisionDelegate OnCollisionExitEvent;
-        
-        virtual void OnCollisionEnter(const CollisionType& Collision){}
-        virtual void OnCollisionStay(const CollisionType& Collision){}
-        virtual void OnCollisionExit(const CollisionType& Collision){}
-        
-        void ClearEvents()
-        {
-            OnCollisionEnterEvent.ClearAll();
-            OnCollisionStayEvent.ClearAll();
-            OnCollisionExitEvent.ClearAll();
-        }
-    };
-
+    
     class PhysicsComponent : public Component
     {
     public:
@@ -68,12 +43,18 @@ namespace Hydro
         bool m_ShowCollisions = false;
     };
 
-    template<typename BodyBase, typename ShapeBase>
+    template<typename BodyBase, typename ShapeBase, typename CollisionType>
     class PhysicsComponentInterface : public PhysicsComponent
     {
+    public:
+        using CollisionDelegate = MulticastDelegate<void(const CollisionType&)>;
+        CollisionDelegate OnCollisionEnterEvent;
+        CollisionDelegate OnCollisionStayEvent;
+        CollisionDelegate OnCollisionExitEvent;
+        
     protected:
         PhysicsComponentInterface(GameObject* Owner, const std::string& Name = "Physics Component") : PhysicsComponent(Owner, Name){}
-        virtual ShapeBase* CreateShape() = 0;
+        virtual ShapeBase* CreateShape(Ref<Transform> ObjectTransform) = 0;
         virtual void RenderCollisions(const Ref<RendererBackend>& Renderer) const = 0;
         virtual void RecreatePhysicsState() = 0;
         

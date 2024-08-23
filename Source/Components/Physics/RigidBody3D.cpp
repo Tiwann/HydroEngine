@@ -14,12 +14,13 @@ namespace Hydro
         Scene& Scene = m_GameObject->GetScene();
         PhysicsWorld3D& World = Scene.GetPhysicsWorld3D();
         
-        const Vector3 Position = GetTransform()->GetPosition();
-        const Vector3 Rotation = GetTransform()->GetRotation();
+        const Ref<Transform> Transform = GetTransform();
+        const Vector3 Position = Transform->GetPosition();
+        const Vector3 Rotation = Transform->GetRotation();
         
         const PhysicsBodyDefinition Definition { Position, Rotation, PhysicsBodyType::Static, false };
         m_PhysicsBody = World.CreateBody(Definition, PhysicsMaterial());
-        m_PhysicsShape = CreateShape();
+        m_PhysicsShape = CreateShape(Transform);
         m_PhysicsBody->CreatePhysicsState(m_PhysicsShape, PhysicsMaterial());
     }
 

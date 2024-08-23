@@ -9,7 +9,7 @@ namespace Hydro
     public:
         Circle2D(GameObject* Owner);
         void OnInspectorGUI(const ImGuiIO& IO) override;
-        PhysicsShape2D* CreateShape() override;
+        PhysicsShape2D* CreateShape(Ref<Transform> Transform) override;
         
         Vector2 GetCenter() const;
         void SetCenter(const Vector2& Center);

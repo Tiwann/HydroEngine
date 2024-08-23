@@ -8,7 +8,7 @@ namespace Hydro
     class PhysicsBody3D;
     class PhysicsShape3D;
     
-    class RigidBody3D : public PhysicsComponentInterface<PhysicsBody3D, PhysicsShape3D>, public ICollisionResponse<Collision3D>
+    class RigidBody3D : public PhysicsComponentInterface<PhysicsBody3D, PhysicsShape3D, Collision3D>
     {
     public:
         friend class GameObject;

@@ -11,7 +11,7 @@ namespace Hydro
     public:
         Box2D(GameObject* Owner);
 
-        PhysicsShape2D* CreateShape() override;
+        PhysicsShape2D* CreateShape(Ref<Transform> ObjectTransform) override;
         void OnInspectorGUI(const ImGuiIO& IO) override;
         
         Vector2 GetCenter() const;
