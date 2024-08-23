@@ -14,10 +14,11 @@ in vec4 oColor;
 uniform float uThickness;
 uniform float uSmoothness;
 
+out vec4 fragColor;
 
 void main()
 {
     float circle = Circle(oTexCoord, vec2(0.0), uThickness, uSmoothness);
     vec4 coloredCirlcle = oColor * circle;
-    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    fragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }

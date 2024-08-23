@@ -39,10 +39,12 @@ in vec4 oColor;
 uniform sampler2D uTexture;
 uniform vec4 uColorTint;
 
+out vec4 fragColor;
+
 void main()
 {
     vec4 colorTexture = texture(uTexture, oTexCoord);
     if(colorTexture.a <= 0.0001)
         discard;
-    gl_FragColor = colorTexture * uColorTint;
+    fragColor = colorTexture * uColorTint;
 }

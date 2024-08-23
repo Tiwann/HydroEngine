@@ -34,8 +34,9 @@ in vec2 oTexCoord;
 in vec3 oNormal;
 in vec4 oColor;
 
+out vec4 fragColor;
 
 void main()
 {
-    gl_FragColor = oColor;
+    fragColor = oColor;
 }
