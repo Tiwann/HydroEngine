@@ -41,6 +41,8 @@ namespace Hydro
         {
             const Verbosity Verbo = GetDebugVerbosity(Severity);
             const std::string SourceName = GetDebugSourceName(Source);
+            if(Verbo < Verbosity::Warning)
+                return;
             HYDRO_LOG(OpenGL, Verbo, "Debug ({}): {}", SourceName, Message);
         };
 
