@@ -6,6 +6,7 @@ namespace JPH { class Mat44; }
 
 namespace Hydro
 {
+    class Vector2;
     class Vector3;
     
     class Matrix4
@@ -27,6 +28,9 @@ namespace Hydro
 
         Vector4 Multiply(const Vector4& Vec) const;
         Vector4 operator*(const Vector4& Vec) const;
+        Vector3 operator*(const Vector3& Vec) const;
+        Vector2 operator*(const Vector2& Vec) const;
+        
         Matrix4 Multiply(const Matrix4& Mat) const;
         Matrix4 operator*(const Matrix4& Mat) const;
         

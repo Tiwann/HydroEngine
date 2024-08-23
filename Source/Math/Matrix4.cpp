@@ -130,6 +130,17 @@ namespace Hydro
         return Multiply(Vec);
     }
 
+    Vector3 Matrix4::operator*(const Vector3& Vec) const
+    {
+    	return Multiply(Vec);
+    }
+
+    Vector2 Matrix4::operator*(const Vector2& Vec) const
+    {
+    	Vector4 Result = Multiply(Vector4(Vec.x, Vec.y, 0.0f, 0.0f));
+    	return {Result.x, Result.y};
+    }
+
     Matrix4 Matrix4::Multiply(const Matrix4& Mat) const
     {
         Vector4 Col1 { Mat.m00 * m00 + Mat.m01 * m10 + Mat.m02 * m20 + Mat.m03 * m30,
