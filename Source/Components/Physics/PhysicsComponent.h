@@ -1,9 +1,8 @@
 #pragma once
-#include "Core/Physics/PhysicsBodyType.h"
-#include "Constraints.h"
 #include "Core/Component.h"
+#include "Core/Physics/PhysicsBodyType.h"
+#include "Core/Physics/PhysicsConstraints.h"
 #include "Core/Physics/PhysicsMaterial.h"
-#include "Core/Flags.h"
 #include "Core/MulticastDelegate.h"
 
 namespace Hydro
@@ -43,14 +42,6 @@ namespace Hydro
 
         bool GetShowCollisions() const;
         void SetShowCollisions(bool Enabled);
-        PhysicsMaterial GetMaterial() const;
-        virtual void SetMaterial(const PhysicsMaterial& Material);
-        PhysicsConstraintsFlags GetConstraintsFlags() const;
-        virtual void SetConstraintsFlags(PhysicsConstraintsFlags Constraints);
-        bool IsTrigger() const;
-        virtual void SetTrigger(bool IsTrigger);
-        PhysicsBodyType GetType() const;
-        virtual void SetPhysicsBodyType(PhysicsBodyType Type);
 
         virtual void SetGravityScale(float Scale) = 0;
         virtual void SetLinearVelocity(const Vector3& Velocity) = 0;
@@ -70,14 +61,11 @@ namespace Hydro
         virtual void AddForceAtPosition(const Vector3& Position, const Vector3& Force) = 0;
         virtual void AddImpulseAtPosition(const Vector3& Position, const Vector3& Force) = 0;
 
+        
+
     protected:
         PhysicsComponent(GameObject* Owner, const std::string& Name) : Component(Owner, Name){}
-        PhysicsBodyType m_Type = PhysicsBodyType::Static;
-        PhysicsMaterial m_Material;
-        PhysicsConstraintsFlags m_ConstraintsFlags;
-        bool m_IsTrigger = false;
         bool m_ShowCollisions = false;
-        bool m_IsColliding = false;
     };
 
     template<typename BodyBase, typename ShapeBase>
@@ -88,7 +76,15 @@ namespace Hydro
         virtual ShapeBase* CreateShape() = 0;
         virtual void RenderCollisions(const Ref<RendererBackend>& Renderer) const = 0;
         virtual void RecreatePhysicsState() = 0;
-
+        
+        virtual const PhysicsMaterial& GetMaterial() const = 0;
+        virtual void SetMaterial(const PhysicsMaterial& Material) = 0;
+        virtual PhysicsConstraintsFlags GetConstraints() = 0;
+        virtual void SetConstraints(PhysicsConstraintsFlags Constraints) = 0;
+        virtual bool IsSensor() const = 0;
+        virtual void SetSensor(bool Sensor) = 0;
+        virtual PhysicsBodyType GetPhysicsBodyType() const = 0;
+        virtual void SetPhysicsBodyType(PhysicsBodyType Type) = 0;
 
         void OnRender(const Ref<RendererBackend>& Renderer) override
         {

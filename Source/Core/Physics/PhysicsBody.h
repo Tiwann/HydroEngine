@@ -1,9 +1,8 @@
 ﻿#pragma once
 #include "Math/Vector3.h"
-#include "Core/Physics/PhysicsMaterial.h"
-#include <cstdint>
-
-#include "PhysicsShape.h"
+#include "PhysicsMaterial.h"
+#include "PhysicsBodyType.h"
+#include "PhysicsConstraints.h"
 
 namespace Hydro
 {
@@ -11,6 +10,7 @@ namespace Hydro
     class PhysicsBody
     {
     public:
+        using Body = BodyHandle;
         explicit PhysicsBody(BodyHandle* Handle, WorldBase& World) : m_Handle(Handle), m_World(&World){ }
         virtual ~PhysicsBody() = default;
         PhysicsBody(const PhysicsBody&) = delete;
@@ -21,7 +21,7 @@ namespace Hydro
 
         virtual void CreatePhysicsState(ShapeBase* Shape, const PhysicsMaterial& Material)
         {
-            m_Shape = dynamic_cast<ShapeBase*>(Shape);
+            m_Shape = Shape;
             m_Material = Material;
         }
         
@@ -54,10 +54,15 @@ namespace Hydro
         virtual void AddForceAtPosition(const Vector3& Position, const Vector3& Force) = 0;
         virtual void AddImpulseAtPosition(const Vector3& Position, const Vector3& Force) = 0;
 
-        virtual void SetMaterial(const PhysicsMaterial& Material)
-        {
-            m_Material = Material;
-        }
+        
+        virtual const PhysicsConstraintsFlags& GetConstraints() const = 0;
+        virtual void SetConstraints(const PhysicsConstraintsFlags& constraints) = 0;
+        virtual const PhysicsMaterial& GetMaterial() const = 0;
+        virtual void SetMaterial(const PhysicsMaterial& Material) = 0;
+        virtual PhysicsBodyType GetType() const = 0;
+        virtual void SetType(PhysicsBodyType Type) = 0;
+        virtual bool IsSensor() = 0;
+        virtual void SetIsSensor(bool Sensor) = 0;
 
         BodyHandle* GetHandle() { return m_Handle; }
         const BodyHandle* GetHandle() const { return m_Handle; }
@@ -67,10 +72,15 @@ namespace Hydro
 
         ShapeBase* GetShape() { return m_Shape; }
         const ShapeBase* GetShape() const { return m_Shape; }
+
+    protected:
+        PhysicsConstraintsFlags m_Constraints;
+        PhysicsMaterial m_Material;
+        PhysicsBodyType m_Type = PhysicsBodyType::Static;
+        bool m_IsSensor = false;
     private:
         BodyHandle* m_Handle = nullptr;
         WorldBase* m_World = nullptr;
         ShapeBase* m_Shape = nullptr;
-        PhysicsMaterial m_Material;
     };
 }

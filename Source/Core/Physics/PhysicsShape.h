@@ -52,8 +52,8 @@ namespace Hydro
             m_Shape = nullptr;
         }
         
-        Handle& GetShape() { return *m_Shape; }
-        const Handle& GetShape() const { return *m_Shape; }
+        Handle& GetHandle() { return *m_Shape; }
+        const Handle& GetHandle() const { return *m_Shape; }
     protected:
         Handle* m_Shape = nullptr;
     };

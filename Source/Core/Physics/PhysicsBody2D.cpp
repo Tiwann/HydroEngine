@@ -25,12 +25,12 @@ namespace Hydro
     void PhysicsBody2D::CreatePhysicsState(PhysicsShape2D* Shape, const PhysicsMaterial& Material)
     {
         b2FixtureDef FixtureDefinition = {};
-        const b2Shape& ShapeHandle = Shape->GetShape();
+        const b2Shape& ShapeHandle = Shape->GetHandle();
         FixtureDefinition.shape = &ShapeHandle;
         FixtureDefinition.density = Material.Density;
         FixtureDefinition.friction = Material.Friction;
         FixtureDefinition.restitution = Material.Bounciness;
-        //FixtureDefinition.isSensor = m_IsTrigger; // Need to find solution for this
+        FixtureDefinition.isSensor = m_IsSensor;
 
         b2FixtureUserData FixtureUserData;
         FixtureUserData.pointer = (uintptr_t)this;
@@ -45,18 +45,7 @@ namespace Hydro
         BodyHandle->DestroyFixture(m_Fixture);
         m_Fixture = nullptr;
     }
-
-    void PhysicsBody2D::SetMaterial(const PhysicsMaterial& Material)
-    {
-        PhysicsBody::SetMaterial(Material);
-        b2Body* BodyHandle = GetHandle();
-        b2Fixture* Fixture = BodyHandle->GetFixtureList();
-        Fixture->SetFriction(Material.Friction);
-        Fixture->SetRestitution(Material.Bounciness);
-        Fixture->SetDensity(Material.Density);
-    }
-
-
+    
     void PhysicsBody2D::SetPosition(const Vector3& Position)
     {
         b2Body* BodyHandle = GetHandle();
@@ -177,5 +166,55 @@ namespace Hydro
     {
         b2Body* BodyHandle = GetHandle();
         BodyHandle->ApplyLinearImpulse((Vector2)Force, (Vector2)Position, true);
+    }
+
+    const PhysicsConstraintsFlags& PhysicsBody2D::GetConstraints() const
+    {
+        return m_Constraints;
+    }
+
+    void PhysicsBody2D::SetConstraints(const PhysicsConstraintsFlags& Constraints)
+    {
+        m_Constraints = Constraints;
+        const bool FixedRotation = m_Constraints.Contains(PhysicsConstraintsBits::Rotation) ||
+                m_Constraints.Contains(PhysicsConstraintsBits::RotationZ);
+        b2Body* BodyHandle = GetHandle();
+        BodyHandle->SetFixedRotation(FixedRotation);
+    }
+
+    const PhysicsMaterial& PhysicsBody2D::GetMaterial() const
+    {
+        return m_Material;
+    }
+
+    void PhysicsBody2D::SetMaterial(const PhysicsMaterial& Material)
+    {
+        m_Material = Material;
+        m_Fixture->SetFriction(Material.Friction);
+        m_Fixture->SetRestitution(Material.Bounciness);
+        m_Fixture->SetDensity(Material.Density);
+    }
+
+    PhysicsBodyType PhysicsBody2D::GetType() const
+    {
+        return m_Type;
+    }
+
+    void PhysicsBody2D::SetType(PhysicsBodyType Type)
+    {
+        m_Type = Type;
+        b2Body* BodyHandle = GetHandle();
+        BodyHandle->SetType((b2BodyType)Type);
+    }
+
+    bool PhysicsBody2D::IsSensor()
+    {
+        return m_IsSensor;
+    }
+
+    void PhysicsBody2D::SetIsSensor(bool Sensor)
+    {
+        m_IsSensor = Sensor;
+        m_Fixture->SetSensor(Sensor);
     }
 }

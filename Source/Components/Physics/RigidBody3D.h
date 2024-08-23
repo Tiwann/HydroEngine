@@ -18,7 +18,6 @@ namespace Hydro
         void OnStart() override;
         void OnPhysicsUpdate(float Delta) override;
         
-        
         void SetGravityScale(float Scale) override;
         void SetLinearVelocity(const Vector3& Velocity) override;
         void SetAngularVelocity(const Vector3& AngularVelocity) override;
@@ -34,11 +33,15 @@ namespace Hydro
         void AddImpulse(const Vector3& Force) override;
         void AddForceAtPosition(const Vector3& Position, const Vector3& Force) override;
         void AddImpulseAtPosition(const Vector3& Position, const Vector3& Force) override;
-        
         void RecreatePhysicsState() override;
+        
+        const PhysicsMaterial& GetMaterial() const override;
         void SetMaterial(const PhysicsMaterial& Material) override;
-        void SetConstraintsFlags(PhysicsConstraintsFlags Constraints) override;
-        void SetTrigger(bool IsTrigger) override;
+        PhysicsConstraintsFlags GetConstraints() override;
+        void SetConstraints(PhysicsConstraintsFlags Constraints) override;
+        bool IsSensor() const override;
+        void SetSensor(bool Sensor) override;
+        PhysicsBodyType GetPhysicsBodyType() const override;
         void SetPhysicsBodyType(PhysicsBodyType Type) override;
     };
 }

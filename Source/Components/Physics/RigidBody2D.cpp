@@ -27,10 +27,10 @@ namespace Hydro
         const Vector3 Position = GetTransform()->GetPosition();
         const Vector3 Rotation = GetTransform()->GetRotation();
         
-        const PhysicsBodyDefinition Definition { Position, Rotation, m_Type, m_IsTrigger };
-        m_PhysicsBody = World.CreateBody(Definition, m_Material);
+        const PhysicsBodyDefinition Definition { Position, Rotation, PhysicsBodyType::Static, false };
+        m_PhysicsBody = World.CreateBody(Definition, PhysicsMaterial());
         m_PhysicsShape = CreateShape();
-        m_PhysicsBody->CreatePhysicsState(m_PhysicsShape, m_Material);
+        m_PhysicsBody->CreatePhysicsState(m_PhysicsShape, PhysicsMaterial());
     }
 
     void RigidBody2D::OnStart()
@@ -54,8 +54,6 @@ namespace Hydro
     
     void RigidBody2D::OnPhysicsUpdate(float Delta)
     {
-        m_PhysicsBody->SetMaterial(m_Material);
-        
         const Ref<Transform> Transform = GetTransform();
         const Vector3 NewPosition = m_PhysicsBody->GetPosition();
         const Vector3 NewRotation = m_PhysicsBody->GetRotation();
@@ -148,33 +146,49 @@ namespace Hydro
         m_PhysicsBody->SetRotation(Rotation);
     }
 
+    void RigidBody2D::RecreatePhysicsState()
+    {
+        m_PhysicsBody->DestroyPhysicsState();
+        m_PhysicsBody->CreatePhysicsState(m_PhysicsShape, m_PhysicsBody->GetMaterial());
+    }
+
+    const PhysicsMaterial& RigidBody2D::GetMaterial() const
+    {
+        return m_PhysicsBody->GetMaterial();
+    }
+
     void RigidBody2D::SetMaterial(const PhysicsMaterial& Material)
     {
-        PhysicsComponentInterface::SetMaterial(Material);
         m_PhysicsBody->SetMaterial(Material);
     }
 
-    void RigidBody2D::SetConstraintsFlags(PhysicsConstraintsFlags Constraints)
+    PhysicsConstraintsFlags RigidBody2D::GetConstraints()
     {
-        PhysicsComponentInterface::SetConstraintsFlags(Constraints);
-        RecreatePhysicsState();
+        return m_PhysicsBody->GetConstraints();
     }
 
-    void RigidBody2D::SetTrigger(bool IsTrigger)
+    void RigidBody2D::SetConstraints(PhysicsConstraintsFlags Constraints)
     {
-        PhysicsComponentInterface::SetTrigger(IsTrigger);
-        RecreatePhysicsState();
+        m_PhysicsBody->SetConstraints(Constraints);
+    }
+
+    bool RigidBody2D::IsSensor() const
+    {
+        return m_PhysicsBody->IsSensor();
+    }
+
+    void RigidBody2D::SetSensor(bool Sensor)
+    {
+        m_PhysicsBody->SetIsSensor(Sensor);
+    }
+
+    PhysicsBodyType RigidBody2D::GetPhysicsBodyType() const
+    {
+        return m_PhysicsBody->GetType();
     }
 
     void RigidBody2D::SetPhysicsBodyType(PhysicsBodyType Type)
     {
-        PhysicsComponentInterface::SetPhysicsBodyType(Type);
-        RecreatePhysicsState();
-    }
-
-    void RigidBody2D::RecreatePhysicsState()
-    {
-        m_PhysicsBody->DestroyPhysicsState();
-        m_PhysicsBody->CreatePhysicsState(m_PhysicsShape, m_Material);
+        m_PhysicsBody->SetType(Type);
     }
 }

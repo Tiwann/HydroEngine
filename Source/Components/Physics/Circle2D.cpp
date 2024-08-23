@@ -7,6 +7,7 @@
 #include "Core/RendererBackend.h"
 #include "Core/Physics/PhysicsShape.h"
 #include "Editor/EditorGUI.h"
+#include "Core/Physics/PhysicsBody2D.h"
 
 
 namespace Hydro
@@ -22,10 +23,11 @@ namespace Hydro
         UI::DragVector2<float>("Center", m_Center);
         UI::DragValue<float>("Radius", m_Radius);
         const char* ColliderTypes[3] = { "Static", "Kinematic", "Dynamic" };
-        
-        if(ImGui::Combo("Collider Type", (int*)&m_Type, ColliderTypes, 3))
+
+        PhysicsBodyType BodyType = m_PhysicsBody->GetType();
+        if(ImGui::Combo("Collider Type", (int*)&BodyType, ColliderTypes, 3))
         {
-            RecreatePhysicsState();
+            m_PhysicsBody->SetType(BodyType);
         }
     }
 

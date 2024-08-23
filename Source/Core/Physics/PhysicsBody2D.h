@@ -17,7 +17,7 @@ namespace Hydro
     
         void CreatePhysicsState(PhysicsShape2D* Shape, const PhysicsMaterial& Material) override;
         void DestroyPhysicsState() override;
-        void SetMaterial(const PhysicsMaterial& Material) override;
+        
         
         void SetPosition(const Vector3& Position) override;
         Vector3 GetPosition() const override;
@@ -43,6 +43,14 @@ namespace Hydro
         void AddForceAtPosition(const Vector3& Position, const Vector3& Force) override;
         void AddImpulseAtPosition(const Vector3& Position, const Vector3& Force) override;
 
+        const PhysicsConstraintsFlags& GetConstraints() const override;
+        void SetConstraints(const PhysicsConstraintsFlags& Constraints) override;
+        void SetMaterial(const PhysicsMaterial& Material) override;
+        const PhysicsMaterial& GetMaterial() const override;
+        PhysicsBodyType GetType() const override;
+        void SetType(PhysicsBodyType Type) override;
+        bool IsSensor() override;
+        void SetIsSensor(bool Sensor) override;
     private:
         b2Fixture* m_Fixture = nullptr;
     };

@@ -42,12 +42,15 @@ namespace Hydro
         void AddImpulseAtPosition(const Vector3& Position, const Vector3& Force) override;
         void SetPosition(const Vector3& Position);
         void SetRotation(const Vector3& Rotation);
-
-        void SetMaterial(const PhysicsMaterial& Material) override;
-        void SetConstraintsFlags(PhysicsConstraintsFlags Constraints) override;
-        void SetTrigger(bool IsTrigger) override;
-        void SetPhysicsBodyType(PhysicsBodyType Type) override;
-
         void RecreatePhysicsState() override;
+        
+        const PhysicsMaterial& GetMaterial() const override;
+        void SetMaterial(const PhysicsMaterial& Material) override;
+        PhysicsConstraintsFlags GetConstraints() override;
+        void SetConstraints(PhysicsConstraintsFlags Constraints) override;
+        bool IsSensor() const override;
+        void SetSensor(bool Sensor) override;
+        PhysicsBodyType GetPhysicsBodyType() const override;
+        void SetPhysicsBodyType(PhysicsBodyType Type) override;
     };
 }

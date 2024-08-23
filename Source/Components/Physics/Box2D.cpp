@@ -4,6 +4,7 @@
 #include "Components/Transform.h"
 #include "Core/RendererBackend.h"
 #include "Core/Color.h"
+#include "Core/Physics/PhysicsBody2D.h"
 #include "Core/Physics/PhysicsShape.h"
 #include "Editor/EditorGUI.h"
 
@@ -28,10 +29,11 @@ namespace Hydro
         UI::DragVector2<float>("Center", m_Center, 0.01f);
         UI::DragVector2<float>("Half Extents", m_HalfExtents, 0.01f);
         StaticArray<const char*, 3> BodyTypes = { "Static", "Kinematic", "Dynamic" };
-        
-        if(ImGui::Combo("Collider Type", (int*)&m_Type, BodyTypes.Data(), 3))
+
+        PhysicsBodyType BodyType = m_PhysicsBody->GetType();
+        if(ImGui::Combo("Collider Type", (int*)&BodyType, BodyTypes.Data(), 3))
         {
-            RecreatePhysicsState();
+            m_PhysicsBody->SetType(BodyType);
         }
     }
 

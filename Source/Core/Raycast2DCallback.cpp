@@ -9,7 +9,7 @@ namespace Hydro
         float fraction)
     {
         const RigidBody2D* Collider = (RigidBody2D*)fixture->GetUserData().pointer;
-        if(Collider->IsTrigger())
+        if(Collider->IsSensor())
         {
             return 1;
         }

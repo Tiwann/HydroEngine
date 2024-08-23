@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "Core/Physics/PhysicsBody.h"
 
-namespace JPH { class Body; class Shape; }
+namespace JPH { class Body; }
 
 namespace Hydro
 {
@@ -43,5 +43,13 @@ namespace Hydro
         void AddImpulse(const Vector3& Force) override;
         void AddForceAtPosition(const Vector3& Position, const Vector3& Force) override;
         void AddImpulseAtPosition(const Vector3& Position, const Vector3& Force) override;
+
+        const PhysicsConstraintsFlags& GetConstraints() const override;
+        void SetConstraints(const PhysicsConstraintsFlags& Constraints) override;
+        const PhysicsMaterial& GetMaterial() const override;
+        PhysicsBodyType GetType() const override;
+        void SetType(PhysicsBodyType Type) override;
+        bool IsSensor() override;
+        void SetIsSensor(bool Sensor) override;
     };
 }
