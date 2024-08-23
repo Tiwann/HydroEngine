@@ -10,16 +10,16 @@ HYDRO_DECLARE_LOG_CATEGORY_STATIC(StateMachine, "STATE MACHINE")
 
 namespace Hydro
 {
-    template<typename StateBase, typename = EnableIfType<IsBaseOfValue<State, StateBase>>>
+    template<typename StateBase>
     class StateMachine : public Component
     {
     protected:
         StateMachine(GameObject* Owner, const std::string& Name = "StateMachine") : Component(Owner, Name) {}
     public:
-        void ChangeState(const StateBase& NewState)
+        void ChangeState(StateBase* NewState)
         {
             m_CurrentState->OnExit();
-            m_CurrentState = &NewState;
+            m_CurrentState = NewState;
             m_CurrentState->OnEnter();
         }
         
@@ -33,6 +33,11 @@ namespace Hydro
             m_CurrentState = &NewState;
         }
 
+        void OnStart() override
+        {
+            m_CurrentState->OnEnter();
+        }
+
         void OnUpdate(float Delta) override
         {
             if(!m_CurrentState)
@@ -44,7 +49,12 @@ namespace Hydro
             m_CurrentState->OnUpdate(Delta);
         }
 
-    private:
+        void OnDestroy() override
+        {
+            m_CurrentState->OnExit();
+        }
+
+    protected:
         StateBase* m_CurrentState = nullptr;
     };
 }
