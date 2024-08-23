@@ -253,6 +253,8 @@ namespace Hydro
             Memory::Memset(m_Data, 0, m_Count);
             m_Count = 0;
         }
+
+        bool IsEmpty() const { return m_Count == 0; }
         
         Iterator begin() override { return m_Data; }
         Iterator end() override { return m_Data + m_Count; }
