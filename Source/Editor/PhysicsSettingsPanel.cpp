@@ -5,16 +5,6 @@
 
 namespace Hydro
 {
-    void PhysicsSettingsPanel::OnInit()
-    {
-        EditorWindow::OnInit();
-    }
-
-    void PhysicsSettingsPanel::OnUpdate(float Delta)
-    {
-        EditorWindow::OnUpdate(Delta);
-    }
-
     void PhysicsSettingsPanel::OnInspectorGUI(const ImGuiIO& IO)
     {
         EditorWindow::OnInspectorGUI(IO);
