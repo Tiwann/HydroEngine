@@ -19,8 +19,8 @@ namespace Hydro
     class Scene final
     {
     public:
-        using GameObjectIterator = std::vector<Ref<GameObject>>::iterator;
-        using GameObjectConstIterator = std::vector<Ref<GameObject>>::const_iterator;
+        using Iterator = Array<Ref<GameObject>>::Iterator;
+        using ConstIterator = Array<Ref<GameObject>>::ConstIterator;
         friend class Physics2D;
 
         Scene() = default;
@@ -35,7 +35,7 @@ namespace Hydro
         {
             const Ref<GameObject> NewObject = CreateRef<T>(Name, this);
             NewObject->OnInit();
-            m_GameObjects.push_back(NewObject);
+            m_GameObjects.Add(NewObject);
             return Cast<T>(NewObject);
         }
 
@@ -46,11 +46,11 @@ namespace Hydro
                 Delegate(Object);
             }
         }
-        GameObjectIterator begin() { return m_GameObjects.begin(); }
-        GameObjectIterator end() { return m_GameObjects.end(); }
+        Iterator begin() { return m_GameObjects.begin(); }
+        Iterator end() { return m_GameObjects.end(); }
 
-        GameObjectConstIterator begin() const { return m_GameObjects.begin(); }
-        GameObjectConstIterator end() const { return m_GameObjects.end(); }
+        ConstIterator begin() const { return m_GameObjects.begin(); }
+        ConstIterator end() const { return m_GameObjects.end(); }
         
         GUID GetGuid() const { return m_Guid; }
         std::string GetName() const { return m_Name; }
@@ -80,7 +80,7 @@ namespace Hydro
     private:
         GUID m_Guid;
         std::string m_Name;
-        std::vector<Ref<GameObject>> m_GameObjects;
+        Array<Ref<GameObject>> m_GameObjects;
         
         PhysicsWorld2D m_PhysicsWorld2D;
         PhysicsWorld3D m_PhysicsWorld3D;

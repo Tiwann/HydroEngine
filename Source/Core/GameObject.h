@@ -18,13 +18,13 @@ namespace Hydro
     
     class GameObject : public std::enable_shared_from_this<GameObject>
     {
-        using ComponentIterator = std::vector<Ref<Component>>::iterator;
-        using ComponentConstIterator = std::vector<Ref<Component>>::const_iterator;
+        using Iterator = Array<Ref<Component>>::Iterator;
+        using ConstIterator = Array<Ref<Component>>::ConstIterator;
     public:
         friend class Scene;
         friend class Application;
         GameObject(std::string Name, Scene* Owner);
-        ~GameObject();
+        virtual ~GameObject() = default;
         
         static bool Destroy(Ref<GameObject>& Object);
         
@@ -56,7 +56,7 @@ namespace Hydro
         {
             Ref<T> NewComponent = CreateRef<T>(this);
             const Ref<Component> AsComponent = Cast<Component, T>(NewComponent);
-            m_Components.push_back(NewComponent);
+            m_Components.Add(NewComponent);
             NewComponent->OnInit();
             HYDRO_LOG(GameObject, Verbosity::Trace, "Created {} component on GameObject {}", AsComponent->GetName(), m_Name);
             return NewComponent;
@@ -70,7 +70,7 @@ namespace Hydro
                 if(Ref<T> CastedComponent = Cast<T>(Component))
                 {
                     CastedComponent->OnDestroy();
-                    m_Components.erase(std::ranges::find(m_Components, Component));
+                    m_Components.Remove(Component);
                     Component.reset();
                     return true;
                 }
@@ -91,10 +91,10 @@ namespace Hydro
         const std::string& GetName() const { return m_Name; }
 
         
-        ComponentIterator begin() { return m_Components.begin(); }
-        ComponentIterator end() { return m_Components.end(); }
-        ComponentConstIterator begin() const { return m_Components.begin(); }
-        ComponentConstIterator end() const { return m_Components.end(); }
+        Iterator begin() { return m_Components.begin(); }
+        Iterator end() { return m_Components.end(); }
+        ConstIterator begin() const { return m_Components.begin(); }
+        ConstIterator end() const { return m_Components.end(); }
 
         void ForEach(const std::function<void(Ref<Component>)>& Delegate) const
         {
@@ -116,9 +116,9 @@ namespace Hydro
 
         GUID m_Guid;
         std::string m_Name;
-        std::vector<Ref<Component>> m_Components;
+        Array<Ref<Component>> m_Components;
         bool m_Enabled;
-        std::vector<Ref<GameObject>> m_Children;
+        Array<Ref<GameObject>> m_Children;
         Ref<GameObject> m_Parent;
         Ref<Transform> m_Transform;
         Scene* m_Scene;

@@ -12,12 +12,7 @@ namespace Hydro
     {
         m_Transform = AddComponent<Transform>();
     }
-
-    GameObject::~GameObject()
-    {
-        
-    }
-
+    
     bool GameObject::Destroy(Ref<GameObject>& Object)
     {
         Application& Application = Application::GetCurrentApplication();
@@ -34,15 +29,15 @@ namespace Hydro
         if(!Object)
         {
             m_Parent = nullptr;
-            Object->m_Children.erase(std::ranges::find(m_Children, Object));
+            Object->m_Children.Remove(Object);
             return;
         }
 
         m_Parent = Object;
-        Object->m_Children.push_back(shared_from_this());
+        Object->m_Children.Add(shared_from_this());
     }
     
-    bool GameObject::HasChildren() const { return !m_Children.empty(); }
+    bool GameObject::HasChildren() const { return !m_Children.IsEmpty(); }
 
     bool GameObject::HasParent() const
     {
@@ -51,7 +46,7 @@ namespace Hydro
 
     Ref<GameObject> GameObject::GetChild(size_t Index) const
     {
-        if(Index < 0 || Index > m_Children.size())
+        if(Index < 0 || Index > m_Children.Count())
             return nullptr;
         return m_Children[Index];
     }

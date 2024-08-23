@@ -69,8 +69,7 @@ namespace Hydro
     bool Scene::DestroyObject(Ref<GameObject>& Object)
     {
         Object->OnDestroy();
-        const auto Index = std::ranges::find(m_GameObjects, Object);
-        m_GameObjects.erase(Index);
+        m_GameObjects.Remove(Object);
         Object.reset();
         return true;
     }

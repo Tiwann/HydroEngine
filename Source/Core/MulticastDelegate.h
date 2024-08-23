@@ -1,8 +1,7 @@
 #pragma once
-#include <functional>
-#include <vector>
-
 #include "Assertion.h"
+#include "Core/Containers/DynamicArray.h"
+#include <functional>
 
 #define HYDRO_BIND_EVENT(Event, Func) (Event).BindMember(this, (Func))
 #define HYDRO_BIND_EVENT_AS(Event, As, Func) (Event).BindMember<As>(this, (Func))
@@ -16,11 +15,11 @@ namespace Hydro
 		using DelegateType = std::function<Signature>;
 		MulticastDelegate() = default;
 
-		bool IsBound() const { return !m_Subscribers.empty(); }
+		bool IsBound() const { return !m_Subscribers.IsEmpty(); }
 		
 		void Bind(DelegateType Subscriber)
 		{
-			m_Subscribers.push_back(Subscriber);
+			m_Subscribers.Add(Subscriber);
 		}
 
 		template<typename Class, typename... Args>
@@ -39,8 +38,7 @@ namespace Hydro
 
 		void Unbind(DelegateType Subscriber)
 		{
-			size_t Position = std::find(m_Subscribers.begin(), m_Subscribers.end(), Subscriber);
-			m_Subscribers.erase(Position);
+			m_Subscribers.RemoveAll(Subscriber);
 		}
 
 		void operator-=(DelegateType Subscriber)
@@ -50,7 +48,7 @@ namespace Hydro
 
 		void ClearAll()
 		{
-			m_Subscribers.clear();
+			m_Subscribers.Clear();
 		}
 
 		template<typename... Params>
@@ -77,6 +75,6 @@ namespace Hydro
 		}
 
 	private:
-		std::vector<DelegateType> m_Subscribers;
+		Array<DelegateType> m_Subscribers;
 	};
 }
