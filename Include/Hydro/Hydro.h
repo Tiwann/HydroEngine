@@ -8,7 +8,6 @@
 #include "Core/Vertex.h"
 #include "Input/Input.h"
 #include "Core/Color.h"
-#include "Input/Input.h"
 #include "Core/Log.h"
 #include "Core/LogCategory.h"
 #include "Core/LogVerbosity.h"
@@ -23,3 +22,8 @@
 
 #include "Core/RendererBackend.h"
 #include "Core/Texture2D.h"
+
+#include "ResourceManager/ResourceManager.h"
+#include "ResourceManager/ShaderManager.h"
+#include "ResourceManager/TextureManager.h"
+#include "ResourceManager/SoundManager.h"
