@@ -36,6 +36,7 @@ project "glfw"
 	}
 
 	includedirs "include"
+	defines "_GLFW_USE_OPTIMUS_HPG"
 
 	filter "configurations:Debug*"
 		runtime "Debug"
