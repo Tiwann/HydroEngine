@@ -25,9 +25,7 @@ namespace Hydro
         friend class Application;
         GameObject(std::string Name, Scene* Owner);
         virtual ~GameObject() = default;
-        
-        static bool Destroy(Ref<GameObject>& Object);
-        
+
         void SetName(const std::string& Name);
 
         template<typename T>

@@ -251,6 +251,7 @@ namespace Hydro
         m_DetailsPanel->OnInspectorGUI(IO);
         m_ViewportPanel->OnInspectorGUI(IO);
         m_SceneHierarchyPanel->OnInspectorGUI(IO);
+        m_PhysicsSettingsPanel->OnInspectorGUI(IO);
         
         if(m_ShowImGuiDemoWindow) ImGui::ShowDemoWindow(&m_ShowImGuiDemoWindow);
     }

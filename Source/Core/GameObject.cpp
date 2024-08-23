@@ -12,12 +12,6 @@ namespace Hydro
     {
         m_Transform = AddComponent<Transform>();
     }
-    
-    bool GameObject::Destroy(Ref<GameObject>& Object)
-    {
-        Application& Application = Application::GetCurrentApplication();
-        return Application.GetScene()->DestroyObject(Object);
-    }
 
     void GameObject::SetName(const std::string& Name)
     {
@@ -39,10 +33,7 @@ namespace Hydro
     
     bool GameObject::HasChildren() const { return !m_Children.IsEmpty(); }
 
-    bool GameObject::HasParent() const
-    {
-        return m_Parent != nullptr;
-    }
+    bool GameObject::HasParent() const { return m_Parent != nullptr; }
 
     Ref<GameObject> GameObject::GetChild(size_t Index) const
     {
