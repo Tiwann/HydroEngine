@@ -20,7 +20,7 @@ namespace Hydro
     PhysicsShape2D* Box2D::CreateShape(Ref<Transform> ObjectTransform)
     {
         const Matrix4 Transform = ObjectTransform->GetWorldSpaceMatrix();
-        const Vector2 TransformedHalfExtents = Transform * m_HalfExtents;
+        const Vector2 TransformedHalfExtents = Transform * Vector3(m_HalfExtents);
         return new BoxShape2D(TransformedHalfExtents, m_Center, 0.0f);
     }
 
@@ -62,8 +62,7 @@ namespace Hydro
     
     void Box2D::RenderCollisions(const Ref<RendererBackend>& Renderer) const
     {
-        Vector3 TransformedCenter = GetTransform()->GetPosition() + m_Center;
-        Vector3 TransformedExtents = GetTransform()->GetWorldSpaceMatrix() * Vector3(m_HalfExtents);
-        Renderer->DrawWireQuad(TransformedCenter,  TransformedExtents , 3.0f, Color::Green);
+        const Matrix4 Transform = GetTransform()->GetWorldSpaceMatrix();
+        Renderer->DrawWireQuad(Transform, m_Center, m_HalfExtents, 3.0f, Color::Green);
     }
 }

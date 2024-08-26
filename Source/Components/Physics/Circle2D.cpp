@@ -58,7 +58,7 @@ namespace Hydro
     
     void Circle2D::RenderCollisions(const Ref<RendererBackend>& Renderer) const
     {
-        const Vector3 TransformedCenter = GetTransform()->GetPosition() + m_Center;
-        Renderer->DrawCircle(TransformedCenter, m_Radius, Color::Green);
+        const Matrix4 Transform = GetTransform()->GetWorldSpaceMatrix();
+        Renderer->DrawCircle(Transform, m_Center, m_Radius, Color::Green);
     }
 }
