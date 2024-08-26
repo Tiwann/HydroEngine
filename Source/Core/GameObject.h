@@ -75,6 +75,16 @@ namespace Hydro
             }
             return false;
         }
+
+        bool RemoveComponent(Ref<Component>& Component)
+        {
+            if(!Component) return false;
+            
+            Component->OnDestroy();
+            m_Components.Remove(Component);
+            Component.reset();
+            return true;
+        }
         
         void SetParent(const Ref<GameObject>& Object);
         bool HasChildren() const;
