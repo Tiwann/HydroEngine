@@ -4,12 +4,22 @@
 #include "Core/Assertion.h"
 #include "Core/TypeTraits.h"
 
-#include <spdlog/fmt/bundled/core.h>
-
-#include <spdlog/fmt/bundled/format.h>
-
 namespace Hydro
 {
+
+    template<typename CharacterType, typename = EnableIfType<IsCharacterValue<CharacterType>>>
+    static size_t StringLength(const CharacterType* Data)
+    {
+        CharacterType* Ptr = const_cast<CharacterType*>(Data);
+        size_t Count = 0;
+        while (*Ptr != 0)
+        {
+            Count++;
+            ++Ptr;
+        }
+        return Count;
+    }
+    
     template<typename T, typename = EnableIfType<IsCharacterValue<T>>>
     class StringBase : public Iterable<T>
     {
@@ -18,6 +28,8 @@ namespace Hydro
         using SizeType = size_t;
         using StringLiteralType = const CharacterType*;
         using PointerType = CharacterType*;
+        using Iterator = Iterator<T>;
+        using ConstIterator = ConstIterator<T>;
         
         static inline const SizeType CharacterSize = sizeof(CharacterType);
         
@@ -30,7 +42,7 @@ namespace Hydro
         StringBase(StringLiteralType Data)
         {
             HYDRO_ASSERT(Data, "Cannot construct string with nullptr!");
-            m_Count = Length(Data);
+            m_Count = StringLength(Data);
             m_Data = new CharacterType[m_Count + 1]{};
             memcpy(m_Data, Data, m_Count * CharacterSize);
         }
@@ -122,14 +134,18 @@ namespace Hydro
         }
 
 
+        CharacterType* Data() { return m_Data; }
         const CharacterType* Data() const { return m_Data; }
+        
+        CharacterType* operator*() { return m_Data; }
+        const CharacterType* operator*() const { return m_Data; }
         
         SizeType Count() const { return m_Count; }
         
         StringBase& Append(StringLiteralType Data)
         {
             HYDRO_ASSERT(Data, "Cannot apped string with nullptr string literal!");
-            const SizeType DataCount = Length(Data);
+            const SizeType DataCount = StringLength(Data);
             const SizeType NewCount = m_Count + DataCount;
             CharacterType* NewData = new CharacterType[NewCount + 1]{};
             memcpy(NewData, m_Data, m_Count * CharacterSize);
@@ -147,6 +163,19 @@ namespace Hydro
             CharacterType* NewData = new CharacterType[NewCount + 1]{};
             memcpy(NewData, m_Data, m_Count * CharacterSize);
             memcpy(NewData + m_Count, &Character, CharacterSize);
+            delete [] m_Data;
+            m_Data = NewData;
+            m_Count = NewCount;
+            return *this;
+        }
+
+        StringBase& Append(const StringBase& String)
+        {
+            const SizeType DataCount = String.Count();
+            const SizeType NewCount = m_Count + DataCount;
+            CharacterType* NewData = new CharacterType[NewCount + 1]{};
+            memcpy(NewData, m_Data, m_Count * CharacterSize);
+            memcpy(NewData + m_Count, String.Data(), DataCount * CharacterSize);
             delete [] m_Data;
             m_Data = NewData;
             m_Count = NewCount;
@@ -194,37 +223,30 @@ namespace Hydro
             return *this;
         }
 
-        const CharacterType* operator*() const { return m_Data; }
+        
         
 
-        Iterator<T> begin() override { return m_Data; }
-        Iterator<T> end() override { return m_Data + m_Count; }
-        ConstIterator<T> begin() const override { return m_Data; }
-        ConstIterator<T> end() const override { return m_Data + m_Count; }
+        Iterator begin() override { return m_Data; }
+        Iterator end() override { return m_Data + m_Count; }
+        ConstIterator begin() const override { return m_Data; }
+        ConstIterator end() const override { return m_Data + m_Count; }
     
     private:
         CharacterType* m_Data = nullptr;
         size_t m_Count = 0;
-
-        SizeType Length(StringLiteralType Data)
-        {
-            PointerType Ptr = const_cast<CharacterType*>(Data);
-            SizeType Count = 0;
-            while (*Ptr != 0)
-            {
-                Count++;
-                ++Ptr;
-            }
-            return Count;
-        }
     };
     
     using String = StringBase<char>;
     using String16 = StringBase<char16_t>;
     using String32 = StringBase<char32_t>;
     using WideString = StringBase<wchar_t>;
+}
 
-    
+#include <spdlog/fmt/bundled/core.h>
+#include <spdlog/fmt/bundled/format.h>
+
+namespace Hydro
+{
     template <typename... Args>
     String Format(fmt::format_string<Args...> Fmt, Args&&... Arguments)
     {
@@ -235,9 +257,12 @@ namespace Hydro
 template<>
 struct fmt::formatter<Hydro::String> : formatter<string_view>
 {
-    format_context::iterator format(const Hydro::String& Str, format_context& Context) const
+    fmt::format_context::iterator format(const Hydro::String& Str, format_context& Context) const
     {
-        return formatter<string_view>::format(string_view(Str.Data(), Str.Count()), Context);
+        return fmt::formatter<string_view>::format(string_view(Str.Data(), Str.Count()), Context);
     }
 };
+
+
+
 
