@@ -35,7 +35,8 @@ namespace Hydro
             UI::AddComponent(SelectedObject);
             ImGui::PopID();
 
-            UI::Text(fmt::format("GUID: {}", SelectedObject->GetGuid().GetString()));
+            UI::Text(Format("GUID: {}", SelectedObject->GetGuid().GetString()));
+            static bool ShowContextMenu;
             SelectedObject->ForEach([&IO](const auto& Component)
             {
                 ImGui::PushID(Component->GetGuid());
@@ -45,7 +46,42 @@ namespace Hydro
                     ImGui::TreePop();
                 }
                 ImGui::PopID();
+
+                if(UI::ItemClicked(MouseButton::Right))
+                {
+                    ShowContextMenu = true;
+                    ImGui::OpenPopup("ComponentContextMenu");
+                    Selection::SetComponent(Component);
+                }
+                
             });
+
+
+            if (ShowContextMenu && ImGui::BeginPopup("ComponentContextMenu"))
+            {
+                const char* Options[]
+                {
+                    "Delete"
+                };
+
+                ImGui::SeparatorText("Context Menu");
+                for (size_t i = 0; i < std::size(Options); i++)
+                {
+                    if (ImGui::Selectable(Options[i]))
+                    {
+                        Ref<Component> SelectedComponent = Selection::GetComponent();
+                        if(!SelectedObject) break;
+                            
+                        switch (i)
+                        {
+                        case 0: SelectedObject->RemoveComponent(SelectedComponent);
+                        }
+                        ShowContextMenu = false;
+                    }
+                }
+
+                ImGui::EndPopup();
+            }
         });
     }
 }
