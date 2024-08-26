@@ -22,6 +22,16 @@
         </Expand>
     </Type>
 
+    <Type Name="Hydro::Map&lt;*&gt;">
+        <DisplayString>{{Count = {m_Count}}}</DisplayString>
+        <Expand>
+            <ArrayItems Condition="m_Count!=0">
+                <Size>m_Count</Size>
+                <ValuePointer>m_Data</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>
+
     <Type Name="Hydro::StringBase&lt;*,*&gt;">
         <DisplayString>{m_Data}</DisplayString>
         <Expand>
