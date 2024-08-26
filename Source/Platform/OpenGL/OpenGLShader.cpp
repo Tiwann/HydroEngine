@@ -181,7 +181,7 @@ namespace Hydro
     {
         const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
-        glUniform1fv(Location, 1, &Value);
+        glUniform1f(Location, Value);
     }
     
 
@@ -196,7 +196,7 @@ namespace Hydro
     {
         const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
-        glUniform3fv(Location, 1, (const float*)&Value);
+        glUniform3f(Location, Value.x, Value.y, Value.z);
     }
 
     void OpenGLShader::SetUniformFloat4(const std::string& Name, const Vector4& Value)
