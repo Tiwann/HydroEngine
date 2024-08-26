@@ -40,7 +40,7 @@ namespace Hydro
         EditorWindow::OnInspectorGUI(IO);
         if(!m_Opened) return;
 
-        if(ImGui::Begin(m_Name.data(), &m_Opened))
+        if(ImGui::Begin(*m_Name, &m_Opened))
         {
             if(ImGui::Button("Create Object"))
             {
@@ -55,7 +55,6 @@ namespace Hydro
                 if(UI::ItemClicked(MouseButton::Left))
                 {
                     HYDRO_LOG(SceneHierarchyPanel, Verbosity::Warning, "Item Cliked: {}", Object->GetName().c_str());
-                    Selection::Set(Object.get());
                     Selection::SetGameObject(Object);
                 }
 
@@ -111,7 +110,7 @@ namespace Hydro
                 Matrix4 ViewMatrix = Cam->GetViewMatrix();
                 Matrix4 ProjectionMatrix = Cam->GetProjectionMatrix();
                 
-                ImGuizmo::Manipulate(*ViewMatrix, *ProjectionMatrix, ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, *ModelMatrix);
+                ImGuizmo::Manipulate(*ViewMatrix, *ProjectionMatrix, ImGuizmo::UNIVERSAL, ImGuizmo::LOCAL, *ModelMatrix);
                 if(ImGuizmo::IsUsing())
                 {
                     Vector3 Pos, Rot, Sc;

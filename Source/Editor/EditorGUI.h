@@ -5,6 +5,7 @@
 #include "Core/Containers/TreeNode.h"
 #include "Input/MouseButton.h"
 #include "Math/LinearAlgebra.h"
+#include "Core/Containers/StringView.h"
 #include <functional>
 
 namespace Hydro
@@ -104,15 +105,14 @@ namespace Hydro
     };
 
     HYDRO_DECLARE_FLAGS(ColorFieldFlagBits, ColorFieldFlags);
-
-
+    
     namespace UI
     {
         /* Window */
-        void NewWindow(std::string_view Label, bool& Opened, WindowFlags Flags, const std::function<void()>& Content);
+        void NewWindow(StringView Label, bool& Opened, WindowFlags Flags, const std::function<void()>& Content);
         
         /* Text */
-        void Text(std::string_view Str);
+        void Text(const StringView Str);
         
         /* Sliders */
         template<typename T, typename = std::enable_if<std::is_arithmetic_v<T>>>
@@ -292,7 +292,7 @@ namespace Hydro
         
 
         
-        bool Button(std::string_view Label, Vector2 Size = {0, 0}, bool Enabled = true);
+        bool Button(const StringView Label, Vector2 Size = {0, 0}, bool Enabled = true);
         
         void MainMenuMenuBar(const TreeNode<MenuItem>& RootNode);
         

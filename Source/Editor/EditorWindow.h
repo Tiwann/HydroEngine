@@ -1,13 +1,14 @@
 #pragma once
 #include "Platform/PlatformImGui.h"
-#include <string>
+#include "Core/GUID.h"
+#include "Core/Containers/String.h"
 
 namespace Hydro
 {
     class EditorWindow
     {
     public:
-        EditorWindow(std::string Name);
+        EditorWindow(String Name);
         virtual ~EditorWindow() = default;
         virtual void OnInit(){}
         virtual void OnUpdate(float Delta){}
@@ -18,7 +19,7 @@ namespace Hydro
     
 
     protected:
-        std::string m_Name;
+        String m_Name;
         bool m_Opened;
         GUID m_Guid;
     };

@@ -4,7 +4,7 @@
 
 namespace Hydro
 {
-    EditorWindow::EditorWindow(std::string Name): m_Name(std::move(Name)), m_Opened(false)
+    EditorWindow::EditorWindow(String Name): m_Name(std::move(Name)), m_Opened(false)
     {
         
     }

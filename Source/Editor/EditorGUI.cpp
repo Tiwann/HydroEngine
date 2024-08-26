@@ -1,6 +1,5 @@
 #include "HydroPCH.h"
 #include "EditorGUI.h"
-
 #include "StyleVar.h"
 #include "Core/Sprite.h"
 #include "Components/Camera.h"
@@ -14,10 +13,10 @@
 
 namespace Hydro::UI
 {
-    void NewWindow(std::string_view Label, bool& Opened, WindowFlags Flags, const std::function<void()>& Content)
+    void NewWindow(const StringView Label, bool& Opened, WindowFlags Flags, const std::function<void()>& Content)
     {
         if(!Opened) return;
-        if(ImGui::Begin(Label.data(), &Opened, Flags.As<ImGuiWindowFlags>()))
+        if(ImGui::Begin(Label, &Opened, Flags.As<ImGuiWindowFlags>()))
         {
             if(Content) Content();
         }
@@ -25,15 +24,15 @@ namespace Hydro::UI
     }
     
 
-    void Text(const std::string_view Str)
+    void Text(const StringView Str)
     {
-        ImGui::Text(Str.data());
+        ImGui::Text(Str);
     }
     
-    bool Button(std::string_view Label, Vector2 Size, bool Enabled)
+    bool Button(const StringView Label, Vector2 Size, bool Enabled)
     {
         ImGui::BeginDisabled(!Enabled);
-        const bool Result = ImGui::Button(Label.data(), { Size.x, Size.y });
+        const bool Result = ImGui::Button(Label, { Size.x, Size.y });
         ImGui::EndDisabled();
         return Result;
     }
