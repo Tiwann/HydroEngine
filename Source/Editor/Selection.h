@@ -4,6 +4,7 @@
 namespace Hydro
 {
     class GameObject;
+    class Component;
 }
 
 namespace Hydro
@@ -17,11 +18,6 @@ namespace Hydro
             return instance;
         }
 
-        static void Set(void* Object)
-        {
-            GetInstance().SetData(Object);
-        }
-
         static void SetGameObject(const Ref<GameObject>& Object)
         {
             GetInstance().m_GameObject = Object;
@@ -32,24 +28,21 @@ namespace Hydro
             if(!GetInstance().m_GameObject) return nullptr;
             return GetInstance().m_GameObject;
         }
-        
 
-        void SetData(void* Object)
+        static void SetComponent(const Ref<Component>& Component)
         {
-            m_Object = Object;
+            GetInstance().m_Component = Component;
         }
         
-
-        template<typename T>
-        static T* Get()
+        static Ref<Component> GetComponent()
         {
-            void* Obj = GetInstance().m_Object;
-            if(!Obj) return nullptr;
-            return (T*)Obj;
+            if(!GetInstance().m_Component) return nullptr;
+            return GetInstance().m_Component;
         }
+
         
     private:
-        void* m_Object;
         Ref<GameObject> m_GameObject;
+        Ref<Component> m_Component;
     };
 }
