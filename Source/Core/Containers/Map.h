@@ -73,11 +73,23 @@ namespace Hydro
             return FindKey(Key) != -1;
         }
 
-        Iterator begin() override { return m_Data.begin(); }
-        Iterator end() override { return m_Data.begin(); }
-        ConstIterator begin() const override { return m_Data.end(); }
-        ConstIterator end() const override { return m_Data.end(); }
+        SizeType Count() const { return m_Data.Count(); }
 
+        PairType& GetAt(SizeType Index)
+        {
+            return m_Data.GetAt(Index);
+        }
+
+        const PairType& GetAt(SizeType Index) const
+        {
+            return m_Data.GetAt(Index);    
+        }
+        
+        Iterator begin() override { return m_Data.begin(); }
+        Iterator end() override { return m_Data.end(); }
+        ConstIterator begin() const override { return m_Data.begin(); }
+        ConstIterator end() const override { return m_Data.end(); }
+    
     private:
         Array<PairType> m_Data;
     };
