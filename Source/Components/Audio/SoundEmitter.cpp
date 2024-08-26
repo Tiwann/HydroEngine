@@ -95,16 +95,16 @@ namespace Hydro
         if (ImGui::TreeNode("Sound"))
         {
             const std::string GUID = m_Sound ? m_Sound->GetGuid().GetString() : "None";
-            UI::Text(fmt::format("GUID: {}", GUID));
+            UI::Text(Format("GUID: {}", GUID));
             if(m_Sound)
             {
-                UI::Text(fmt::format("Channels: {}", m_Sound->GetChannels()));
-                UI::Text(fmt::format("Sound Type: {}", SoundTypeToString(m_Sound->GetType())));
-                UI::Text(fmt::format("Sound Format: {}", SoundFormatToString(m_Sound->GetFormat())));
+                UI::Text(Format("Channels: {}", m_Sound->GetChannels()));
+                UI::Text(Format("Sound Type: {}", SoundTypeToString(m_Sound->GetType())));
+                UI::Text(Format("Sound Format: {}", SoundFormatToString(m_Sound->GetFormat())));
                 const float Seconds = m_Sound->GetDuration();
                 const int Minutes = Math::IntegerPart(Seconds / 60.0f);
                 const int RemainSeconds = ((int)Seconds) % 60;
-                UI::Text(fmt::format("Duration: {:02}:{:02}", Minutes, RemainSeconds));
+                UI::Text(Format("Duration: {:02}:{:02}", Minutes, RemainSeconds));
             }
             
             ImGui::Separator();
