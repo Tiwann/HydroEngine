@@ -142,37 +142,40 @@ namespace Hydro
         glLineWidth(Thickness);
     
         DrawIndexed(DrawMode::Lines, vao, vbo, ibo, shader);
+        ibo.reset();
+        vbo.reset();
+        vao.reset();
     }
 
-    void OpenGLRendererBackend::DrawWireQuad(const Vector3& Position, const Vector2& HalfExtents, float Thickness, const Color& Color)
+    void OpenGLRendererBackend::DrawWireQuad(const Matrix4& Transform, const Vector3& Position, const Vector2& HalfExtents, float Thickness, const Color& Color)
     {
         auto vao = VertexArray::Create();
         vao->Bind();
-        Vertex Points[] = {
+        StaticArray<Vertex, 4> Points
+        {
             { Position + Vector3(-HalfExtents.x, HalfExtents.y, 0.0f) , Vector2::Zero, Vector3::Zero, Color },    
             { Position + Vector3(+HalfExtents.x, HalfExtents.y, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
             { Position + Vector3(+HalfExtents.x, -HalfExtents.y, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
             { Position + Vector3(-HalfExtents.x, -HalfExtents.y, 0.0f) , Vector2::Zero, Vector3::Zero, Color },
         };
-        auto vbo = VertexBuffer::Create(Points, std::size(Points));
+        auto vbo = VertexBuffer::Create(Points, Points.Count());
         auto ibo = IndexBuffer::Create({0, 1, 2, 3});
 
         vao->SetBufferLayout(VertexBufferLayout::Default);
         
         auto shader = m_Application.GetShaderManager().Retrieve("UniformColor");
         shader->Bind();
-        
-
-        Matrix4 Model = Matrix4::Identity;
-        Model.Scale({1.0f, 1.0f, 1.0f});
-        shader->SetUniformMat4("uModel", Model);
+        shader->SetUniformMat4("uModel", Transform);
         
         glLineWidth(Thickness);
     
         DrawIndexed(DrawMode::LineLoop, vao, vbo, ibo, shader);
+        ibo.reset();
+        vbo.reset();
+        vao.reset();
     }
 
-    void OpenGLRendererBackend::DrawCircle(const Vector3& Position, float Radius, const Color& Color)
+    void OpenGLRendererBackend::DrawCircle(const Matrix4& Transform, const Vector3& Position, float Radius, const Color& Color)
     {
         auto vao = VertexArray::Create();
         vao->Bind();
@@ -190,11 +193,14 @@ namespace Hydro
         auto shader = m_Application.GetShaderManager().Retrieve("Circle");
         shader->Bind();
         
-        shader->SetUniformMat4("uModel", Matrix4::Identity);
+        shader->SetUniformMat4("uModel", Transform);
         shader->SetUniformFloat("uThickness", 0.2f);
         shader->SetUniformFloat("uSmoothness", 0.05f);
 
         DrawIndexed(DrawMode::Triangles, vao, vbo, ibo, shader);
+        ibo.reset();
+        vbo.reset();
+        vao.reset();
     }
 
     void OpenGLRendererBackend::SetCullMode(CullMode Mode)

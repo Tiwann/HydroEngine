@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "CullMode.h"
 #include "Core/SharedPointer.h"
+#include "Math/Matrix4.h"
 
 
 namespace Hydro
@@ -46,8 +47,8 @@ namespace Hydro
         virtual void Draw(DrawMode Mode, const Vao& VAO, uint32_t NumVert, const Ref<Shader>& Shader) = 0;
         virtual void DrawIndexed(DrawMode Mode, const Vao& VAO, const Vbo& VBO, const Ibo& IBO, const Ref<Shader>& Shader) = 0;
         virtual void DrawLine(const Vector3& PosA, const Vector3& PosB, float Thickness, const Color& Color) = 0;
-        virtual void DrawWireQuad(const Vector3& Position, const Vector2& HalfExtents, float Thickness, const Color& Color) = 0;
-        virtual void DrawCircle(const Vector3& Position, float Radius, const Color& Color) = 0;
+        virtual void DrawWireQuad(const Matrix4& Transform, const Vector3& Position, const Vector2& HalfExtents, float Thickness, const Color& Color) = 0;
+        virtual void DrawCircle(const Matrix4& Transform, const Vector3& Position, float Radius, const Color& Color) = 0;
         virtual void SetCullMode(CullMode Mode);
 
         bool IsReady() const;

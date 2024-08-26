@@ -27,8 +27,8 @@ namespace Hydro
         void Draw(DrawMode Mode, const Vao& VAO, uint32_t NumVert, const Ref<Shader>& Shader) override;
         void DrawIndexed(DrawMode Mode, const Ref<VertexArray>& VAO, const Ref<VertexBuffer>& VBO, const Ref<IndexBuffer>& IBO, const Ref<Shader>& Shader) override;
         void DrawLine(const Vector3& PointA, const Vector3& PointB, float Thickness, const Color& Color) override;
-        void DrawWireQuad(const Vector3& Position, const Vector2& HalfExtents, float Thickness, const Color& Color) override;
-        void DrawCircle(const Vector3& Position, float Radius, const Color& Color) override;
+        void DrawWireQuad(const Matrix4& Transform, const Vector3& Position, const Vector2& HalfExtents, float Thickness, const Color& Color) override;
+        void DrawCircle(const Matrix4& Transform, const Vector3& Position, float Radius, const Color& Color) override;
         void SetCullMode(CullMode Mode) override;
 
         GLenum GetOpenGLDrawMode(DrawMode Mode);
