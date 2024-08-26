@@ -8,11 +8,11 @@
 #include <imgui_impl_dx12.h>
 #endif
 
-#include "Core/GUID.h"
+
 
 namespace Hydro
 {
-    class Vector3;
+    class Vector3; class GUID;
 }
 
 namespace ImGui
