@@ -1,18 +1,9 @@
 #include "Scene.h"
-
 #include "Application.h"
 #include "Entity.h"
 #include "Core/Physics/Physics2D.h"
-#include "Time.h"
-#include "box2d/box2d.h"
-#include "Components/Transform.h"
-
-
-#include <Jolt/RegisterTypes.h>
-#include <Jolt/Core/Memory.h>
-#include <Jolt/Physics/PhysicsSystem.h>
-
 #include "Core/Physics/Physics3D.h"
+
 
 namespace Hydro
 {
