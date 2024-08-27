@@ -1,6 +1,6 @@
 ﻿#include "Core/Physics/PhysicsBody3D.h"
 #include "PhysicsWorld3D.h"
-#include "PhysicsShape.h"
+#include "PhysicsShape3D.h"
 #include "Math/Functions.h"
 
 #include <Jolt/Jolt.h>

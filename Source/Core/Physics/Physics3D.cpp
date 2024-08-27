@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "Core/Physics/Physics3D.h"
+﻿#include "Core/Physics/Physics3D.h"
 
 namespace Hydro
 {

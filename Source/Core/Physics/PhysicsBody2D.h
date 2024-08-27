@@ -1,6 +1,9 @@
 ﻿#pragma once
-#include "PhysicsShape.h"
+#include "PhysicsShape2D.h"
 #include "PhysicsBody.h"
+
+class b2Body;
+class b2Fixture;
 
 namespace Hydro
 {
