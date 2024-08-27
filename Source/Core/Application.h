@@ -42,8 +42,12 @@ namespace Hydro
     public:
         using Super = Application;
         
-        Application();
+        Application(Array<const char*> Arguments);
         virtual ~Application() = default;
+        Application(const Application&) = delete;
+        Application(Application&&) = delete;
+        Application& operator=(const Application&) = delete;
+        Application& operator=(Application&&) = delete;
         
         void Run();
 
@@ -69,8 +73,6 @@ namespace Hydro
         const Ref<Scene>& GetScene();
         const Ref<AudioEngine>& GetAudioEngine() const;
         
-        static Application& GetCurrentApplication();
-
         ShaderManager& GetShaderManager();
         TextureManager& GetTextureManager();
         
@@ -116,7 +118,7 @@ namespace Hydro
         Ref<ViewportPanel> GetViewportPanel() const;
 
     private:
-        static Application* s_Instance;
+        Array<const char*> m_Arguments;
         Color m_ClearColor{Color::Black};
         ApplicationConfiguration m_Configuration;
         bool m_IsRunning = true;
@@ -126,4 +128,6 @@ namespace Hydro
         
         bool PreInitialize();
     };
+
+    inline Application* g_Application;
 }

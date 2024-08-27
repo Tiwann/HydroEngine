@@ -31,7 +31,7 @@ namespace Hydro
         m_VertexBuffer = VertexBuffer::Create();
         m_IndexBuffer = IndexBuffer::Create({ 0, 2, 1, 0, 3, 2 });
         
-        ShaderManager& Manager = Application::GetCurrentApplication().GetShaderManager();
+        ShaderManager& Manager = g_Application->GetShaderManager();
         m_Shader = Manager.Retrieve("Sprite");
     }
 

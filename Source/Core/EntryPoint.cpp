@@ -1,17 +1,15 @@
 ﻿#include "EntryPoint.h"
 #include "Application.h"
-#include "Log.h"
-#include "LogVerbosity.h"
 
 namespace Hydro
 {
-    int Main(int Argc, char** Argv)
+    int Main(const int Argc, const char** Argv)
     {
         while (g_ApplicationRunning)
         {
-            Application* application = CreateApplication();
-            application->Run();
-            delete application;
+            g_Application = CreateApplication(Array<const char*>(Argv, Argc));
+            g_Application->Run();
+            delete g_Application;
         }
         return 0;
     }
@@ -24,7 +22,7 @@ INT APIENTRY WinMain(HINSTANCE, HINSTANCE, PSTR, INT)
     return Hydro::Main(__argc, __argv);
 }
 #else
-int main(int argc, char** argv)
+int main(const int argc, const char** argv)
 {
     return Hydro::Main(argc, argv);
 }

@@ -15,7 +15,7 @@ namespace Hydro
 
     bool Input::GetKey(KeyCode KeyCode)
     {
-        const Ref<Window>& Window = Application::GetCurrentApplication().GetWindow();
+        const Ref<Window>& Window = g_Application->GetWindow();
         const int State = glfwGetKey(Window->GetNativeWindow(), (int)KeyCode);
         return State == GLFW_PRESS;
     }
@@ -160,7 +160,7 @@ namespace Hydro
 
     bool Input::GetMouseButton(MouseButton MouseButton)
     {
-        const Ref<Window>& Window = Application::GetCurrentApplication().GetWindow();
+        const Ref<Window>& Window = g_Application->GetWindow();
         const int State = glfwGetMouseButton(Window->GetNativeWindow(), (int)MouseButton);
         return State == GLFW_PRESS;
     }
@@ -172,7 +172,7 @@ namespace Hydro
 
     Vector2 Input::GetMousePosition()
     {
-        GLFWwindow* NativeWindow = Application::GetCurrentApplication().GetWindow()->GetNativeWindow();
+        GLFWwindow* NativeWindow = g_Application->GetWindow()->GetNativeWindow();
         double X, Y;
         glfwGetCursorPos(NativeWindow, &X, &Y);
         return {(float)X, (float)Y};

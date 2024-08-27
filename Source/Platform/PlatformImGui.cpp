@@ -81,7 +81,7 @@ namespace Hydro::UI
             if(Result != VK_SUCCESS)
             {
                 HYDRO_IMGUI_ERROR("Something went wrong.");
-                Application::GetCurrentApplication().RequireExit();
+                g_Application->RequireExit();
             }
         };
         

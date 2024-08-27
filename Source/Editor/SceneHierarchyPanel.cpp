@@ -94,7 +94,7 @@ namespace Hydro
 
             if(Ref<GameObject> Object = Selection::GetGameObject())
             {
-                const Application& App = Application::GetCurrentApplication();
+                const Application& App = *g_Application;
                 const Vector2 ViewportSize = App.GetViewportPanel()->GetSize();
                 const Vector2 ViewportPos = App.GetViewportPanel()->GetPosition();
                 const Ref<Camera> Cam = App.GetRendererBackend()->GetCurrentCamera();

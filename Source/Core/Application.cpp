@@ -36,11 +36,8 @@ namespace Hydro
 {
     extern bool g_ApplicationRunning;
 
-    Application* Application::s_Instance = nullptr;
-
-    Application::Application()
+    Application::Application(Array<const char*> Arguments) : m_Arguments(std::move(Arguments))
     {
-        s_Instance = this;
     }
 
     void Application::OnInit()
@@ -115,6 +112,8 @@ namespace Hydro
         ApplicationDelegates::OnInitEvent.Broadcast();
         OnLoadResources(m_ShaderManager, m_TextureManager, m_SoundManager);
     }
+
+    
 
     void Application::Run()
     {
@@ -308,11 +307,6 @@ namespace Hydro
         g_ApplicationRunning = true;
     }
     
-    Application& Application::GetCurrentApplication()
-    {
-        return *s_Instance;
-    }
-
     ShaderManager& Application::GetShaderManager()
     {
         return *m_ShaderManager;
@@ -429,7 +423,7 @@ namespace Hydro
         // Set window callbacks
         glfwSetWindowCloseCallback(m_Window->GetNativeWindow(), [](GLFWwindow*)
         {
-            GetCurrentApplication().RequireExit();
+            g_Application->RequireExit();
         });
 
         glfwSetWindowFocusCallback(m_Window->GetNativeWindow(), [](GLFWwindow* window, int focus){

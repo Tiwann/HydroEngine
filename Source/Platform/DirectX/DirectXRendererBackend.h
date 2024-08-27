@@ -10,7 +10,7 @@ HYDRO_DECLARE_LOG_CATEGORY_STATIC(DirectX, "D3D12");
     if(FAILED(HRESULT)) \
     { \
         HYDRO_LOG(DirectX, Error, Message);\
-        Application::GetCurrentApplication().RequireExit(); \
+        g_Application->RequireExit(); \
         m_IsReady = false; \
         return; \
     }

@@ -25,7 +25,7 @@ namespace Hydro
     void SoundEmitter::OnInit()
     {
         Component::OnInit();
-        const Ref<AudioEngine> Engine = Application::GetCurrentApplication().GetAudioEngine();
+        const Ref<AudioEngine> Engine = g_Application->GetAudioEngine();
         m_System = Engine->GetSystem();
         OnPlayingEvent.BindMember(this, &SoundEmitter::OnPlaying);
     }

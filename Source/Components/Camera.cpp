@@ -14,7 +14,7 @@ namespace Hydro
 
     void Camera::OnUpdate(float Delta)
     {
-        const Application& App = Application::GetCurrentApplication();
+        const Application& App = *g_Application;
         const Ref<Window>& Window = App.GetWindow();
         
         Settings.Width = Window->GetWidth();

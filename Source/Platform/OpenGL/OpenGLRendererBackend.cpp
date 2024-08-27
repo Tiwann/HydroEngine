@@ -22,7 +22,7 @@ namespace Hydro
 {
     bool OpenGLRendererBackend::Initialize()
     {
-        Application& application = Application::GetCurrentApplication();
+        Application& application = *g_Application;
         HYDRO_LOG(OpenGL, Verbosity::Trace, "Creating OpenGL context");
         glfwMakeContextCurrent(application.GetWindow()->GetNativeWindow());
         glfwSwapInterval(1);
@@ -74,7 +74,7 @@ namespace Hydro
 
     void OpenGLRendererBackend::SwapBuffers()
     {
-        glfwSwapBuffers(Application::GetCurrentApplication().GetWindow()->GetNativeWindow());
+        glfwSwapBuffers(g_Application->GetWindow()->GetNativeWindow());
     }
 
     void OpenGLRendererBackend::SetViewportRect(Vector2 Position, Vector2 Size)

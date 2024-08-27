@@ -22,7 +22,7 @@ namespace Hydro
         //m_PhysicsWorld3D.OnInit();
         
         
-        m_RendererBackend = Application::GetCurrentApplication().GetRendererBackend();
+        m_RendererBackend = g_Application->GetRendererBackend();
         
         for(const Ref<GameObject>& Object : m_GameObjects)
         {

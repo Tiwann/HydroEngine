@@ -36,7 +36,7 @@ namespace Hydro
     bool Sound::LoadData(const Path& Filepath, SoundFlags Flags)
     {
         m_Flags = Flags;
-        const Ref<AudioEngine> Engine = Application::GetCurrentApplication().GetAudioEngine();
+        const Ref<AudioEngine> Engine = g_Application->GetAudioEngine();
         FMOD::Sound* LoadedSound = Engine->CreateSound(Filepath, Flags);
         if(!LoadedSound) return false;
         m_Handle = LoadedSound;

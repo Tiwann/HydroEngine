@@ -44,7 +44,7 @@ namespace Hydro
     PopupMessageResult WindowsPopupMessage::Show()
     {
         if(OnPopupMessageOpened.IsBound()) OnPopupMessageOpened.Broadcast();
-        GLFWwindow* NativeWindow = Application::GetCurrentApplication().GetWindow()->GetNativeWindow();
+        GLFWwindow* NativeWindow = g_Application->GetWindow()->GetNativeWindow();
         const HWND WindowHandle = glfwGetWin32Window(NativeWindow);
 
         const int32_t Flags = s_ResponseConvertor[Response] | s_IconConvertor[Icon];

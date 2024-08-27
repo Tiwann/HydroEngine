@@ -71,7 +71,7 @@ namespace Hydro
 
     Path File::OpenFileDialog(const std::string& Title, const Path& DefaultPath, const char* Filters)
     {
-        const Ref<Window>& Window = Application::GetCurrentApplication().GetWindow();
+        const Ref<Window>& Window = g_Application->GetWindow();
 #if defined HYDRO_PLATFORM_WINDOWS
         OPENFILENAMEA OpenFileName = { };
         ZeroMemory(&OpenFileName, sizeof(OPENFILENAME));
@@ -94,7 +94,7 @@ namespace Hydro
 
     Path File::SaveFileDialog(const std::string& Title, const Path& DefaultPath, const char* Filters)
     {
-        const Ref<Window>& Window = Application::GetCurrentApplication().GetWindow();
+        const Ref<Window>& Window = g_Application->GetWindow();
 #if defined HYDRO_PLATFORM_WINDOWS
         OPENFILENAMEA OpenFileName = { };
         ZeroMemory(&OpenFileName, sizeof(OPENFILENAME));
