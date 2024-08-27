@@ -15,7 +15,7 @@ namespace Hydro
         using ConstIterator = ConstIterator<PairType>;
         
         Map() = default;
-        Map(const Array<PairType>& Array) : m_Data(Array){}
+        Map(const std::initializer_list<PairType>& Array) : m_Data(Array){}
         Map(const Map&) = default;
         Map(Map&&) noexcept = default;
         Map& operator=(const Map&) = default;
