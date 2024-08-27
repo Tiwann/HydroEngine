@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "OpenGLShader.h"
+﻿#include "OpenGLShader.h"
 
 #include "Core/Assertion.h"
 #include "Core/Log.h"

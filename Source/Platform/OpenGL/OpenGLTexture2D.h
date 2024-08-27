@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "Core/Texture2D.h"
 
+typedef int32_t GLint;
+
 namespace Hydro
 {
     class OpenGLTexture2D : public Texture2D

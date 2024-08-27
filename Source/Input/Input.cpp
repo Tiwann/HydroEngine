@@ -1,4 +1,3 @@
-#include "HydroPCH.h"
 #include "Input.h"
 
 #include "Core/Application.h"
@@ -26,7 +25,7 @@ namespace Hydro
         return s_KeyStates[KeyCode] == InputState::Released;
     }
 
-    std::string Input::GetKeyName(KeyCode KeyCode)
+    String Input::GetKeyName(KeyCode KeyCode)
     {
         switch (KeyCode) {
         case KeyCode::UNKNOWN: return "Unknown Key";
@@ -183,7 +182,7 @@ namespace Hydro
     {
         for(auto& Pair : s_KeyStates)
         {
-            Pair.second = InputState::None;
+            Pair.Value = InputState::None;
         }
     }
 }

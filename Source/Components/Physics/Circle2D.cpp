@@ -1,13 +1,11 @@
-﻿#include "HydroPCH.h"
-#include "Circle2D.h"
-
+﻿#include "Circle2D.h"
 #include "Components/Transform.h"
 #include "Core/Color.h"
-#include "Core/Memory.h"
 #include "Core/RendererBackend.h"
 #include "Core/Physics/PhysicsShape.h"
 #include "Editor/EditorGUI.h"
 #include "Core/Physics/PhysicsBody2D.h"
+#include "Core/Physics/CircleShape2D.h"
 
 
 namespace Hydro

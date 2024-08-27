@@ -1,10 +1,7 @@
-﻿#include "HydroPCH.h"
-#include "Filesystem.h"
-
+﻿#include "Filesystem.h"
 #include "Application.h"
 #include "Log.h"
 #include "LogVerbosity.h"
-#include "Memory.h"
 #include "Window.h"
 
 #include <GLFW/glfw3native.h>
@@ -12,6 +9,8 @@
 #if defined(HYDRO_PLATFORM_WINDOWS)
 #include <commdlg.h>
 #endif
+
+#include <fstream>
 
 namespace Hydro
 {

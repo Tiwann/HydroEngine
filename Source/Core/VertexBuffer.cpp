@@ -1,4 +1,3 @@
-#include "HydroPCH.h"
 #include "VertexBuffer.h"
 
 #include "Macros.h"

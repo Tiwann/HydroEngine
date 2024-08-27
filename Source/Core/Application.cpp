@@ -1,6 +1,4 @@
-﻿#include "HydroPCH.h"
-
-#include "Application.h"
+﻿#include "Application.h"
 #include "Window.h"
 #include "Image.h"
 #include "Log.h"
@@ -11,10 +9,6 @@
 #include "Cursors.h"
 #include "Scene.h"
 #include "FrameBuffer.h"
-
-#include <GLFW/glfw3.h>
-
-
 #include "CameraSettings.h"
 #include "CullMode.h"
 #include "MemoryData.h"
@@ -23,23 +17,20 @@
 #include "ResourceManager/TextureManager.h"
 #include "Audio/AudioEngine.h"
 #include "Input/Input.h"
-
 #include "Platform/PlatformImGui.h"
 #include "Components/Camera.h"
-#include "Components/Physics/PhysicsComponent.h"
 #include "Components/Rendering/SpriteRenderer.h"
-
-
 #include "Editor/DetailsPanel.h"
 #include "Editor/SceneHierarchyPanel.h"
 #include "Editor/ViewportPanel.h"
 #include "Editor/PhysicsSettingsPanel.h"
-
 #include "Editor/EditorGUI.h"
 #include "Editor/Selection.h"
 #include "Serialization/ApplicationConfigurationSerializer.h"
 #include "Serialization/SceneSerializer.h"
 
+#include <GLFW/glfw3.h>
+#include <glad/gl.h>
 
 namespace Hydro
 {
@@ -484,7 +475,6 @@ namespace Hydro
 
         glfwSetFramebufferSizeCallback(m_Window->GetNativeWindow(), [](GLFWwindow* window, int width, int height)
         {
-            Application* application = (Application*)glfwGetWindowUserPointer(window);
             #if defined(HYDRO_PLATFORM_OPENGL)
             glViewport(0, 0, width, height);
             #endif

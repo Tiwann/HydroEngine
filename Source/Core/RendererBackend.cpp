@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "RendererBackend.h"
+﻿#include "RendererBackend.h"
 
 #include "Application.h"
 #include "..\Platform\PlatformRendererBackend.h"

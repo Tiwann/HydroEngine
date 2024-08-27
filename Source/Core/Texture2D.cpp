@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "Texture2D.h"
+﻿#include "Texture2D.h"
 
 #include "Assertion.h"
 #include "Platform/PlatformTexture2D.h"

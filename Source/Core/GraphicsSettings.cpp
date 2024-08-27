@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "GraphicsSettings.h"
+﻿#include "GraphicsSettings.h"
 
 namespace Hydro
 {

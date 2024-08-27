@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "LogCategoryFormatter.h"
+﻿#include "LogCategoryFormatter.h"
 #include "Log.h"
 
 namespace Hydro

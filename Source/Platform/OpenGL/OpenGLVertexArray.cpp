@@ -1,4 +1,3 @@
-#include "HydroPCH.h"
 #include "OpenGLVertexArray.h"
 #include "Core/Vertex.h"
 #include <glad/gl.h>

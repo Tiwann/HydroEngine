@@ -1,6 +1,8 @@
 #pragma once
 #include "Core/FrameBuffer.h"
 
+typedef uint32_t GLenum;
+
 namespace Hydro
 {
     class OpenGLFrameBuffer : public FrameBuffer

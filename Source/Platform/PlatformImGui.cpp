@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "PlatformImGui.h"
+﻿#include "PlatformImGui.h"
 #include "Core/Application.h"
 #include "Core/Window.h"
 #include "Core/LogCategory.h"

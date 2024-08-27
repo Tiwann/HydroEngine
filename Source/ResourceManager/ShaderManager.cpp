@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "ShaderManager.h"
+﻿#include "ShaderManager.h"
 #include "Core/LogVerbosity.h"
 #include "Core/Log.h"
 

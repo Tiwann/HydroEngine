@@ -1,7 +1,7 @@
-#include "HydroPCH.h"
 #include "Functions.h"
 #include "Vector2.h"
 #include "Vector3.h"
+#include <cmath>
 
 namespace Hydro
 {

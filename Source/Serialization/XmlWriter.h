@@ -25,10 +25,40 @@ namespace Hydro
         void BeginDocument(int32_t VersionMaj, int32_t VersionMin);
 
         template<typename ValueType>
-        void BeginElement(const String& Name, const Map<String, ValueType>& Attributes);
+        void BeginElement(const String& Name, const Map<String, ValueType>& Attributes)
+        {
+            HYDRO_ASSERT(m_DocumentBegun, "Bad Xml: Did you call BeginDocument() ?");
+            Array<String> FormattedAttributes;
+            for(const Pair<String, ValueType>& Attribute : Attributes)
+                FormattedAttributes.Add(Format("{}=\"{}\"", Attribute.Key, Attribute.Value));
+            
+            String Content;
+            Content.Append(Name);
+            for(const String& Attribute : FormattedAttributes)
+                Content.Append(Format(" {}", Attribute));
+
+            const String Tag = Format("{}<{}>\n", GetIndentation(), Content);
+            m_Stream->WriteString(Tag);
+            m_NumIndentation++;
+            m_Elements.Add(Name);
+        }
 
         template<typename ValueType>
-        void ElementInline(const String& Name, const Map<String, ValueType>& Attributes);
+        void ElementInline(const String& Name, const Map<String, ValueType>& Attributes)
+        {
+            HYDRO_ASSERT(m_DocumentBegun, "Bad Xml: Did you call BeginDocument() ?");
+            Array<String> FormattedAttributes;
+            for(const Pair<String, ValueType>& Attribute : Attributes)
+                FormattedAttributes.Add(Format("{}=\"{}\"", Attribute.Key, Attribute.Value));
+            
+            String Content;
+            Content.Append(Name);
+            for(const String& Attribute : FormattedAttributes)
+                Content.Append(Format(" {}", Attribute));
+
+            const String Tag = Format("{}<{}/>\n", GetIndentation(), Content);
+            m_Stream->WriteString(Tag);
+        }
         
         void EndElement();
 

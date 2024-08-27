@@ -1,4 +1,3 @@
-#include "HydroPCH.h"
 #include "OpenGLRendererBackend.h"
 #include "Core/Application.h"
 #include "Core/Window.h"
@@ -6,20 +5,18 @@
 #include "Core/Color.h"
 #include "Core/LogVerbosity.h"
 #include "Core/Vertex.h"
-#include <GLFW/glfw3.h>
 
 #include "Components/Camera.h"
 #include "Core/Shader.h"
-#include "Components/Transform.h"
 #include "Core/IndexBuffer.h"
 #include "ResourceManager/ShaderManager.h"
 #include "Core/VertexArray.h"
 #include "Core/VertexBuffer.h"
 #include "Core/VertexBufferLayout.h"
-
 #include "Math/LinearAlgebra.h"
 
 #include <glad/gl.h>
+#include <GLFW/glfw3.h>
 
 namespace Hydro
 {

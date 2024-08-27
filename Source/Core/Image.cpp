@@ -1,4 +1,3 @@
-#include "HydroPCH.h"
 #include "Image.h"
 
 #include <stb/stb_image.h>

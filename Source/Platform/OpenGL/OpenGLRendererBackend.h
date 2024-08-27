@@ -6,6 +6,8 @@
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(OpenGL, "OPENGL");
 
+typedef uint32_t GLenum;
+
 namespace Hydro
 {
     class Shader;

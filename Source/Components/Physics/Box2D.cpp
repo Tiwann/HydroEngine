@@ -1,11 +1,10 @@
-#include "HydroPCH.h"
 #include "Box2D.h"
 #include "Core/Scene.h"
 #include "Components/Transform.h"
 #include "Core/RendererBackend.h"
 #include "Core/Color.h"
 #include "Core/Physics/PhysicsBody2D.h"
-#include "Core/Physics/PhysicsShape.h"
+#include "Core/Physics/BoxShape2D.h"
 #include "Editor/EditorGUI.h"
 
 static constexpr char ComponentName[7] = "Box 2D";

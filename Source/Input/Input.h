@@ -2,7 +2,8 @@
 #include "KeyCode.h"
 #include "InputState.h"
 #include "MouseButton.h"
-#include <map>
+#include "Core/Containers/String.h"
+#include "Core/Containers/Map.h"
 
 
 namespace Hydro
@@ -16,7 +17,7 @@ namespace Hydro
         static bool GetKeyDown(KeyCode KeyCode);
         static bool GetKey(KeyCode KeyCode);
         static bool GetKeyUp(KeyCode KeyCode);
-        static std::string GetKeyName(KeyCode KeyCode);
+        static String GetKeyName(KeyCode KeyCode);
 
         static bool GetMouseButtonDown(MouseButton MouseButton);
         static bool GetMouseButton(MouseButton MouseButton);
@@ -24,8 +25,8 @@ namespace Hydro
 
         static Vector2 GetMousePosition();
     private:
-        inline static std::map<KeyCode, InputState> s_KeyStates;
-        inline static std::map<MouseButton, InputState> s_MouseButtonStates;
+        inline static Map<KeyCode, InputState> s_KeyStates;
+        inline static Map<MouseButton, InputState> s_MouseButtonStates;
         
         static void ResetInputStates();
     };

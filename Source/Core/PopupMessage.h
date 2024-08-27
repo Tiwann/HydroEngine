@@ -2,6 +2,7 @@
 #include "Macros.h"
 #include "MulticastDelegate.h"
 #include "SharedPointer.h"
+#include <string>
 
 #define HYDRO_POPUPMESSAGE_SIGNATURE const std::string& Title, const std::string& Message, PopupMessageResponse Response, PopupMessageIcon Icon
 

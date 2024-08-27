@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "Camera.h"
+﻿#include "Camera.h"
 #include "Math/LinearAlgebra.h"
 #include "Transform.h"
 #include "Core/Application.h"

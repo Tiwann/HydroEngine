@@ -9,43 +9,7 @@ namespace Hydro
         m_Stream->WriteString(BeginDocument);
         m_DocumentBegun = true;
     }
-
-    template <typename ValueType>
-    void XmlWriter::BeginElement(const String& Name, const Map<String, ValueType>& Attributes)
-    {
-        HYDRO_ASSERT(m_DocumentBegun, "Bad Xml: Did you call BeginDocument() ?");
-        Array<String> FormattedAttributes;
-        for(const Pair<String, ValueType>& Attribute : Attributes)
-            FormattedAttributes.Add(Format("{}=\"{}\"", Attribute.Key, Attribute.Value));
-            
-        String Content;
-        Content.Append(Name);
-        for(const String& Attribute : FormattedAttributes)
-            Content.Append(Format(" {}", Attribute));
-
-        const String Tag = Format("{}<{}>\n", GetIndentation(), Content);
-        m_Stream->WriteString(Tag);
-        m_NumIndentation++;
-        m_Elements.Add(Name);
-    }
-
-    template <typename ValueType>
-    void XmlWriter::ElementInline(const String& Name, const Map<String, ValueType>& Attributes)
-    {
-        HYDRO_ASSERT(m_DocumentBegun, "Bad Xml: Did you call BeginDocument() ?");
-        Array<String> FormattedAttributes;
-        for(const Pair<String, ValueType>& Attribute : Attributes)
-            FormattedAttributes.Add(Format("{}=\"{}\"", Attribute.Key, Attribute.Value));
-            
-        String Content;
-        Content.Append(Name);
-        for(const String& Attribute : FormattedAttributes)
-            Content.Append(Format(" {}", Attribute));
-
-        const String Tag = Format("{}<{}/>\n", GetIndentation(), Content);
-        m_Stream->WriteString(Tag);
-    }
-
+    
     void XmlWriter::EndElement()
     {
         m_NumIndentation--;

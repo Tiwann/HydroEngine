@@ -1,4 +1,3 @@
-#include "HydroPCH.h"
 #include "IndexBuffer.h"
 #include "Macros.h"
 #include "Platform/PlatformIndexBuffer.h"

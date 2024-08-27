@@ -1,6 +1,5 @@
-﻿#include "HydroPCH.h"
-#include "ApplicationConfigurationSerializer.h"
-
+﻿#include "ApplicationConfigurationSerializer.h"
+#include <fstream>
 #include <nlohmann/json.hpp>
 
 namespace Hydro

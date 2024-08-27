@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "Shader.h"
+﻿#include "Shader.h"
 
 #include "Application.h"
 #include "Assertion.h"

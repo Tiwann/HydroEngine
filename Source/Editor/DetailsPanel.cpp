@@ -1,4 +1,3 @@
-#include "HydroPCH.h"
 #include "DetailsPanel.h"
 
 #include "EditorGUI.h"

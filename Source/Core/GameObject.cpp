@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "GameObject.h"
+﻿#include "GameObject.h"
 
 #include "Application.h"
 #include "Scene.h"

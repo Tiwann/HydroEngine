@@ -1,4 +1,3 @@
-#include "HydroPCH.h"
 #include "OpenGLIndexBuffer.h"
 
 #include <glad/gl.h>

@@ -1,4 +1,3 @@
-#include "HydroPCH.h"
 #include "Sprite.h"
 #include "Texture2D.h"
 

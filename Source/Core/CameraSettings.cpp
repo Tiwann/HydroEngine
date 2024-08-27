@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "CameraSettings.h"
+﻿#include "CameraSettings.h"
 
 
 namespace Hydro

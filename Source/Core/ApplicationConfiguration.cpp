@@ -1,4 +1,3 @@
-#include "HydroPCH.h"
 #include "ApplicationConfiguration.h"
 
 namespace Hydro

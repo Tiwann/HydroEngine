@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "OpenGLTexture2D.h"
+﻿#include "OpenGLTexture2D.h"
 #include "Core/Log.h"
 #include "Core/LogVerbosity.h"
 #include "Core/Memory.h"

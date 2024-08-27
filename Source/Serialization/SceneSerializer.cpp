@@ -1,7 +1,6 @@
-﻿#include "HydroPCH.h"
-#include "SceneSerializer.h"
-
+﻿#include "SceneSerializer.h"
 #include "ComponentSerializer.h"
+#include <fstream>
 
 bool Hydro::SceneSerializer::Serialize(const Ref<Scene>& Scene, const Path& Filepath)
 {

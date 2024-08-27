@@ -1,4 +1,3 @@
-#include "HydroPCH.h"
 #include "SpriteRenderer.h"
 
 #include "Core/Application.h"

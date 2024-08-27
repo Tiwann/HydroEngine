@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "EntryPoint.h"
+﻿#include "EntryPoint.h"
 #include "Application.h"
 #include "Log.h"
 #include "LogVerbosity.h"

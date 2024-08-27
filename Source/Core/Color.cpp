@@ -1,5 +1,4 @@
-﻿#include "HydroPCH.h"
-#include "Color.h"
+﻿#include "Color.h"
 #include "Math/Vector4.h"
 
 namespace Hydro

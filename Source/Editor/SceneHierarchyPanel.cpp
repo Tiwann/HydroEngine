@@ -1,4 +1,3 @@
-#include "HydroPCH.h"
 #include "SceneHierarchyPanel.h"
 
 #include "EditorGUI.h"

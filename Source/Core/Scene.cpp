@@ -1,4 +1,3 @@
-#include "HydroPCH.h"
 #include "Scene.h"
 
 #include "Application.h"
