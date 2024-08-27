@@ -16,7 +16,7 @@ namespace Hydro
         EditorWindow::OnInspectorGUI(IO);
         UI::NewWindow(m_Name, m_Opened, WindowFlagBits::None, [&IO]
         {
-            Ref<GameObject> SelectedObject = Selection::GetGameObject();
+            Ref<Entity> SelectedObject = Selection::GetEntity();
             if (!SelectedObject) return;
 
             char Buffer[256] = {};

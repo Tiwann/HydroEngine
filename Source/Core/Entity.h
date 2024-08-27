@@ -16,15 +16,15 @@ namespace Hydro
     class RendererBackend;
     class Vector3;
     
-    class GameObject : public std::enable_shared_from_this<GameObject>
+    class Entity : public std::enable_shared_from_this<Entity>
     {
         using Iterator = Array<Ref<Component>>::Iterator;
         using ConstIterator = Array<Ref<Component>>::ConstIterator;
     public:
         friend class Scene;
         friend class Application;
-        GameObject(std::string Name, Scene* Owner);
-        virtual ~GameObject() = default;
+        Entity(std::string Name, Scene* Owner);
+        virtual ~Entity() = default;
 
         void SetName(const std::string& Name);
 
@@ -86,12 +86,12 @@ namespace Hydro
             return true;
         }
         
-        void SetParent(const Ref<GameObject>& Object);
+        void SetParent(const Ref<Entity>& Entity);
         bool HasChildren() const;
         bool HasParent() const;
         
-        Ref<GameObject> GetChild(size_t Index) const;
-        Ref<GameObject> GetParent() const;
+        Ref<Entity> GetChild(size_t Index) const;
+        Ref<Entity> GetParent() const;
         Ref<Transform> GetTransform() const;
 
         const Scene& GetScene() const;
@@ -126,8 +126,8 @@ namespace Hydro
         std::string m_Name;
         Array<Ref<Component>> m_Components;
         bool m_Enabled;
-        Array<Ref<GameObject>> m_Children;
-        Ref<GameObject> m_Parent;
+        Array<Ref<Entity>> m_Children;
+        Ref<Entity> m_Parent;
         Ref<Transform> m_Transform;
         Scene* m_Scene;
     };

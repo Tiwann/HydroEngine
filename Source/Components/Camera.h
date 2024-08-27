@@ -14,7 +14,7 @@ namespace Hydro
     class Camera : public Component
     {
     public:
-        Camera(GameObject* Owner);
+        Camera(Entity* Owner);
 
         void OnUpdate(float Delta) override;
         void OnInspectorGUI(const ImGuiIO& IO) override;

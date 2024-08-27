@@ -17,7 +17,7 @@
 
 namespace Hydro
 {
-    SpriteRenderer::SpriteRenderer(GameObject* Owner)
+    SpriteRenderer::SpriteRenderer(Entity* Owner)
     : Renderer(Owner, "Sprite Renderer"), m_Sprite(nullptr, Vector2::Zero, Vector2::Zero), m_Tiling(Vector2::One)
     {
     }

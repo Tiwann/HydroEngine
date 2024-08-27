@@ -1,4 +1,4 @@
-﻿#include "GameObject.h"
+﻿#include "Entity.h"
 
 #include "Application.h"
 #include "Scene.h"
@@ -7,72 +7,72 @@
 
 namespace Hydro
 {
-    GameObject::GameObject(std::string Name, Scene* Owner) : m_Name(std::move(Name)), m_Scene(Owner)
+    Entity::Entity(std::string Name, Scene* Owner) : m_Name(std::move(Name)), m_Scene(Owner)
     {
         m_Transform = AddComponent<Transform>();
     }
 
-    void GameObject::SetName(const std::string& Name)
+    void Entity::SetName(const std::string& Name)
     {
         m_Name = Name;
     }
     
-    void GameObject::SetParent(const Ref<GameObject>& Object)
+    void Entity::SetParent(const Ref<Entity>& Entity)
     {
-        if(!Object)
+        if(!Entity)
         {
             m_Parent = nullptr;
-            Object->m_Children.Remove(Object);
+            Entity->m_Children.Remove(Entity);
             return;
         }
 
-        m_Parent = Object;
-        Object->m_Children.Add(shared_from_this());
+        m_Parent = Entity;
+        Entity->m_Children.Add(shared_from_this());
     }
     
-    bool GameObject::HasChildren() const { return !m_Children.IsEmpty(); }
+    bool Entity::HasChildren() const { return !m_Children.IsEmpty(); }
 
-    bool GameObject::HasParent() const { return m_Parent != nullptr; }
+    bool Entity::HasParent() const { return m_Parent != nullptr; }
 
-    Ref<GameObject> GameObject::GetChild(size_t Index) const
+    Ref<Entity> Entity::GetChild(size_t Index) const
     {
         if(Index < 0 || Index > m_Children.Count())
             return nullptr;
         return m_Children[Index];
     }
 
-    Ref<GameObject> GameObject::GetParent() const
+    Ref<Entity> Entity::GetParent() const
     {
         return m_Parent;
     }
 
-    Ref<Transform> GameObject::GetTransform() const
+    Ref<Transform> Entity::GetTransform() const
     {
         return m_Transform;
     }
 
-    const Scene& GameObject::GetScene() const
+    const Scene& Entity::GetScene() const
     {
         return *m_Scene;
     }
 
-    Scene& GameObject::GetScene()
+    Scene& Entity::GetScene()
     {
         return *m_Scene;
     }
 
 
-    void GameObject::OnInit()
+    void Entity::OnInit()
     {
         ForEach([](const auto& Component){ Component->OnInit(); });
     }
 
-    void GameObject::OnStart()
+    void Entity::OnStart()
     {
         ForEach([](const auto& Component) { Component->OnStart(); });
     }
 
-    void GameObject::OnUpdate(float Delta)
+    void Entity::OnUpdate(float Delta)
     {
         if(!m_Enabled) return;
         for(const Ref<Component>& Component : m_Components)
@@ -83,7 +83,7 @@ namespace Hydro
         }
     }
 
-    void GameObject::OnRender(const Ref<RendererBackend>& Renderer)
+    void Entity::OnRender(const Ref<RendererBackend>& Renderer)
     {
         if(!m_Enabled) return;
         for(const Ref<Component>& Component : m_Components)
@@ -95,7 +95,7 @@ namespace Hydro
         }
     }
 
-    void GameObject::OnPhysicsUpdate(float Delta)
+    void Entity::OnPhysicsUpdate(float Delta)
     {
         if(!m_Enabled) return;
         for(const Ref<Component>& Component : m_Components)
@@ -106,7 +106,7 @@ namespace Hydro
         }
     }
 
-    void GameObject::OnDestroy()
+    void Entity::OnDestroy()
     {
         for(Ref<Component>& Component : m_Components)
         {
@@ -114,7 +114,7 @@ namespace Hydro
         }
     }
 
-    void GameObject::SetEnabled(bool Enabled)
+    void Entity::SetEnabled(bool Enabled)
     {
         if(m_Enabled == Enabled)
             return;

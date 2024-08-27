@@ -1,12 +1,12 @@
 ﻿#include "Transform.h"
-#include "Core/GameObject.h"
+#include "Core/Entity.h"
 #include "Editor/EditorGUI.h"
 #include "Physics/PhysicsComponent.h"
 #include "Physics/RigidBody2D.h"
 
 namespace Hydro
 {
-    Transform::Transform(GameObject* Owner) : Component(Owner, "Transform")
+    Transform::Transform(Entity* Owner) : Component(Owner, "Transform")
     {
     }
 
@@ -67,7 +67,7 @@ namespace Hydro
 
     void Transform::Translate(const Vector3& Translation)
     {
-        if(m_GameObject->GetComponent<RigidBody2D>() && Translation != Vector3::Zero)
+        if(m_Entity->GetComponent<RigidBody2D>() && Translation != Vector3::Zero)
         {
             HYDRO_LOG(Transform, Verbosity::Warning, "Tried to translate an object that is controlled by physics.");
         }
@@ -111,9 +111,9 @@ namespace Hydro
 
     Matrix4 Transform::GetWorldSpaceMatrix() const
     {
-        if(m_GameObject->HasParent())
+        if(m_Entity->HasParent())
         {
-            return m_GameObject->GetParent()->GetTransform()->GetWorldSpaceMatrix() * GetLocalSpaceMatrix();
+            return m_Entity->GetParent()->GetTransform()->GetWorldSpaceMatrix() * GetLocalSpaceMatrix();
         }
         return GetLocalSpaceMatrix();
     }
@@ -133,7 +133,7 @@ namespace Hydro
         
         if(UI::DragVector3<float>("Position", m_Position, 0.01f, 0, 0, "%.2f"))
         {
-            if(const auto& Shape = m_GameObject->GetComponent<RigidBody2D>())
+            if(const auto& Shape = m_Entity->GetComponent<RigidBody2D>())
             {
                 Shape->SetPosition(m_Position);
                 Shape->RecreatePhysicsState();
@@ -142,7 +142,7 @@ namespace Hydro
         
         if(UI::DragVector3<float>("Rotation", m_Rotation, 0.01f, 0, 360.0f, "%.2f"))
         {
-            if(const auto& Shape = m_GameObject->GetComponent<RigidBody2D>())
+            if(const auto& Shape = m_Entity->GetComponent<RigidBody2D>())
             {
                 Shape->SetRotation(m_Rotation.z);
                 Shape->RecreatePhysicsState();
@@ -151,7 +151,7 @@ namespace Hydro
         
         if(UI::DragVector3<float>("Scale", m_Scale, 0.01f, 0, 0, "%.2f"))
         {
-            if(const auto& Shape = m_GameObject->GetComponent<RigidBody2D>())
+            if(const auto& Shape = m_Entity->GetComponent<RigidBody2D>())
             {
                 Shape->RecreatePhysicsState();
             }

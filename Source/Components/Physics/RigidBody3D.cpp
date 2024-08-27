@@ -10,7 +10,7 @@ namespace Hydro
     {
         PhysicsComponentInterface::OnInit();
 
-        Scene& Scene = m_GameObject->GetScene();
+        Scene& Scene = m_Entity->GetScene();
         PhysicsWorld3D& World = Scene.GetPhysicsWorld3D();
         
         const Ref<Transform> Transform = GetTransform();

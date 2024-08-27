@@ -92,13 +92,13 @@ namespace Hydro
         Scene.AddChild({ "Rename" });
         Scene.AddChild({ "Create Object", nullptr, [this]
         {
-            const Ref<class GameObject> Object = CreateObject("New Object");
-            Selection::SetGameObject(Object);
+            const Ref<class Entity> Object = CreateEntity("New Object");
+            Selection::SetEntity(Object);
         }});
         Scene.AddChild({ "Create Camera", nullptr, [this]
         {
-            const Ref<class GameObject> Camera = CreateCamera();
-            Selection::SetGameObject(Camera);
+            const Ref<class Entity> Camera = CreateCamera();
+            Selection::SetEntity(Camera);
         }});
         
         auto& Misc = m_MenuBar.AddChild({ "Misc" });
@@ -160,9 +160,9 @@ namespace Hydro
 
     void Application::OnStart()
     {
-        m_Scene->ForEach([](const Ref<GameObject>& Object)
+        m_Scene->ForEach([](const Ref<Entity>& Entity)
         {
-            Object->OnStart();
+            Entity->OnStart();
         });
     }
 
@@ -327,20 +327,20 @@ namespace Hydro
         Cursor::SetCursorVisible(m_Window, Visible);
     }
 
-    Ref<GameObject> Application::CreateCamera() const
+    Ref<Entity> Application::CreateCamera() const
     {
         const CameraSettings Settings = CameraSettings::DefaultOrthographic
         .WithDimension(GetWindow()->GetWidth(), GetWindow()->GetHeight());
-        const auto& CameraObj = CreateObject("Camera");
+        const auto& CameraObj = CreateEntity("Camera");
         const auto& Cam = CameraObj->AddComponent<Camera>();
         Cam->Settings = Settings;
         m_Renderer->SetCurrentCamera(Cam);
         return CameraObj;
     }
 
-    Ref<GameObject> Application::CreateSprite() const
+    Ref<Entity> Application::CreateSprite() const
     {
-        const auto& NewObject = CreateObject("New Sprite");
+        const auto& NewObject = CreateEntity("New Sprite");
         const auto& SpriteRend = NewObject->AddComponent<SpriteRenderer>();
 
         return NewObject;

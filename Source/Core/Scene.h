@@ -3,7 +3,7 @@
 #include "SharedPointer.h"
 #include "Core/Log.h"
 #include "GUID.h"
-#include "GameObject.h"
+#include "Entity.h"
 
 #include "Core/Physics/PhysicsWorld2D.h"
 #include "Core/Physics/PhysicsWorld3D.h"
@@ -19,8 +19,8 @@ namespace Hydro
     class Scene final
     {
     public:
-        using Iterator = Array<Ref<GameObject>>::Iterator;
-        using ConstIterator = Array<Ref<GameObject>>::ConstIterator;
+        using Iterator = Array<Ref<Entity>>::Iterator;
+        using ConstIterator = Array<Ref<Entity>>::ConstIterator;
         friend class Physics2D;
 
         Scene() = default;
@@ -30,31 +30,31 @@ namespace Hydro
         void OnRender(const Ref<RendererBackend>& Renderer) const;
         void OnDestroy();
         
-        template<typename T = GameObject, typename = std::enable_if_t<std::is_base_of_v<GameObject, T>>>
-        Ref<T> CreateObject(const std::string& Name)
+        template<typename T = Entity, typename = std::enable_if_t<std::is_base_of_v<Entity, T>>>
+        Ref<T> CreateEntity(const std::string& Name)
         {
-            const Ref<GameObject> NewObject = CreateRef<T>(Name, this);
-            NewObject->OnInit();
-            m_GameObjects.Add(NewObject);
-            return Cast<T>(NewObject);
+            const Ref<Entity> Entity = CreateRef<T>(Name, this);
+            Entity->OnInit();
+            m_Entities.Add(Entity);
+            return Cast<T>(Entity);
         }
 
-        void ForEach(const std::function<void(Ref<GameObject>)>& Delegate) const
+        void ForEach(const std::function<void(Ref<Entity>)>& Delegate) const
         {
-            for(const auto& Object : m_GameObjects)
+            for(const auto& Entity : m_Entities)
             {
-                Delegate(Object);
+                Delegate(Entity);
             }
         }
-        Iterator begin() { return m_GameObjects.begin(); }
-        Iterator end() { return m_GameObjects.end(); }
+        Iterator begin() { return m_Entities.begin(); }
+        Iterator end() { return m_Entities.end(); }
 
-        ConstIterator begin() const { return m_GameObjects.begin(); }
-        ConstIterator end() const { return m_GameObjects.end(); }
+        ConstIterator begin() const { return m_Entities.begin(); }
+        ConstIterator end() const { return m_Entities.end(); }
         
         GUID GetGuid() const { return m_Guid; }
         std::string GetName() const { return m_Name; }
-        bool DestroyObject(Ref<GameObject>& Object);
+        bool DestroyObject(Ref<Entity>& Entity);
         void SetName(const std::string& Name);
 
         const PhysicsWorld2D& GetPhysicsWorld2D() const
@@ -80,7 +80,7 @@ namespace Hydro
     private:
         GUID m_Guid;
         std::string m_Name;
-        Array<Ref<GameObject>> m_GameObjects;
+        Array<Ref<Entity>> m_Entities;
         
         PhysicsWorld2D m_PhysicsWorld2D;
         PhysicsWorld3D m_PhysicsWorld3D;

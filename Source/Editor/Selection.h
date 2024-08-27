@@ -3,7 +3,7 @@
 
 namespace Hydro
 {
-    class GameObject;
+    class Entity;
     class Component;
 }
 
@@ -18,15 +18,15 @@ namespace Hydro
             return instance;
         }
 
-        static void SetGameObject(const Ref<GameObject>& Object)
+        static void SetEntity(const Ref<Entity>& Entity)
         {
-            GetInstance().m_GameObject = Object;
+            GetInstance().m_Entity = Entity;
         }
 
-        static Ref<GameObject> GetGameObject()
+        static Ref<Entity> GetEntity()
         {
-            if(!GetInstance().m_GameObject) return nullptr;
-            return GetInstance().m_GameObject;
+            if(!GetInstance().m_Entity) return nullptr;
+            return GetInstance().m_Entity;
         }
 
         static void SetComponent(const Ref<Component>& Component)
@@ -42,7 +42,7 @@ namespace Hydro
 
         
     private:
-        Ref<GameObject> m_GameObject;
+        Ref<Entity> m_Entity;
         Ref<Component> m_Component;
     };
 }

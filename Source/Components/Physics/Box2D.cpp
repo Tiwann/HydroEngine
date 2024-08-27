@@ -11,7 +11,7 @@ static constexpr char ComponentName[7] = "Box 2D";
 
 namespace Hydro
 {
-    Box2D::Box2D(GameObject* Owner) : RigidBody2D(Owner, ComponentName)
+    Box2D::Box2D(Entity* Owner) : RigidBody2D(Owner, ComponentName)
     {
         
     }

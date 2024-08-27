@@ -10,16 +10,16 @@
 namespace Hydro
 {
     class Transform;
-    class GameObject;
+    class Entity;
     class RendererBackend;
     
     class Component
     {
     public:
-        friend GameObject;
+        friend Entity;
         HYDRO_NOT_COPYABLE_NOT_MOVABLE(Component);
         
-        Component(GameObject* Owner, std::string Name);
+        Component(Entity* Owner, std::string Name);
         virtual ~Component();
 
         const std::string& GetName() const;
@@ -30,7 +30,7 @@ namespace Hydro
         virtual void OnStart(){}
         virtual void OnDestroy()
         {
-            m_GameObject = nullptr;
+            m_Entity = nullptr;
             m_Enabled = false;
         }
         virtual void OnEnable(){}
@@ -46,6 +46,6 @@ namespace Hydro
         GUID m_Guid;
         std::string m_Name;
         bool m_Enabled;
-        GameObject* m_GameObject{nullptr};
+        Entity* m_Entity{nullptr};
     };
 }

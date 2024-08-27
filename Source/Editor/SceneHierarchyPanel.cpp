@@ -19,16 +19,16 @@ namespace Hydro
         m_Opened = true;
     }
 
-    static void DrawGameObject(const Ref<GameObject>& Object)
+    static void DrawEntity(const Ref<Entity>& Entity)
     {
-        const char* Name = Object->GetName().empty() ? "##" : Object->GetName().c_str();
+        const char* Name = Entity->GetName().empty() ? "##" : Entity->GetName().c_str();
         
         if(ImGui::TreeNode(Name))
         {
-            if(Object->HasChildren())
+            if(Entity->HasChildren())
             {
-                const auto& Child = Object->GetChild(0);
-                DrawGameObject(Child);
+                const auto& Child = Entity->GetChild(0);
+                DrawEntity(Child);
             }
             ImGui::TreePop();
         }
@@ -43,18 +43,18 @@ namespace Hydro
         {
             if(ImGui::Button("Create Object"))
             {
-                m_CurrentScene->CreateObject("Empty Object");    
+                m_CurrentScene->CreateEntity("Empty Object");    
             }
 
             static bool ShowContextMenu = false;
             
-            m_CurrentScene->ForEach([this](const Ref<GameObject>& Object)
+            m_CurrentScene->ForEach([this](const Ref<Entity>& Entity)
             {
-                DrawGameObject(Object);
+                DrawEntity(Entity);
                 if(UI::ItemClicked(MouseButton::Left))
                 {
-                    HYDRO_LOG(SceneHierarchyPanel, Verbosity::Warning, "Item Cliked: {}", Object->GetName().c_str());
-                    Selection::SetGameObject(Object);
+                    HYDRO_LOG(SceneHierarchyPanel, Verbosity::Warning, "Item Cliked: {}", Entity->GetName().c_str());
+                    Selection::SetEntity(Entity);
                 }
 
                 
@@ -62,7 +62,7 @@ namespace Hydro
                 {
                     ShowContextMenu = true;
                     ImGui::OpenPopup("ContextMenu");
-                    Selection::SetGameObject(Object);
+                    Selection::SetEntity(Entity);
                 }
             });
 
@@ -78,7 +78,7 @@ namespace Hydro
                 {
                     if (ImGui::Selectable(Options[i]))
                     {
-                        Ref<GameObject> SelectedObject = Selection::GetGameObject();
+                        Ref<Entity> SelectedObject = Selection::GetEntity();
                         if(!SelectedObject) break;
                             
                         switch (i)
@@ -92,7 +92,7 @@ namespace Hydro
                 ImGui::EndPopup();
             }
 
-            if(Ref<GameObject> Object = Selection::GetGameObject())
+            if(Ref<Entity> Object = Selection::GetEntity())
             {
                 const Application& App = *g_Application;
                 const Vector2 ViewportSize = App.GetViewportPanel()->GetSize();

@@ -10,7 +10,7 @@
 
 namespace Hydro
 {
-    Circle2D::Circle2D(GameObject* Owner) : RigidBody2D(Owner, "Circle 2D")
+    Circle2D::Circle2D(Entity* Owner) : RigidBody2D(Owner, "Circle 2D")
     {
         
     }

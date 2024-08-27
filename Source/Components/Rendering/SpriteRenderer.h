@@ -30,7 +30,7 @@ namespace Hydro
     class SpriteRenderer : public Renderer
     {
     public:
-        SpriteRenderer(GameObject* Owner);
+        SpriteRenderer(Entity* Owner);
         
         SpriteRendererFlags Flags;
         

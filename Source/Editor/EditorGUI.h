@@ -296,7 +296,7 @@ namespace Hydro
         
         void MainMenuMenuBar(const TreeNode<MenuItem>& RootNode);
         
-        void AddComponent(const Ref<GameObject>& Object);
+        void AddComponent(const Ref<Entity>& Entity);
         
         void Sprite(class Sprite& InOutSprite);
 

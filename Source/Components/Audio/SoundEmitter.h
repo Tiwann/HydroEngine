@@ -22,7 +22,7 @@ namespace Hydro
         using EmitterStopDelegate = MulticastDelegate<void(Ref<Sound> Sound, bool IsPause)>;
         using EmitterPlayingDelegate = MulticastDelegate<void(Ref<Sound> Sound, uint32_t Position, uint32_t Length)>;
         
-        SoundEmitter(GameObject* Owner);
+        SoundEmitter(Entity* Owner);
 
         void OnInit() override;
         void OnUpdate(float Delta) override;

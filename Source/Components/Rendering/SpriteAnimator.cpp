@@ -1,4 +1,4 @@
-﻿#include "Core/GameObject.h"
+﻿#include "Core/Entity.h"
 #include "SpriteAnimator.h"
 #include "SpriteRenderer.h"
 #include "Core/SpriteAnimation.h"
@@ -6,7 +6,7 @@
 
 namespace Hydro
 {
-    SpriteAnimator::SpriteAnimator(GameObject* Owner) : Component(Owner, "Sprite Animator")
+    SpriteAnimator::SpriteAnimator(Entity* Owner) : Component(Owner, "Sprite Animator")
     {
         
     }
@@ -14,7 +14,7 @@ namespace Hydro
     void SpriteAnimator::OnInit()
     {
         Component::OnInit();
-        m_SpriteRenderer = m_GameObject->GetComponent<SpriteRenderer>();
+        m_SpriteRenderer = m_Entity->GetComponent<SpriteRenderer>();
         
         m_Timer.FinishedEvent.BindMember(this, &SpriteAnimator::OnSpriteChange);
         m_Timer.SetDuration(1.0f / (float)m_Speed);

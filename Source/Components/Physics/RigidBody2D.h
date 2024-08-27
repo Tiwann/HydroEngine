@@ -14,8 +14,8 @@ namespace Hydro
     class RigidBody2D : public PhysicsComponentInterface<PhysicsBody2D, PhysicsShape2D, Collision2D>
     {
     protected:
-        friend class GameObject;
-        RigidBody2D(GameObject* Owner, const std::string& Name);
+        friend class Entity;
+        RigidBody2D(Entity* Owner, const std::string& Name);
         
         void OnInit() override;
         void OnStart() override;

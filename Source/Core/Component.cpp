@@ -1,11 +1,11 @@
 ﻿#include "Core/Component.h"
 
-#include "GameObject.h"
+#include "Entity.h"
 
 namespace Hydro
 {
     
-    Component::Component(GameObject* Owner, std::string Name) : m_Name(std::move(Name)), m_Enabled(true), m_GameObject(Owner)
+    Component::Component(Entity* Owner, std::string Name) : m_Name(std::move(Name)), m_Enabled(true), m_Entity(Owner)
     {
     }
 
@@ -21,7 +21,7 @@ namespace Hydro
     
     Ref<Transform> Component::GetTransform() const
     {
-        return m_GameObject->GetTransform();
+        return m_Entity->GetTransform();
     }
 
     void Component::SetEnabled(bool Enabled)

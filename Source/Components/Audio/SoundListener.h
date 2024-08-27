@@ -11,7 +11,7 @@ namespace Hydro
     class SoundListener : public Component
     {
     public:
-        SoundListener(GameObject* Owner);
+        SoundListener(Entity* Owner);
 
         void OnInit() override;
         void OnDestroy() override;

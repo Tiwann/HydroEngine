@@ -12,7 +12,7 @@ namespace Hydro
     class SpriteAnimator : public Component
     {
     public:
-        SpriteAnimator(GameObject* Owner);
+        SpriteAnimator(Entity* Owner);
         
         void OnInit() override;
         void OnUpdate(float Delta) override;

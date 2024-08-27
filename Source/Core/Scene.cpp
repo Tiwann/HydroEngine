@@ -1,7 +1,7 @@
 #include "Scene.h"
 
 #include "Application.h"
-#include "GameObject.h"
+#include "Entity.h"
 #include "Core/Physics/Physics2D.h"
 #include "Time.h"
 #include "box2d/box2d.h"
@@ -24,52 +24,52 @@ namespace Hydro
         
         m_RendererBackend = g_Application->GetRendererBackend();
         
-        for(const Ref<GameObject>& Object : m_GameObjects)
+        for(const Ref<Entity>& Entity : m_Entities)
         {
-            Object->OnInit();
+            Entity->OnInit();
         }
     }
 
     void Scene::OnUpdate(float Delta)
     {
-        for(const Ref<GameObject>& Object : m_GameObjects)
+        for(const Ref<Entity>& Entity : m_Entities)
         {
-            Object->OnUpdate(Delta);
+            Entity->OnUpdate(Delta);
         }
 
         m_PhysicsWorld2D.Step(Physics2D::TimeStep);
         //m_PhysicsWorld3D.Step(Physics3D::TimeStep);
 
-        for(const Ref<GameObject>& Object : m_GameObjects)
+        for(const Ref<Entity>& Entity : m_Entities)
         {
-            Object->OnPhysicsUpdate(Delta);
+            Entity->OnPhysicsUpdate(Delta);
         }
     }
 
     void Scene::OnRender(const Ref<RendererBackend>& Renderer) const
     {
-        for(const Ref<GameObject>& Object : m_GameObjects)
+        for(const Ref<Entity>& Entity : m_Entities)
         {
-            Object->OnRender(Renderer);
+            Entity->OnRender(Renderer);
         }
     }
 
     void Scene::OnDestroy()
     {
-        for(Ref<GameObject>& Object : m_GameObjects)
+        for(Ref<Entity>& Entity : m_Entities)
         {
-            Object->OnDestroy();
+            Entity->OnDestroy();
         }
         
         m_PhysicsWorld2D.OnDestroy();
         //m_PhysicsWorld3D.OnDestroy();
     }
     
-    bool Scene::DestroyObject(Ref<GameObject>& Object)
+    bool Scene::DestroyObject(Ref<Entity>& Entity)
     {
-        Object->OnDestroy();
-        m_GameObjects.Remove(Object);
-        Object.reset();
+        Entity->OnDestroy();
+        m_Entities.Remove(Entity);
+        Entity.reset();
         return true;
     }
 

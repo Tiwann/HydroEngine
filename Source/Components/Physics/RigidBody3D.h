@@ -11,8 +11,8 @@ namespace Hydro
     class RigidBody3D : public PhysicsComponentInterface<PhysicsBody3D, PhysicsShape3D, Collision3D>
     {
     public:
-        friend class GameObject;
-        RigidBody3D(GameObject* Owner, const std::string& Name) : PhysicsComponentInterface(Owner, Name) { }
+        friend class Entity;
+        RigidBody3D(Entity* Owner, const std::string& Name) : PhysicsComponentInterface(Owner, Name) { }
 
         void OnInit() override;
         void OnStart() override;

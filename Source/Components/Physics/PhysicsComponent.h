@@ -39,7 +39,7 @@ namespace Hydro
         
 
     protected:
-        PhysicsComponent(GameObject* Owner, const std::string& Name) : Component(Owner, Name){}
+        PhysicsComponent(Entity* Owner, const std::string& Name) : Component(Owner, Name){}
         bool m_ShowCollisions = false;
     };
 
@@ -53,7 +53,7 @@ namespace Hydro
         CollisionDelegate OnCollisionExitEvent;
         
     protected:
-        PhysicsComponentInterface(GameObject* Owner, const std::string& Name = "Physics Component") : PhysicsComponent(Owner, Name){}
+        PhysicsComponentInterface(Entity* Owner, const std::string& Name = "Physics Component") : PhysicsComponent(Owner, Name){}
         virtual ShapeBase* CreateShape(Ref<Transform> ObjectTransform) = 0;
         virtual void RenderCollisions(const Ref<RendererBackend>& Renderer) const = 0;
         virtual void RecreatePhysicsState() = 0;

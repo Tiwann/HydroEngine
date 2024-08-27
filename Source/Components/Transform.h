@@ -10,7 +10,7 @@ namespace Hydro
     class Transform : public Component
     {
     public:
-        Transform(GameObject* Owner);
+        Transform(Entity* Owner);
 
         void OnDestroy() override;
         

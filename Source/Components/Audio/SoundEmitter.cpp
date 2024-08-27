@@ -17,7 +17,7 @@ static constexpr char ComponentName[14] = "Sound Emitter";
 namespace Hydro
 {
     
-    SoundEmitter::SoundEmitter(GameObject* Owner) : Component(Owner, ComponentName)
+    SoundEmitter::SoundEmitter(Entity* Owner) : Component(Owner, ComponentName)
     {
         
     }
@@ -48,7 +48,7 @@ namespace Hydro
         {
             {
                 const Vector3 Position = GetTransform()->GetPosition();
-                const auto& Physics = m_GameObject->GetComponent<PhysicsComponent>();
+                const auto& Physics = m_Entity->GetComponent<PhysicsComponent>();
                 const Vector3 Velocity = Physics ? Physics->GetLinearVelocity() : Vector3::Zero;
                 m_Channel->set3DAttributes((const FMOD_VECTOR*)&Position, (const FMOD_VECTOR*)&Velocity);
             }

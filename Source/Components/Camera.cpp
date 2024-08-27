@@ -2,13 +2,13 @@
 #include "Math/LinearAlgebra.h"
 #include "Transform.h"
 #include "Core/Application.h"
-#include "Core/GameObject.h"
+#include "Core/Entity.h"
 #include "Core/Window.h"
 #include "Editor/EditorGUI.h"
 
 namespace Hydro
 {
-    Camera::Camera(GameObject* Owner) : Component(Owner, "Camera")
+    Camera::Camera(Entity* Owner) : Component(Owner, "Camera")
     {                             
     }
 
@@ -44,7 +44,7 @@ namespace Hydro
 
     Matrix4 Camera::GetViewMatrix() const
     {
-        return m_GameObject->GetTransform()->GetWorldSpaceMatrix().Inverse();
+        return m_Entity->GetTransform()->GetWorldSpaceMatrix().Inverse();
     }
 
     Matrix4 Camera::GetProjectionMatrix() const

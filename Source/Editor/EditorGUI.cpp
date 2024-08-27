@@ -82,7 +82,7 @@ namespace Hydro::UI
         }
     }
 
-    void AddComponent(const Ref<GameObject>& Object)
+    void AddComponent(const Ref<Entity>& Entity)
     {
         static bool ShowListBox = false;
         
@@ -112,12 +112,12 @@ namespace Hydro::UI
                 {
                     switch (i)
                     {
-                    case 0: Object->AddComponent<Camera>(); break;
-                    case 1: Object->AddComponent<SoundEmitter>(); break;
-                    case 2: Object->AddComponent<SoundListener>(); break;
-                    case 3: Object->AddComponent<SpriteRenderer>(); break;
-                    case 4: Object->AddComponent<Box2D>(); break;
-                    case 5: Object->AddComponent<Circle2D>(); break;
+                    case 0: Entity->AddComponent<Camera>(); break;
+                    case 1: Entity->AddComponent<SoundEmitter>(); break;
+                    case 2: Entity->AddComponent<SoundListener>(); break;
+                    case 3: Entity->AddComponent<SpriteRenderer>(); break;
+                    case 4: Entity->AddComponent<Box2D>(); break;
+                    case 5: Entity->AddComponent<Circle2D>(); break;
                     }
                     ShowListBox = false;
                 }

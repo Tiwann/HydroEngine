@@ -7,7 +7,7 @@ namespace Hydro
     class Circle2D : public RigidBody2D
     {
     public:
-        Circle2D(GameObject* Owner);
+        Circle2D(Entity* Owner);
         void OnInspectorGUI(const ImGuiIO& IO) override;
         PhysicsShape2D* CreateShape(Ref<Transform> Transform) override;
         

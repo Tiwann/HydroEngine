@@ -19,7 +19,7 @@ namespace Hydro
     class Window;
     class Image;
     class Scene;
-    class GameObject;
+    class Entity;
     class AudioEngine;
     class ViewportPanel;
     class DetailsPanel;
@@ -82,14 +82,14 @@ namespace Hydro
         void SetClearColor(const Color& Color);
         void SetCursorVisible(bool Visible) const;
         
-        template<typename T = GameObject, typename = std::enable_if_t<std::is_base_of_v<GameObject, T>>>
-        Ref<T> CreateObject(const std::string& Name) const
+        template<typename T = Entity, typename = std::enable_if_t<std::is_base_of_v<Entity, T>>>
+        Ref<T> CreateEntity(const std::string& Name) const
         {
-            return m_Scene->CreateObject<T>(Name);
+            return m_Scene->CreateEntity<T>(Name);
         }
 
-        Ref<GameObject> CreateCamera() const;
-        Ref<GameObject> CreateSprite() const;
+        Ref<Entity> CreateCamera() const;
+        Ref<Entity> CreateSprite() const;
         
     private:
         /* Core Components */

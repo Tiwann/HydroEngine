@@ -14,7 +14,7 @@ namespace Hydro
     class StateMachine : public Component
     {
     protected:
-        StateMachine(GameObject* Owner, const std::string& Name = "StateMachine") : Component(Owner, Name) {}
+        StateMachine(Entity* Owner, const std::string& Name = "StateMachine") : Component(Owner, Name) {}
     public:
         void ChangeState(StateBase* NewState)
         {

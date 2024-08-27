@@ -12,7 +12,7 @@ static constexpr char ComponentName[14] = "Sound Litener";
 
 namespace Hydro
 {
-    SoundListener::SoundListener(GameObject* Owner): Component(Owner, ComponentName)
+    SoundListener::SoundListener(Entity* Owner): Component(Owner, ComponentName)
     {
         
     }
@@ -39,7 +39,7 @@ namespace Hydro
     {
         Component::OnUpdate(Delta);
 
-        const Ref<PhysicsComponent>& Physics = m_GameObject->GetComponent<PhysicsComponent>();
+        const Ref<PhysicsComponent>& Physics = m_Entity->GetComponent<PhysicsComponent>();
         const Vector3 Position = GetTransform()->GetPosition();
         const Vector3 Forward = GetTransform()->GetForwardVector();
         const Vector3 Up = GetTransform()->GetUpVector();

@@ -9,7 +9,7 @@ namespace Hydro
     class Box2D : public RigidBody2D
     {
     public:
-        Box2D(GameObject* Owner);
+        Box2D(Entity* Owner);
 
         PhysicsShape2D* CreateShape(Ref<Transform> ObjectTransform) override;
         void OnInspectorGUI(const ImGuiIO& IO) override;

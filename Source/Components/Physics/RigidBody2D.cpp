@@ -9,13 +9,13 @@
 
 namespace Hydro
 {
-    RigidBody2D::RigidBody2D(GameObject* Owner, const std::string& Name) : PhysicsComponentInterface(Owner, Name){ }
+    RigidBody2D::RigidBody2D(Entity* Owner, const std::string& Name) : PhysicsComponentInterface(Owner, Name){ }
     
     void RigidBody2D::OnInit()
     {
         Component::OnInit();
         
-        Scene& Scene = m_GameObject->GetScene();
+        Scene& Scene = m_Entity->GetScene();
         PhysicsWorld2D& World = Scene.GetPhysicsWorld2D();
 
         const Ref<Transform> Transform = GetTransform();
@@ -40,7 +40,7 @@ namespace Hydro
 
     void RigidBody2D::OnDestroy()
     {
-        Scene& Scene = m_GameObject->GetScene();
+        Scene& Scene = m_Entity->GetScene();
         PhysicsWorld2D& World = Scene.GetPhysicsWorld2D();
 
         delete m_PhysicsShape;
