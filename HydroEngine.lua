@@ -82,6 +82,7 @@ project "HydroEngine"
 	filter "Configurations:*OpenGL"
 	    links { "glad" }
 	    defines "HYDRO_PLATFORM_OPENGL"
+	    defines "GLFW_INCLUDE_NONE"
 	
 
 	filter "System:Windows"
