@@ -34,6 +34,13 @@ namespace Hydro
         SizeType ReadUInt32(uint32_t& OutInt);
         SizeType ReadUInt64(uint64_t& OutInt);
 
+        template<typename Type>
+        SizeType ReadBuffer(Buffer<Type>& OutBuffer, SizeType Count)
+        {
+            OutBuffer = Buffer<Type>(Count);
+            return Read(OutBuffer.GetData(), Count);
+        }
+
         SizeType ReadString(String& Str, SizeType Count);
 
         SizeType WriteChar(const char InChar);
