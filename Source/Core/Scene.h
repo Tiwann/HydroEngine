@@ -54,7 +54,7 @@ namespace Hydro
         
         GUID GetGuid() const { return m_Guid; }
         std::string GetName() const { return m_Name; }
-        bool DestroyObject(Ref<Entity>& Entity);
+        bool DestroyEntity(Ref<Entity>& Entity);
         void SetName(const std::string& Name);
 
         const PhysicsWorld2D& GetPhysicsWorld2D() const

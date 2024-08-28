@@ -15,7 +15,7 @@
 #include "ScopedTimer.h"
 #include "ResourceManager/ShaderManager.h"
 #include "ResourceManager/TextureManager.h"
-#include "Audio/AudioEngine.h"
+#include "Audio/AudioSystem.h"
 #include "Input/Input.h"
 #include "Platform/PlatformImGui.h"
 #include "Components/Camera.h"
@@ -90,10 +90,10 @@ namespace Hydro
 
         auto& Scene = m_MenuBar.AddChild({ "Scene"});
         Scene.AddChild({ "Rename" });
-        Scene.AddChild({ "Create Object", nullptr, [this]
+        Scene.AddChild({ "Create Entity", nullptr, [this]
         {
-            const Ref<class Entity> Object = CreateEntity("New Object");
-            Selection::SetEntity(Object);
+            const Ref<class Entity> Entity = CreateEntity("New Entity");
+            Selection::SetEntity(Entity);
         }});
         Scene.AddChild({ "Create Camera", nullptr, [this]
         {
@@ -225,7 +225,7 @@ namespace Hydro
             }
         }
 
-        m_AudioEngine->OnUpdate();
+        m_AudioSystem.OnUpdate();
         m_Scene->OnUpdate(Delta);
         m_DetailsPanel->OnUpdate(Delta);
         m_SceneHierarchyPanel->OnUpdate(Delta);
@@ -257,7 +257,7 @@ namespace Hydro
         m_ShaderManager->UnloadAll();
         m_SoundManager->UnloadAll();
         
-        m_AudioEngine->Destroy();
+        m_AudioSystem.Destroy();
         m_Renderer->Destroy();
         m_Window->Destroy();
         
@@ -340,10 +340,10 @@ namespace Hydro
 
     Ref<Entity> Application::CreateSprite() const
     {
-        const auto& NewObject = CreateEntity("New Sprite");
-        const auto& SpriteRend = NewObject->AddComponent<SpriteRenderer>();
+        const auto& NewEntity = CreateEntity("New Sprite");
+        const auto& SpriteRend = NewEntity->AddComponent<SpriteRenderer>();
 
-        return NewObject;
+        return NewEntity;
     }
 
     const Ref<RendererBackend>& Application::GetRendererBackend() const
@@ -356,9 +356,14 @@ namespace Hydro
         return m_Scene;
     }
 
-    const Ref<AudioEngine>& Application::GetAudioEngine() const
+    const AudioSystem& Application::GetAudioSystem() const
     {
-        return m_AudioEngine;
+        return m_AudioSystem;
+    }
+
+    AudioSystem& Application::GetAudioSystem()
+    {
+        return m_AudioSystem;
     }
 
     Ref<SceneHierarchyPanel> Application::GetSceneHierarchyPanel() const
@@ -530,9 +535,8 @@ namespace Hydro
         m_Renderer->SetCullMode(CullMode::BackFace);
         HYDRO_LOG(Application, Verbosity::Info, "Renderer created!");
 
-
-        m_AudioEngine = AudioEngine::Create();
-        if(!m_AudioEngine->Init(44100, 1024))
+        
+        if(!m_AudioSystem.Init(44100, 1024))
         {
             HYDRO_LOG(Application, Verbosity::Error, "Failed to create audio engine!");
             return false;

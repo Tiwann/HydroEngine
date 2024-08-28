@@ -41,9 +41,9 @@ namespace Hydro
 
         if(ImGui::Begin(*m_Name, &m_Opened))
         {
-            if(ImGui::Button("Create Object"))
+            if(ImGui::Button("Create Entity"))
             {
-                m_CurrentScene->CreateEntity("Empty Object");    
+                m_CurrentScene->CreateEntity("Empty Entity");    
             }
 
             static bool ShowContextMenu = false;
@@ -78,12 +78,12 @@ namespace Hydro
                 {
                     if (ImGui::Selectable(Options[i]))
                     {
-                        Ref<Entity> SelectedObject = Selection::GetEntity();
-                        if(!SelectedObject) break;
+                        Ref<Entity> SelectedEntity = Selection::GetEntity();
+                        if(!SelectedEntity) break;
                             
                         switch (i)
                         {
-                        case 0: m_CurrentScene->DestroyObject(SelectedObject); break;
+                        case 0: m_CurrentScene->DestroyEntity(SelectedEntity); break;
                         }
                         ShowContextMenu = false;
                     }
@@ -92,7 +92,7 @@ namespace Hydro
                 ImGui::EndPopup();
             }
 
-            if(Ref<Entity> Object = Selection::GetEntity())
+            if(Ref<Entity> Entity = Selection::GetEntity())
             {
                 const Application& App = *g_Application;
                 const Vector2 ViewportSize = App.GetViewportPanel()->GetSize();
@@ -104,7 +104,7 @@ namespace Hydro
                 ImGuizmo::SetDrawlist(App.GetViewportPanel()->GetDrawList());
                 ImGuizmo::SetRect(ViewportPos.x, ViewportPos.y, ViewportSize.x, ViewportSize.y);
 
-                const Ref<Transform> Transform = Object->GetTransform();
+                const Ref<Transform> Transform = Entity->GetTransform();
                 Matrix4 ModelMatrix = Transform->GetLocalSpaceMatrix();
                 Matrix4 ViewMatrix = Cam->GetViewMatrix();
                 Matrix4 ProjectionMatrix = Cam->GetProjectionMatrix();
@@ -118,7 +118,7 @@ namespace Hydro
                     Transform->SetRotation(Rot);
                     Transform->SetScale(Sc);
 
-                    if(const auto& Shape = Object->GetComponent<RigidBody2D>())
+                    if(const auto& Shape = Entity->GetComponent<RigidBody2D>())
                     {
                         Shape->SetPosition(Pos);
                         Shape->SetRotation(Rot.z);

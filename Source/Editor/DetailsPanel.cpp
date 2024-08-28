@@ -16,27 +16,27 @@ namespace Hydro
         EditorWindow::OnInspectorGUI(IO);
         UI::NewWindow(m_Name, m_Opened, WindowFlagBits::None, [&IO]
         {
-            Ref<Entity> SelectedObject = Selection::GetEntity();
-            if (!SelectedObject) return;
+            Ref<Entity> SelectedEntity = Selection::GetEntity();
+            if (!SelectedEntity) return;
 
             char Buffer[256] = {};
-            std::ranges::copy(SelectedObject->GetName(), Buffer);
+            std::ranges::copy(SelectedEntity->GetName(), Buffer);
 
-            ImGui::PushID(SelectedObject->GetGuid());
+            ImGui::PushID(SelectedEntity->GetGuid());
             ImGui::PushItemWidth(200);
             if (ImGui::InputText("##", Buffer, 256, ImGuiInputTextFlags_EnterReturnsTrue))
             {
-                SelectedObject->SetName({Buffer});
+                SelectedEntity->SetName({Buffer});
             }
             ImGui::PopItemWidth();
             
             ImGui::SameLine();
-            UI::AddComponent(SelectedObject);
+            UI::AddComponent(SelectedEntity);
             ImGui::PopID();
 
-            UI::Text(Format("GUID: {}", SelectedObject->GetGuid().GetString()));
+            UI::Text(Format("GUID: {}", SelectedEntity->GetGuid().GetString()));
             static bool ShowContextMenu;
-            SelectedObject->ForEach([&IO](const auto& Component)
+            SelectedEntity->ForEach([&IO](const auto& Component)
             {
                 ImGui::PushID(Component->GetGuid());
                 if (ImGui::TreeNode(Component->GetName().c_str()))
@@ -69,11 +69,11 @@ namespace Hydro
                     if (ImGui::Selectable(Options[i]))
                     {
                         Ref<Component> SelectedComponent = Selection::GetComponent();
-                        if(!SelectedObject) break;
+                        if(!SelectedEntity) break;
                             
                         switch (i)
                         {
-                        case 0: SelectedObject->RemoveComponent(SelectedComponent);
+                        case 0: SelectedEntity->RemoveComponent(SelectedComponent);
                         }
                         ShowContextMenu = false;
                     }

@@ -54,7 +54,7 @@ namespace Hydro
         
     protected:
         PhysicsComponentInterface(Entity* Owner, const std::string& Name = "Physics Component") : PhysicsComponent(Owner, Name){}
-        virtual ShapeBase* CreateShape(Ref<Transform> ObjectTransform) = 0;
+        virtual ShapeBase* CreateShape(Ref<Transform> EntityTransform) = 0;
         virtual void RenderCollisions(const Ref<RendererBackend>& Renderer) const = 0;
         virtual void RecreatePhysicsState() = 0;
         

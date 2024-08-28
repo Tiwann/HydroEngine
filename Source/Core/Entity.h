@@ -7,7 +7,7 @@
 #include "LogVerbosity.h"
 #include "MulticastDelegate.h"
 
-HYDRO_DECLARE_LOG_CATEGORY_STATIC(GameObject, "GameObject")
+HYDRO_DECLARE_LOG_CATEGORY_STATIC(Entity, "Entity")
 
 namespace Hydro
 {
@@ -56,7 +56,7 @@ namespace Hydro
             const Ref<Component> AsComponent = Cast<Component, T>(NewComponent);
             m_Components.Add(NewComponent);
             NewComponent->OnInit();
-            HYDRO_LOG(GameObject, Verbosity::Trace, "Created {} component on GameObject {}", AsComponent->GetName(), m_Name);
+            HYDRO_LOG(Entity, Verbosity::Trace, "Created {} component on Entity {}", AsComponent->GetName(), m_Name);
             return NewComponent;
         }
         

@@ -7,6 +7,7 @@
 #include "Containers/TreeNode.h"
 #include "Editor/Menu.h"
 #include "ResourceManager/SoundManager.h"
+#include "Audio/AudioSystem.h"
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(Application, "APPLICATION");
 
@@ -20,7 +21,7 @@ namespace Hydro
     class Image;
     class Scene;
     class Entity;
-    class AudioEngine;
+    class AudioSystem;
     class ViewportPanel;
     class DetailsPanel;
     class SceneHierarchyPanel;
@@ -71,7 +72,9 @@ namespace Hydro
         const Ref<Window>& GetWindow() const;
         const Ref<RendererBackend>& GetRendererBackend() const;
         const Ref<Scene>& GetScene();
-        const Ref<AudioEngine>& GetAudioEngine() const;
+        
+        const AudioSystem& GetAudioSystem() const;
+        AudioSystem& GetAudioSystem();
         
         ShaderManager& GetShaderManager();
         TextureManager& GetTextureManager();
@@ -96,7 +99,7 @@ namespace Hydro
         Ref<Window> m_Window;
         Ref<RendererBackend> m_Renderer;
         Ref<Scene> m_Scene;
-        Ref<AudioEngine> m_AudioEngine;
+        AudioSystem m_AudioSystem;
         
     protected:
         /* Resources Managers */

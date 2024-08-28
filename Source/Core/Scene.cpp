@@ -56,7 +56,7 @@ namespace Hydro
         //m_PhysicsWorld3D.OnDestroy();
     }
     
-    bool Scene::DestroyObject(Ref<Entity>& Entity)
+    bool Scene::DestroyEntity(Ref<Entity>& Entity)
     {
         Entity->OnDestroy();
         m_Entities.Remove(Entity);
