@@ -3,6 +3,8 @@
 
 namespace Hydro
 {
+    XmlSettings XmlSettings::Default = {1, '\t'};
+    
     XmlWriter::XmlWriter(Stream& Stream, const XmlSettings& Settings): m_Stream(&Stream), m_Settings(Settings){}
 
     XmlWriter::~XmlWriter()
@@ -60,6 +62,8 @@ namespace Hydro
 
     void XmlWriter::EndElement()
     {
+        HYDRO_ASSERT(m_DocumentBegun, "Bad Xml: Did you call BeginDocument() ?");
+        HYDRO_ASSERT(m_NumIndentation > 0, "Bad Xml: Begin/End Mismatch");
         m_NumIndentation--;
         const String Tag = Format("{}</{}>\n", GetIndentation(), m_Elements.Last());
         m_Stream->WriteString(Tag);
@@ -77,6 +81,12 @@ namespace Hydro
         BeginElement(Name, Attributes);
         Content();
         EndElement();
+    }
+
+    void XmlWriter::Write(const String& Value)
+    {
+        HYDRO_ASSERT(m_NumIndentation > 0, "Bad Xml: Not inside a tag, did you call BeginElement() ?");
+        m_Stream->WriteString(Format("{}{}", GetIndentation(), Value));
     }
 
     String XmlWriter::GetIndentation()

@@ -10,6 +10,8 @@ namespace Hydro
     {
         int32_t Indentation = 4;
         char    IndentationCharacter = ' ';
+
+        static XmlSettings Default;
     };
     
     class XmlWriter final
@@ -25,7 +27,7 @@ namespace Hydro
         void ElementInline(const String& Name, const AttributeType& Attributes);
         void EndElement();
         void Element(const String& Name, const AttributeType& Attributes, const std::function<void()>& Content = nullptr);
-
+        void Write(const String& Value);
     private:
         Stream* m_Stream;
         XmlSettings m_Settings;
