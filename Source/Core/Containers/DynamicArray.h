@@ -7,12 +7,6 @@
 
 namespace Hydro
 {
-
-    struct Allocator
-    {
-        
-    };
-    
     template<typename T>
     class Array : public Iterable<T>
     {
