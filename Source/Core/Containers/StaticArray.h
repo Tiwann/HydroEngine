@@ -3,6 +3,7 @@
 #include "Core/Assertion.h"
 #include <initializer_list>
 #include <algorithm>
+#include <cstring>
 
 namespace Hydro
 {
@@ -19,10 +20,7 @@ namespace Hydro
         
         StaticArray()
         {
-            for(SizeType i = 0; i < N; ++i)
-            {
-                m_Data[i] = T();
-            }
+            std::memset(m_Data, 0, N * sizeof(T));
         }
 
         StaticArray(const std::initializer_list<T>& List)
@@ -100,6 +98,20 @@ namespace Hydro
                     return i;
             return -1;
         }
+
+        void Fill(const T& Value)
+        {
+            for(SizeType i = 0; i < N; ++i)
+                m_Data[i] = Value;
+        }
+
+        void Memset(SizeType Begin, SizeType End, uint32_t Value)
+        {
+            HYDRO_ASSERT(Begin < End, "Index out of bounds!");
+            HYDRO_ASSERT(End <= N, "index out of bounds!");
+            
+            std::memset(m_Data + Begin, Value, (End - Begin) * sizeof(T));
+        }
         
         Iterator<T> begin() override { return m_Data; }
         Iterator<T> end() override { return m_Data + N; }
@@ -115,6 +127,6 @@ namespace Hydro
         operator PointerType() { return m_Data; }
         operator ConstPointerType() const { return m_Data; }
     private:
-        ValueType m_Data[N];
+        ValueType m_Data[N];;
     };
 }
