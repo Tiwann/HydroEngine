@@ -1,5 +1,5 @@
 #include "Sound.h"
-#include "AudioEngine.h"
+#include "AudioSystem.h"
 #include "Core/Application.h"
 
 #include <fmod/fmod.hpp>
@@ -36,8 +36,8 @@ namespace Hydro
     bool Sound::LoadData(const Path& Filepath, SoundFlags Flags)
     {
         m_Flags = Flags;
-        const Ref<AudioEngine> Engine = g_Application->GetAudioEngine();
-        FMOD::Sound* LoadedSound = Engine->CreateSound(Filepath, Flags);
+        AudioSystem& AudioSystem = g_Application->GetAudioSystem();
+        FMOD::Sound* LoadedSound = AudioSystem.CreateSound(Filepath, Flags);
         if(!LoadedSound) return false;
         m_Handle = LoadedSound;
         

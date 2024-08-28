@@ -1,10 +1,12 @@
-#include "AudioEngine.h"
+#include "AudioSystem.h"
 #include "Core/Flags.h"
 #include "Core/Log.h"
 #include "Core/LogVerbosity.h"
 
 #include <fmod/fmod.hpp>
 #include <fmod/fmod_errors.h>
+
+#include "Core/Containers/String.h"
 
 
 #define FMOD_FAILED(Result) (Result) != FMOD_RESULT::FMOD_OK
@@ -39,22 +41,13 @@ namespace FMOD
         
 namespace Hydro
 {
-    AudioEngine::~AudioEngine()
+    
+    bool AudioSystem::Init(uint32_t SampleRate, uint32_t CallbackBufferSize)
     {
-        
-    }
-
-    Ref<AudioEngine> AudioEngine::Create()
-    {
-        return CreateRef<AudioEngine>();
-    }
-
-    // Logg errors
-    bool AudioEngine::Init(uint32_t SampleRate, uint32_t CallbackBufferSize)
-    {
-        FMOD_RESULT Result = FMOD::System_Create(&m_System);
+        FMOD_RESULT Result = FMOD::System_Create(&m_Handle);
         FMOD_CHECK(Result);
 
+#if defined(HYDRO_DEBUG)
         FMOD::Debug_Initialize(FMOD_DEBUG_LEVEL_WARNING | FMOD_DEBUG_LEVEL_ERROR, FMOD_DEBUG_MODE_CALLBACK, [](
             FMOD_DEBUG_FLAGS flags,
             const char *file,
@@ -77,43 +70,43 @@ namespace Hydro
 
             return FMOD_OK;
         });
-
-        Result = m_System->setOutput(FMOD_OUTPUTTYPE_AUTODETECT);
+#endif
+        Result = m_Handle->setOutput(FMOD_OUTPUTTYPE_AUTODETECT);
         FMOD_CHECK(Result);
 
-        Result = m_System->setDSPBufferSize(CallbackBufferSize, 4);
+        Result = m_Handle->setDSPBufferSize(CallbackBufferSize, 4);
         FMOD_CHECK(Result);
 
-        Result = m_System->set3DNumListeners(FMOD_MAX_LISTENERS);
+        Result = m_Handle->set3DNumListeners(FMOD_MAX_LISTENERS);
         FMOD_CHECK(Result);
 
-        Result = m_System->setSoftwareFormat((int)SampleRate, FMOD_SPEAKERMODE_STEREO, 0);
+        Result = m_Handle->setSoftwareFormat((int)SampleRate, FMOD_SPEAKERMODE_STEREO, 0);
         FMOD_CHECK(Result);
 
-        Result = m_System->init(1024, FMOD_INIT_NORMAL, nullptr);
+        Result = m_Handle->init(1024, FMOD_INIT_NORMAL, nullptr);
         FMOD_CHECK(Result);
         
         return true;
     }
 
-    void AudioEngine::Destroy()
+    void AudioSystem::Destroy()
     {
-        m_System->close();
-        m_System->release();
+        m_Handle->close();
+        m_Handle->release();
     }
 
-    void AudioEngine::OnUpdate()
+    void AudioSystem::OnUpdate()
     {
-        m_System->update();
+        m_Handle->update();
     }
 
-    FMOD::Sound* AudioEngine::CreateSound(const Path& Filepath, SoundFlags Flags)
+    FMOD::Sound* AudioSystem::CreateSound(const Path& Filepath, SoundFlags Flags)
     {
         FMOD::Sound* Sound = nullptr;
-        const FMOD_RESULT Result = m_System->createSound(Filepath.string().c_str(), Flags.As<FMOD_MODE>(), nullptr, &Sound);
+        const FMOD_RESULT Result = m_Handle->createSound(Filepath.string().c_str(), Flags.As<FMOD_MODE>(), nullptr, &Sound);
         if(Result != FMOD_OK)
         {
-            const std::string Error = FMOD_ErrorString(Result);
+            const String Error = FMOD_ErrorString(Result);
             HYDRO_LOG(AudioEngine, Verbosity::Error, "Failed to create sound: {}", Error);
             return nullptr;
         }
@@ -121,8 +114,8 @@ namespace Hydro
     }
     
 
-    FMOD::System* AudioEngine::GetSystem() const
+    FMOD::System* AudioSystem::GetHandle() const
     {
-        return m_System;
+        return m_Handle;
     }
 }

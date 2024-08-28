@@ -15,21 +15,20 @@ namespace FMOD
 
 namespace Hydro
 {
-    class AudioEngine
+    class AudioSystem
     {
     public:
-        AudioEngine() = default;
-        ~AudioEngine();
-        static Ref<AudioEngine> Create();
+        AudioSystem() = default;
+        ~AudioSystem() = default;
 
         bool Init(uint32_t SampleRate, uint32_t CallbackBufferSize);
         void Destroy();
         void OnUpdate();
 
         FMOD::Sound* CreateSound(const Path& Filepath, SoundFlags Flags);
-        FMOD::System* GetSystem() const;
+        FMOD::System* GetHandle() const;
 
     private:
-        FMOD::System* m_System = nullptr;
+        FMOD::System* m_Handle = nullptr;
     };
 }

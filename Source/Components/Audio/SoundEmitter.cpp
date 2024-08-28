@@ -4,7 +4,7 @@
 #include <miniaudio/miniaudio.h>
 
 #include "Components/Transform.h"
-#include "Audio/AudioEngine.h"
+#include "Audio/AudioSystem.h"
 #include "Audio/Sound.h"
 #include "Core/Application.h"
 #include "Core/PopupMessage.h"
@@ -25,16 +25,13 @@ namespace Hydro
     void SoundEmitter::OnInit()
     {
         Component::OnInit();
-        const Ref<AudioEngine> Engine = g_Application->GetAudioEngine();
-        m_System = Engine->GetSystem();
-        OnPlayingEvent.BindMember(this, &SoundEmitter::OnPlaying);
+        HYDRO_BIND_EVENT(OnPlayingEvent, &SoundEmitter::OnPlaying);
     }
 
     void SoundEmitter::OnDestroy()
     {
         Component::OnDestroy();
         Stop();
-        m_System = nullptr;
         m_Channel = nullptr;
         OnStartedEvent.ClearAll();
         OnStopEvent.ClearAll();
@@ -166,7 +163,10 @@ namespace Hydro
             HYDRO_LOG(SoundEmitter, Verbosity::Error, "Tried to play a SoundEmitter that had no sound!");
             return;
         }
-        m_System->playSound(m_Sound->GetHandle(), nullptr, false, &m_Channel);
+
+        const AudioSystem& AudioSystem = g_Application->GetAudioSystem();
+        FMOD::System* Handle = AudioSystem.GetHandle();
+        Handle->playSound(m_Sound->GetHandle(), nullptr, false, &m_Channel);
         OnStartedEvent.Broadcast(m_Sound, false);
     }
 
@@ -187,7 +187,12 @@ namespace Hydro
         m_Channel->setPaused(false);
         OnStartedEvent.Broadcast(m_Sound, true);
     }
-    
+
+    Ref<Sound> SoundEmitter::GetSound() const
+    {
+        return m_Sound;
+    }
+
     void SoundEmitter::SetSound(const Ref<Sound>& Clip)
     {
         if(IsPlaying()) Stop();

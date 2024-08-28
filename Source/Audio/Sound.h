@@ -36,7 +36,7 @@ namespace Hydro
         uint32_t GetBitsPerSample() const;
         float GetDuration() const;
     private:
-        friend class AudioEngine;
+        friend class AudioSystem;
 
         GUID m_Guid;
         FMOD::Sound* m_Handle = nullptr;

@@ -20,7 +20,6 @@ namespace Hydro
         void OnInspectorGUI(const ImGuiIO& IO) override;
         void SetIndex(uint32_t Index);
     private:
-        FMOD::System* m_System = nullptr;
         uint32_t m_Index = 0;
     };
 }

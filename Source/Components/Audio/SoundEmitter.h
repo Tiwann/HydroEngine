@@ -35,6 +35,7 @@ namespace Hydro
         void Pause();
         void Resume();
 
+        Ref<Sound> GetSound() const;
         void SetSound(const Ref<Sound>& Clip);
         void SetVolume(float Vol);
         void SetPitch(float Pitch);
@@ -54,7 +55,6 @@ namespace Hydro
         uint32_t m_PlaybackPosition = 0;
         uint32_t m_Length = 0;
         
-        FMOD::System* m_System = nullptr;
         FMOD::Channel* m_Channel = nullptr;
     };
 }

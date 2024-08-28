@@ -1,7 +1,7 @@
 #include "SoundListener.h"
 
 #include "Core/Application.h"
-#include "Audio/AudioEngine.h"
+#include "Audio/AudioSystem.h"
 #include "Components/Transform.h"
 #include "Components/Physics/PhysicsComponent.h"
 #include <fmod/fmod.hpp>
@@ -20,14 +20,11 @@ namespace Hydro
     void SoundListener::OnInit()
     {
         Component::OnInit();
-        const Ref<AudioEngine>& Engine = g_Application->GetAudioEngine();
-        m_System = Engine->GetSystem();
     }
 
     void SoundListener::OnDestroy()
     {
         Component::OnDestroy();
-        m_System = nullptr;
     }
 
     void SoundListener::OnStart()
@@ -39,13 +36,16 @@ namespace Hydro
     {
         Component::OnUpdate(Delta);
 
+        const AudioSystem& AudioSystem = g_Application->GetAudioSystem();
+        FMOD::System* AudioSystemHandle = AudioSystem.GetHandle();
+
         const Ref<PhysicsComponent>& Physics = m_Entity->GetComponent<PhysicsComponent>();
         const Vector3 Position = GetTransform()->GetPosition();
         const Vector3 Forward = GetTransform()->GetForwardVector();
         const Vector3 Up = GetTransform()->GetUpVector();
         const Vector3 Velocity = Physics ? Physics->GetLinearVelocity() : Vector3::Zero;
         
-        m_System->set3DListenerAttributes((int)m_Index,
+        AudioSystemHandle->set3DListenerAttributes((int)m_Index,
             (const FMOD_VECTOR*)&Position,
             (const FMOD_VECTOR*)&Velocity,
             (const FMOD_VECTOR*)&Forward,
