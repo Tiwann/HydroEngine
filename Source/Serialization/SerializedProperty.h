@@ -1,5 +1,4 @@
 #pragma once
-#include "Serializable.h"
 #include "Core/TypeTraits.h"
 
 namespace Hydro
