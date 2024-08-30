@@ -65,3 +65,10 @@
 #define HYDRO_ARRAY_COUNT(Array) (sizeof((Array)) / sizeof(*(Array)))
 
 #define HYDRO_NAME_MAX_SIZE 128
+
+#define HYDRO_UNINITIALIZED         0xCD
+#define HYDRO_DEFAULT_MAX_RESOURCE  256
+#define HYDRO_MAX_TEXTURES          128
+#define HYDRO_MAX_SHADERS           64
+#define HYDRO_MAX_SOUNDS            256
+
