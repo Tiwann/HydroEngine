@@ -26,14 +26,14 @@ bool Hydro::SceneSerializer::SerializeMemory(const Ref<Scene>& Scene, std::strin
         { "Guid", Scene->GetGuid().GetString() }
     };
 
-    Scene->ForEach([this](const auto& Object)
+    Scene->ForEach([this](const auto& Entity)
     {
         nlohmann::json JsonGameObject{ "Game Object", {
-            { "Name", Object->GetName() },
-            { "Guid", Object->GetGuid().GetString() },
+            { "Name", Entity->GetName() },
+            { "Guid", Entity->GetGuid().GetString() },
         } };
                 
-        Object->ForEach([this, &JsonGameObject](const Ref<Component>& Component)
+        Entity->ForEach([this, &JsonGameObject](const Ref<Component>& Component)
         {
             if(const auto& Tr = Cast<Transform>(Component))
             {
