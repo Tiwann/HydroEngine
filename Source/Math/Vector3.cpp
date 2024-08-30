@@ -126,7 +126,7 @@ namespace Hydro
 
     Vector3::operator JPH::Vec3() const
     {
-        return JPH::Vec3(x, y, z);
+        return {x, y, z};
     }
 
     Vector3 Vector3::Apply(float (*Function)(float)) const
