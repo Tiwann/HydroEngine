@@ -41,8 +41,6 @@ namespace Hydro
     class Application
     {
     public:
-        using Super = Application;
-        
         Application(Array<const char*> Arguments);
         virtual ~Application() = default;
         Application(const Application&) = delete;

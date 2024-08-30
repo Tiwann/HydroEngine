@@ -127,6 +127,6 @@ namespace Hydro
         operator PointerType() { return m_Data; }
         operator ConstPointerType() const { return m_Data; }
     private:
-        ValueType m_Data[N];;
+        ValueType m_Data[N];
     };
 }

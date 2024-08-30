@@ -513,6 +513,28 @@ namespace Hydro
                 break;
             }
         });
+
+        glfwSetJoystickCallback([](const int JoystickID, const int Event)
+        {
+            if(Event == GLFW_CONNECTED)
+            {
+                HYDRO_LOG(Application, Verbosity::Warning, "Jostick {} connected!", JoystickID);
+                Gamepad* NewGamepad = Input::s_Gamepads.New();
+                NewGamepad->Initialize(JoystickID, glfwGetJoystickName(JoystickID));
+            }
+            else if(Event == GLFW_DISCONNECTED)
+            {
+                HYDRO_LOG(Application, Verbosity::Warning, "Jostick {} disconnected!", JoystickID);
+                Gamepad* DisconnectedGamepad = nullptr;
+                Input::s_Gamepads.ForEachValid([&DisconnectedGamepad, &JoystickID](Gamepad* Gamepad)
+                {
+                    if(Gamepad->GetID() == (uint32_t)JoystickID)
+                        DisconnectedGamepad = Gamepad;
+                });
+                
+                Input::s_Gamepads.Free(DisconnectedGamepad);
+            }
+        });
         
         
         HYDRO_LOG(Application, Verbosity::Info, "Window successfully created!");
