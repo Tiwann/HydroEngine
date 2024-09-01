@@ -1,22 +1,16 @@
 ﻿#pragma once
-
 #include "SharedPointer.h"
 #include "LogCategory.h"
-
 #include <string>
 
-#include "Input/KeyCode.h"
-#include "Input/InputState.h"
-#include "Input/MouseButton.h"
-#include "MulticastDelegate.h"
-#include "Math/Vector2.h"
 
 struct GLFWwindow;
 
 namespace Hydro
 {
     class Image;
-
+    class Vector2;
+    
     HYDRO_DECLARE_LOG_CATEGORY_STATIC(Input, "INPUT")
     
     class Window
@@ -65,11 +59,7 @@ namespace Hydro
 
         bool IsVisible() const { return m_Visible; }
 
-        using KeyDelegate = MulticastDelegate<void(KeyCode, InputState)>;
-        KeyDelegate OnKeyEvent;
-
-        using MouseButtonDelegate = MulticastDelegate<void(MouseButton, InputState)>;
-        MouseButtonDelegate OnMouseButtonEvent;
+        
     private:
         GLFWwindow* m_Handle = nullptr;
         uint32_t m_Width{0}, m_Height{0}, m_PositionX{0}, m_PositionY{0};

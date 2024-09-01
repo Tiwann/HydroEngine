@@ -8,6 +8,10 @@
 #include "Editor/Menu.h"
 #include "ResourceManager/SoundManager.h"
 #include "Audio/AudioSystem.h"
+#include "Input/GamepadButton.h"
+#include "Input/InputState.h"
+#include "Input/KeyCode.h"
+#include "Input/MouseButton.h"
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(Application, "APPLICATION");
 
@@ -36,6 +40,15 @@ namespace Hydro
         static inline MulticastDelegate<void()> OnExit;
         static inline MulticastDelegate<void()> OnFrameBegin;
         static inline MulticastDelegate<void()> OnFrameEnd;
+
+        using KeyDelegate = MulticastDelegate<void(KeyCode, InputState)>;
+        static inline KeyDelegate OnKeyEvent;
+
+        using MouseButtonDelegate = MulticastDelegate<void(MouseButton, InputState)>;
+        static inline MouseButtonDelegate OnMouseButtonEvent;
+
+        using GamepadButtonDelegate = MulticastDelegate<void(size_t, InputState)>;
+        static inline GamepadButtonDelegate OnGamepadButtonEvent;
     };
     
     class Application
