@@ -20,6 +20,7 @@ namespace Hydro
         Button14,
         Button15,
         Button16,
+        ButtonTotal
     };
     
 }

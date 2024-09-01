@@ -1,12 +1,11 @@
 #pragma once
-#include "Gamepad.h"
 #include "KeyCode.h"
 #include "InputState.h"
 #include "MouseButton.h"
 #include "GamepadButton.h"
-#include "Core/BumpAllocator.h"
 #include "Core/Containers/String.h"
 #include "Core/Containers/Map.h"
+#include "Core/Containers/ArrayView.h"
 
 
 namespace Hydro
@@ -27,10 +26,17 @@ namespace Hydro
         static bool GetMouseButtonUp(MouseButton MouseButton);
         
         static Vector2 GetMousePosition();
+
+        static const Array<uint8_t>& GetGamepadButtons(size_t ID);
     private:
         inline static Map<KeyCode, InputState> s_KeyStates;
         inline static Map<MouseButton, InputState> s_MouseButtonStates;
-        inline static BumpAllocator<Gamepad, 16> s_Gamepads;
+        
+        inline static StaticArray<Array<uint8_t>, 16> s_GamepadButtons;
+        inline static StaticArray<Array<uint8_t>, 16> s_LastGamepadButtons;
+        
+
+        static void UpdateGamepadButtons();
         static void ResetInputStates();
     };
 }

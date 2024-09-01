@@ -1,5 +1,4 @@
 #include "Input.h"
-
 #include "Core/Application.h"
 #include "Core/Window.h"
 #include "Math/Vector2.h"
@@ -7,7 +6,6 @@
 
 namespace Hydro
 {
-    
     bool Input::GetKeyDown(KeyCode KeyCode)
     {
         return s_KeyStates[KeyCode] == InputState::Pressed;
@@ -178,11 +176,48 @@ namespace Hydro
         return {(float)X, (float)Y};
     }
 
-    void Input::ResetInputStates()
+    const Array<uint8_t>& Input::GetGamepadButtons(size_t ID)
     {
-        for(auto& Pair : s_KeyStates)
+        return s_GamepadButtons[ID];
+    }
+
+
+    void Input::UpdateGamepadButtons()
+    {
+        for(size_t i = 0; i < 16; ++i)
         {
-            Pair.Value = InputState::None;
+            int ButtonCount;
+            const uint8_t* Buttons = glfwGetJoystickButtons((int)i, &ButtonCount);
+            s_GamepadButtons[i] = Array(Buttons, ButtonCount);
+            for(size_t j = 0 ; j < s_GamepadButtons.Count(); ++j)
+            {
+                if(s_GamepadButtons.Count() == s_LastGamepadButtons.Count() && !s_GamepadButtons[i].IsEmpty() && !s_LastGamepadButtons[i].IsEmpty())
+                {
+                    if(s_GamepadButtons[i][j] != s_LastGamepadButtons[i][j])
+                    {
+                        const InputState State = s_GamepadButtons[i][j] ? InputState::Pressed : InputState::Released;
+                        ApplicationDelegates::OnGamepadButtonEvent.BroadcastChecked(j, State);
+                    }
+                }
+                
+            }
+            s_LastGamepadButtons[i] = s_GamepadButtons[i];
         }
     }
+
+    void Input::ResetInputStates()
+    {
+        for(auto& [Key, State] : s_KeyStates)
+        {
+            State = InputState::None;
+        }
+
+        for(auto& [MouseButton, State] : s_MouseButtonStates)
+        {
+            State = InputState::None;
+        }
+
+        s_LastGamepadButtons = s_GamepadButtons;
+    }
+    
 }

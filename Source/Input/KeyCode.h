@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 #define HYDRO_KEY_UNKNOWN            -1
 #define HYDRO_KEY_SPACE              32
@@ -125,7 +126,7 @@
 
 namespace Hydro
 {
-    enum class KeyCode
+    enum class KeyCode : uint16_t
     {
         UNKNOWN       = HYDRO_KEY_UNKNOWN,
         SPACE         = HYDRO_KEY_SPACE,

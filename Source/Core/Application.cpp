@@ -131,6 +131,7 @@ namespace Hydro
         {
             ApplicationDelegates::OnFrameBegin.Broadcast();
             Input::ResetInputStates();
+            Input::UpdateGamepadButtons();
             glfwPollEvents();
             ScopedTimer FrameTimer([this](const float Duration) { m_DeltaTime = Duration; });
             
@@ -482,16 +483,14 @@ namespace Hydro
         glfwSetKeyCallback(m_Window->GetNativeWindow(), [](GLFWwindow* window, int key, int, int action, int)
         {
             const Application* App = (Application*)glfwGetWindowUserPointer(window);
-            Window::KeyDelegate& OnKeyEvent = App->GetWindow()->OnKeyEvent;
-            
             switch (action)
             {
             case GLFW_PRESS:
-                if(OnKeyEvent.IsBound()) OnKeyEvent.Broadcast((KeyCode)key, InputState::Pressed);
+                if(ApplicationDelegates::OnKeyEvent.IsBound()) ApplicationDelegates::OnKeyEvent.Broadcast((KeyCode)key, InputState::Pressed);
                 Input::s_KeyStates[(KeyCode)key] = InputState::Pressed;
                 break;
             case GLFW_RELEASE:
-                if(OnKeyEvent.IsBound()) OnKeyEvent.Broadcast((KeyCode)key, InputState::Released);
+                if(ApplicationDelegates::OnKeyEvent.IsBound()) ApplicationDelegates::OnKeyEvent.Broadcast((KeyCode)key, InputState::Released);
                 Input::s_KeyStates[(KeyCode)key] = InputState::Released;
                 break;
             }
@@ -500,15 +499,14 @@ namespace Hydro
         glfwSetMouseButtonCallback(m_Window->GetNativeWindow(), [](GLFWwindow *window, int button, int action, int)
         {
             const Application* App = (Application*)glfwGetWindowUserPointer(window);
-            Window::MouseButtonDelegate& OnMouseButtonEvent = App->GetWindow()->OnMouseButtonEvent;
             switch (action)
             {
             case GLFW_PRESS:
-                if(OnMouseButtonEvent.IsBound()) OnMouseButtonEvent.Broadcast((MouseButton)button, InputState::Pressed);
+                if(ApplicationDelegates::OnMouseButtonEvent.IsBound()) ApplicationDelegates::OnMouseButtonEvent.Broadcast((MouseButton)button, InputState::Pressed);
                 Input::s_MouseButtonStates[(MouseButton)button] = InputState::Pressed;
                 break;
             case GLFW_RELEASE:
-                if(OnMouseButtonEvent.IsBound()) OnMouseButtonEvent.Broadcast((MouseButton)button, InputState::Released);
+                if(ApplicationDelegates::OnMouseButtonEvent.IsBound()) ApplicationDelegates::OnMouseButtonEvent.Broadcast((MouseButton)button, InputState::Released);
                 Input::s_MouseButtonStates[(MouseButton)button] = InputState::Released;
                 break;
             }
@@ -518,23 +516,15 @@ namespace Hydro
         {
             if(Event == GLFW_CONNECTED)
             {
-                HYDRO_LOG(Application, Verbosity::Warning, "Jostick {} connected!", JoystickID);
-                Gamepad* NewGamepad = Input::s_Gamepads.New();
-                NewGamepad->Initialize(JoystickID, glfwGetJoystickName(JoystickID));
+                const StringView GamepadName = glfwGetJoystickName(JoystickID);
+                HYDRO_LOG(Application, Verbosity::Warning, "Joystick {} connected: {}", JoystickID, GamepadName);
             }
             else if(Event == GLFW_DISCONNECTED)
             {
-                HYDRO_LOG(Application, Verbosity::Warning, "Jostick {} disconnected!", JoystickID);
-                Gamepad* DisconnectedGamepad = nullptr;
-                Input::s_Gamepads.ForEachValid([&DisconnectedGamepad, &JoystickID](Gamepad* Gamepad)
-                {
-                    if(Gamepad->GetID() == (uint32_t)JoystickID)
-                        DisconnectedGamepad = Gamepad;
-                });
-                
-                Input::s_Gamepads.Free(DisconnectedGamepad);
+               
             }
         });
+        
         
         
         HYDRO_LOG(Application, Verbosity::Info, "Window successfully created!");

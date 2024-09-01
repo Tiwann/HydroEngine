@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Core/Containers/String.h"
+#include "Core/Containers/StringView.h"
 #include "GamepadButton.h"
 #include "InputState.h"
 #include "Core/Containers/Map.h"
@@ -11,19 +11,30 @@ namespace Hydro
     class Gamepad
     {
     public:
+        using ButtonStateMap = Map<GamepadButton, InputState>;
         Gamepad() = default;
-        ~Gamepad() = default;
+        ~Gamepad()
+        {
+            m_ButtonsStates.Clear();
+        }
         
-        void Initialize(const uint32_t ID, const String& Name);
+        Gamepad(const Gamepad& other) = default;
+        Gamepad(Gamepad&& other) noexcept;
+        Gamepad& operator=(const Gamepad& other);
+        Gamepad& operator=(Gamepad&& other) noexcept;
+
+        void Initialize(uint32_t ID, const StringView& Name);
         bool GetButtonDown(GamepadButton Button);
         bool GetButton(GamepadButton Button);
         bool GetButtonUp(GamepadButton Button);
 
         uint32_t GetID() const;
-
+        
+        ButtonStateMap& GetButtonsStates();
+        const StringView& GetName() const;
     private:
         uint32_t m_ID;
-        String m_Name;
-        Map<GamepadButton, InputState> m_State;
+        StringView m_Name;
+        ButtonStateMap m_ButtonsStates;
     };
 }
