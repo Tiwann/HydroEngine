@@ -16,6 +16,8 @@ namespace Hydro
         using ConstPointerType = const T*;
         using ReferenceType = T&;
         using ConstReferenceType = const T&;
+        using Iterator = Iterator<T>;
+        using ConstIterator = ConstIterator<T>;
         using SizeType = size_t;
         
         StaticArray()
@@ -113,11 +115,11 @@ namespace Hydro
             std::memset(m_Data + Begin, Value, (End - Begin) * sizeof(T));
         }
         
-        Iterator<T> begin() override { return m_Data; }
-        Iterator<T> end() override { return m_Data + N; }
+        Iterator begin() override { return m_Data; }
+        Iterator end() override { return m_Data + N; }
         
-        ConstIterator<T> begin() const override{ return m_Data; }
-        ConstIterator<T> end() const override { return (PointerType)(&m_Data[0] + N); }
+        ConstIterator begin() const override{ return m_Data; }
+        ConstIterator end() const override { return m_Data + N; }
 
         ConstPointerType Data() const { return m_Data; }
         PointerType Data() { return m_Data; }
