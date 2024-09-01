@@ -42,17 +42,4 @@ namespace Hydro::Memory
     {
         HYDRO_FREE(Ptr);
     }
-    
-    
-    inline void* Memcpy(void* Destination, const void* Source, size_t Size)
-    {
-        return std::memcpy(Destination, Source, Size);
-    }
-    
-    template<typename T>
-    Iterator<T> Copy(Iterator<T> Begin, Iterator<T> End, Iterator<T> Destination)
-    {
-        return Iterator<T>(memcpy(Destination, Begin, End - Begin));
-    }
-    
 }
