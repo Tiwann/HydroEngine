@@ -21,22 +21,28 @@ namespace Hydro
 
         BumpAllocator()
         {
-            m_Data.Memset(0, Size, UninitializedValue);
+            m_AvailableFlags.Fill(true);
+            m_Data.Fill(T());
         }
 
-        template<typename... Args>
-        PointerType New(Args&&... Arguments)
+        ~BumpAllocator()
+        {
+            for (const Array<T*> All = GetAllValid(); T* Element : All)
+            {
+                Free(Element);
+            }
+            m_AvailableFlags.Fill(false);
+        }
+        
+        PointerType New()
         {
             for(SizeType i = 0; i < Size; ++i)
             {
-                const uint8_t* Data = (uint8_t*)&m_Data[i];
-                for(size_t Byte = 0; Byte < sizeof(T); ++Byte)
-                {
-                    if(Data[Byte] == 0xCDui8)
-                        return nullptr;
-                }
+                if(!m_AvailableFlags[i])
+                    continue;
                 
-                m_Data[i] = std::move(T(std::forward<Args>(Arguments)...));
+                m_AvailableFlags[i] = false;
+                ++m_Count;
                 return &m_Data[i];
             }
             return nullptr;
@@ -47,57 +53,53 @@ namespace Hydro
             if(!Ptr) return;
             HYDRO_ASSERT(Ptr >= &m_Data[0] && Ptr < &m_Data[0] + Size, "Memory is not allocated from this bump allocator!");
             SizeType Index = Ptr - &m_Data[0];
-            Ptr->~T();
-            m_Data.Memset(Index, Index + 1, UninitializedValue);
+            m_AvailableFlags[Index] = true;
+            --m_Count;
         }
 
         SizeType Count() const
         {
-            SizeType Result = 0;
+            return m_Count;
+        }
+
+        Array<T*> GetAllValid()
+        {
+            Array<T*> Result;
             for(SizeType i = 0; i < Size; ++i)
             {
-                const uint8_t* Data = (uint8_t*)&m_Data[i];
-                for(size_t Byte = 0; Byte < sizeof(T); ++Byte)
-                {
-                    if(Data[Byte] == 0xCDui8)
-                        return -1;
-                }
-                
-                ++Result;
+                if(!m_AvailableFlags[i])
+                    Result.Add(&m_Data[i]);
             }
             return Result;
         }
 
-        void ForEachValid(const std::function<void(T* Element)>& Func)
+        T* Single(const std::function<bool(const T*)>& Predicate)
         {
             for(SizeType i = 0; i < Size; ++i)
             {
-                const uint8_t* Data = (uint8_t*)&m_Data[i];
-                
-                for(size_t Byte = 0; Byte < sizeof(T); ++Byte)
+                if(!m_AvailableFlags[i])
                 {
-                    if(Data[Byte] == 0xCDui8)
-                        continue;
+                    if(Predicate(&m_Data[i]))
+                        return &m_Data[i];
                 }
-                
-                Func(&m_Data[i]);
             }
-        }
-
-        T* Single(const std::function<bool(T* Element)>& Predicate)
-        {
-            ForEachValid([&Predicate](T* Element)
-            {
-                if(Predicate(Element))
-                {
-                    return Element;
-                }
-            });
             return nullptr;
         }
 
-        
+        Array<T*> Where(const std::function<bool(const T*)>& Predicate)
+        {
+            Array<T*> Result;
+            for(SizeType i = 0; i < Size; ++i)
+            {
+                if(!m_AvailableFlags[i] && Predicate(&m_Data[i]))
+                    Result.Add(&m_Data[i]);
+            }
+            return Result;
+        }
+    
     private:
-         ArrayType m_Data;
+        StaticArray<bool, Size> m_AvailableFlags;
+        ArrayType m_Data;
+        SizeType m_Count = 0;
     };
 }
