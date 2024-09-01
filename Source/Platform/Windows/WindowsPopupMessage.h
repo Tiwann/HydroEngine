@@ -11,9 +11,9 @@ namespace Hydro
         WindowsPopupMessage(HYDRO_POPUPMESSAGE_SIGNATURE);
         PopupMessageResult Show() override;
         
-        using ResponseConvertor = std::unordered_map<PopupMessageResponse, int32_t>;
-        using ResultConvertor = std::unordered_map<int32_t, PopupMessageResult>;
-        using IconConvertor = std::unordered_map<PopupMessageIcon, int32_t>;
+        using ResponseConvertor = std::unordered_map<PopupMessageResponse, int32>;
+        using ResultConvertor = std::unordered_map<int32, PopupMessageResult>;
+        using IconConvertor = std::unordered_map<PopupMessageIcon, int32>;
     private:
         static ResponseConvertor s_ResponseConvertor;
         static ResultConvertor s_ResultConvertor;

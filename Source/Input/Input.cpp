@@ -176,7 +176,7 @@ namespace Hydro
         return {(float)X, (float)Y};
     }
 
-    const Array<uint8_t>& Input::GetGamepadButtons(size_t ID)
+    const Array<uint8>& Input::GetGamepadButtons(size_t ID)
     {
         return s_GamepadButtons[ID];
     }
@@ -187,7 +187,7 @@ namespace Hydro
         for(size_t i = 0; i < 16; ++i)
         {
             int ButtonCount;
-            const uint8_t* Buttons = glfwGetJoystickButtons((int)i, &ButtonCount);
+            const uint8* Buttons = glfwGetJoystickButtons((int)i, &ButtonCount);
             s_GamepadButtons[i] = Array(Buttons, ButtonCount);
             for(size_t j = 0 ; j < s_GamepadButtons.Count(); ++j)
             {

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "SharedPointer.h"
 #include "LogCategory.h"
+#include "Types.h"
 #include <string>
 
 
@@ -18,12 +19,12 @@ namespace Hydro
     public:
         friend class Application;
         
-        Window(const std::string& name, uint32_t width, uint32_t height, bool resizable);
+        Window(const std::string& name, uint32 width, uint32 height, bool resizable);
         ~Window();
         
 
 
-        static Ref<Window> Create(const std::string& name, uint32_t width, uint32_t height, bool resizable);
+        static Ref<Window> Create(const std::string& name, uint32 width, uint32 height, bool resizable);
         const GLFWwindow* GetNativeWindow() const;
         GLFWwindow* GetNativeWindow();
         
@@ -62,7 +63,7 @@ namespace Hydro
         
     private:
         GLFWwindow* m_Handle = nullptr;
-        uint32_t m_Width{0}, m_Height{0}, m_PositionX{0}, m_PositionY{0};
+        uint32 m_Width{0}, m_Height{0}, m_PositionX{0}, m_PositionY{0};
         std::string m_Name;
         bool m_Resizable{false};
         bool m_HasFocus{false};

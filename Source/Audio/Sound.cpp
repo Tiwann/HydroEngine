@@ -46,7 +46,7 @@ namespace Hydro
             (int*)&m_Channels,
             (int*)&m_BitsPerSample);
 
-        uint32_t Length;
+        uint32 Length;
         m_Handle->getLength(&Length, FMOD_TIMEUNIT_MS);
         m_Duration = (float)Length / 1000.0f;
         
@@ -84,12 +84,12 @@ namespace Hydro
         return m_Format;
     }
 
-    uint32_t Sound::GetChannels() const
+    uint32 Sound::GetChannels() const
     {
         return m_Channels;
     }
 
-    uint32_t Sound::GetBitsPerSample() const
+    uint32 Sound::GetBitsPerSample() const
     {
         return m_BitsPerSample;
     }

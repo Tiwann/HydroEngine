@@ -7,7 +7,7 @@ namespace Hydro
     {
     public:
         VulkanShader(const std::string& Name, const Path& Filepath, ShaderSourceLanguage Language);
-        VulkanShader(const std::string& Name, const Buffer<uint8_t>& Buffer, ShaderSourceLanguage Language);
+        VulkanShader(const std::string& Name, const Buffer<uint8>& Buffer, ShaderSourceLanguage Language);
         VulkanShader(const std::string& Name, const ShaderSource& ShaderSource, ShaderSourceLanguage Language);
         
         bool Compile() override;
@@ -22,11 +22,11 @@ namespace Hydro
         void SetUniformMat4(const std::string& Name, const Matrix4& Value) override;
         void SetUniformMat2(const std::string& Name, const Matrix2& Value) override;
         void SetUniformMat3(const std::string& Name, const Matrix3& Value) override;
-        void SetUniformInt(const std::string& Name, int32_t Value) override;
+        void SetUniformInt(const std::string& Name, int32 Value) override;
         void SetUniformTexture(const std::string& Name, const Ref<Texture2D>& Texture) override;
 
         float GetUniformFloat(const std::string& Name) override;
-        int32_t GetUniformInt(const std::string& Name) override;
+        int32 GetUniformInt(const std::string& Name) override;
         Vector2 GetUniformFloat2(const std::string& Name) override;
         Vector3 GetUniformFloat3(const std::string& Name) override;
         Vector4 GetUniformFloat4(const std::string& Name) override;

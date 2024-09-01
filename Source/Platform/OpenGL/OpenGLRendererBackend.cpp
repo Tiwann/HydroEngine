@@ -82,7 +82,7 @@ namespace Hydro
         glViewport((GLint)Position.x, (GLint)Position.y, (GLint)Size.x, (GLint)Size.y);
     }
 
-    void OpenGLRendererBackend::Draw(DrawMode Mode, const Vao& VAO, uint32_t NumVert, const Ref<Shader>& Shader)
+    void OpenGLRendererBackend::Draw(DrawMode Mode, const Vao& VAO, uint32 NumVert, const Ref<Shader>& Shader)
     {
         VAO->Bind();
         Shader->Bind();
@@ -236,7 +236,7 @@ namespace Hydro
     }
 
 
-    std::string OpenGLRendererBackend::GetDebugSourceName(uint32_t Source)
+    std::string OpenGLRendererBackend::GetDebugSourceName(uint32 Source)
     {
         switch (Source)
         {
@@ -250,7 +250,7 @@ namespace Hydro
         }
     }
 
-    Verbosity OpenGLRendererBackend::GetDebugVerbosity(uint32_t Severity)
+    Verbosity OpenGLRendererBackend::GetDebugVerbosity(uint32 Severity)
     {
         switch (Severity)
         {

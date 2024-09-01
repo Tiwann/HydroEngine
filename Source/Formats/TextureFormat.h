@@ -3,7 +3,7 @@
 
 namespace Hydro
 {
-    enum HTexFlagBits : uint32_t
+    enum HTexFlagBits : uint32
     {
         None = 0,
         HYDRO_FLAG_BIT(PixelFormat, 0),
@@ -16,8 +16,8 @@ namespace Hydro
     struct HTexHeader
     {
         char        Magic[4]{ 'H', 'T', 'E', 'X' };
-        uint32_t    Offset;
-        uint32_t    Size;
+        uint32    Offset;
+        uint32    Size;
         HTexFlags   Flags;
     };
 
@@ -33,8 +33,8 @@ namespace Hydro
     struct HTexPixelFormat
     {
         char Magic[4]{ 'P', 'F', 'M', 'T'};
-        uint32_t Offset;
-        uint32_t Size;
+        uint32 Offset;
+        uint32 Size;
         HTexPixelFormatType Format;
     };
     

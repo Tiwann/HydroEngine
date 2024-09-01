@@ -24,14 +24,14 @@ namespace Hydro
         const Ref<SpriteAnimation>& GetAnimation() const;
         void SetAnimation(const Ref<SpriteAnimation>& Animation);
 
-        void SetSpeed(int32_t Speed);
-        int32_t GetSpeed() const;
+        void SetSpeed(int32 Speed);
+        int32 GetSpeed() const;
     private:
         Timer m_Timer;
         Ref<SpriteRenderer> m_SpriteRenderer;
         Ref<SpriteAnimation> m_Animation;
-        int32_t m_Speed = 12;
-        uint32_t m_Index = 0;
+        int32 m_Speed = 12;
+        uint32 m_Index = 0;
         void OnSpriteChange();
     };
 }

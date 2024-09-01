@@ -11,7 +11,7 @@ namespace Hydro
     public:
         static Color Color();
         static float Float(float Min, float Max);
-        static int32_t Integer(int32_t Min, int32_t Max);
+        static int32 Integer(int32 Min, int32 Max);
         
         static Vector2 Vector2(float MinX, float MinY, float MaxX, float MaxY);
     private:

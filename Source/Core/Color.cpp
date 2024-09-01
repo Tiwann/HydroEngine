@@ -9,7 +9,7 @@ namespace Hydro
         a = 1.0f;
     }
 
-    Color::Color(uint32_t color)
+    Color::Color(uint32 color)
     : r((color >> 24 & 0xFF) / 255.0f), g((color >> 16 & 0xFF) / 255.0f), b((color >> 8 & 0xFF) / 255.0f), a((color & 0xFF) / 255.0f)
     {
     }

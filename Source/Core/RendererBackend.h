@@ -44,7 +44,7 @@ namespace Hydro
         virtual void ClearColorBuffer(const Color& color) = 0;
         virtual void SwapBuffers() = 0;
         virtual void SetViewportRect(Vector2 Position, Vector2 Size) = 0;
-        virtual void Draw(DrawMode Mode, const Vao& VAO, uint32_t NumVert, const Ref<Shader>& Shader) = 0;
+        virtual void Draw(DrawMode Mode, const Vao& VAO, uint32 NumVert, const Ref<Shader>& Shader) = 0;
         virtual void DrawIndexed(DrawMode Mode, const Vao& VAO, const Vbo& VBO, const Ibo& IBO, const Ref<Shader>& Shader) = 0;
         virtual void DrawLine(const Vector3& PosA, const Vector3& PosB, float Thickness, const Color& Color) = 0;
         virtual void DrawWireQuad(const Matrix4& Transform, const Vector3& Position, const Vector2& HalfExtents, float Thickness, const Color& Color) = 0;

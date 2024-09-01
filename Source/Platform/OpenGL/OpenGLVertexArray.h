@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/VertexArray.h"
+#include "Core/Types.h"
 
 
 namespace Hydro
@@ -13,6 +14,6 @@ namespace Hydro
         void Unbind() const override;
         void SetBufferLayout(const VertexBufferLayout& Layout) override;
     private:
-        uint32_t m_Handle;
+        uint32 m_Handle;
     };
 }

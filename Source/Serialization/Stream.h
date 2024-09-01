@@ -25,14 +25,14 @@ namespace Hydro
         virtual void Close();
 
         SizeType ReadChar(char& OutChar);
-        SizeType ReadInt8(int8_t& OutInt);
-        SizeType ReadInt16(int16_t& OutInt);
-        SizeType ReadInt32(int32_t& OutInt);
-        SizeType ReadInt64(int64_t& OutInt);
-        SizeType ReadUInt8(uint8_t& OutInt);
-        SizeType ReadUInt16(uint16_t& OutInt);
-        SizeType ReadUInt32(uint32_t& OutInt);
-        SizeType ReadUInt64(uint64_t& OutInt);
+        SizeType ReadInt8(int8& OutInt);
+        SizeType ReadInt16(int16& OutInt);
+        SizeType ReadInt32(int32& OutInt);
+        SizeType ReadInt64(int64& OutInt);
+        SizeType ReadUInt8(uint8& OutInt);
+        SizeType ReadUInt16(uint16& OutInt);
+        SizeType ReadUInt32(uint32& OutInt);
+        SizeType ReadUInt64(uint64& OutInt);
 
         template<typename Type>
         SizeType ReadBuffer(Buffer<Type>& OutBuffer, SizeType Count)
@@ -44,14 +44,14 @@ namespace Hydro
         SizeType ReadString(String& Str, SizeType Count);
 
         SizeType WriteChar(const char InChar);
-        SizeType WriteInt8(const int8_t& InInt);
-        SizeType WriteInt16(const int16_t& InInt);
-        SizeType WriteInt32(const int32_t& InInt);
-        SizeType WriteInt64(const int64_t& InInt);
-        SizeType WriteUInt8(const uint8_t& InInt);
-        SizeType WriteUInt16(const uint16_t& InInt);
-        SizeType WriteUInt32(const uint32_t& InInt);
-        SizeType WriteUInt64(const uint64_t& InInt);
+        SizeType WriteInt8(const int8& InInt);
+        SizeType WriteInt16(const int16& InInt);
+        SizeType WriteInt32(const int32& InInt);
+        SizeType WriteInt64(const int64& InInt);
+        SizeType WriteUInt8(const uint8& InInt);
+        SizeType WriteUInt16(const uint16& InInt);
+        SizeType WriteUInt32(const uint32& InInt);
+        SizeType WriteUInt64(const uint64& InInt);
         SizeType WriteString(const String& Str);
 
     protected:

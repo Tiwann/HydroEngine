@@ -249,16 +249,16 @@ namespace ImGui
 {
     void PushID(const Hydro::GUID& guid)
     {
-        const uint64_t* begin = guid.GetValues();
-        const uint64_t* end = begin + 2;
+        const uint64* begin = guid.GetValues();
+        const uint64* end = begin + 2;
         PushID((const char*)begin, (const char*)end);
     }
 
     ImGuiID GetID(const Hydro::GUID& guid)
     {
         ImGuiWindow* window = GImGui->CurrentWindow;
-        const uint64_t* begin = guid.GetValues();
-        const uint64_t* end = begin + 2;
+        const uint64* begin = guid.GetValues();
+        const uint64* end = begin + 2;
         return window->GetID((const char*)begin, (const char*)end);
     }  
 }

@@ -172,9 +172,9 @@ namespace Hydro
         return Output;
     }
 
-    int32_t Math::IntegerPart(float Val)
+    int32 Math::IntegerPart(float Val)
     {
-        return (int32_t)Floor(Val);
+        return (int32)Floor(Val);
     }
 
     float Math::DecimalPart(float Val)

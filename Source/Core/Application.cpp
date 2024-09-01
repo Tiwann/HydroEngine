@@ -200,7 +200,7 @@ namespace Hydro
 
         if(Application->GetConfiguration().ShowFPS)
         {
-            const uint32_t FPS = (uint32_t)(1.0f / Delta);
+            const uint32 FPS = (uint32)(1.0f / Delta);
             NewWindowName.append(fmt::format(" FPS: {}", FPS));
         }
         Application->GetWindow()->SetNameTemp(NewWindowName);

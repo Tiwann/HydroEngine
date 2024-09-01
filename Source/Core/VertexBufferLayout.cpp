@@ -18,7 +18,7 @@ namespace Hydro
         return Name == Other.Name && Type == Other.Type;
     }
 
-    uint32_t GetNumComponents(VertexAttributeType Type)
+    uint32 GetNumComponents(VertexAttributeType Type)
     {
         switch (Type)
         {

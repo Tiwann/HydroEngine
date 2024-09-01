@@ -6,7 +6,7 @@
 
 namespace Hydro
 {
-    OpenGLTexture2D::OpenGLTexture2D(const std::string& Name, uint32_t Width, uint32_t Height, const TextureParams& Params, uint32_t Slot) : Texture2D(Name, Width, Height, Params, Slot)
+    OpenGLTexture2D::OpenGLTexture2D(const std::string& Name, uint32 Width, uint32 Height, const TextureParams& Params, uint32 Slot) : Texture2D(Name, Width, Height, Params, Slot)
     {
         glCreateTextures(GL_TEXTURE_2D, 1, &m_Handle);
         glActiveTexture(GL_TEXTURE0 + Slot);
@@ -37,7 +37,7 @@ namespace Hydro
         Unbind();
     }
 
-    void OpenGLTexture2D::SetData(uint8_t* Data, uint32_t Width, uint32_t Height, ImageFormat Format)
+    void OpenGLTexture2D::SetData(uint8* Data, uint32 Width, uint32 Height, ImageFormat Format)
     {
         Bind();
         m_Width = Width;
@@ -56,7 +56,7 @@ namespace Hydro
         m_Width = Image->GetWidth();
         m_Height = Image->GetHeight();
         m_Format = Image->GetFormat();
-        const uint32_t Type = FormatToType(m_Format);
+        const uint32 Type = FormatToType(m_Format);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)m_Width, (GLsizei)m_Height, 0, GL_RGBA, Type, Image->GetData());
         Unbind();
         HYDRO_LOG(Texture2D, Verbosity::Info, "Texture \"{}\": Data was set. Width: {}. Height: {}. Format: {}. Size: {}.", m_Name, m_Width, m_Height, FormatToString(m_Format), File::BytesToString(Image->GetSize()));
@@ -72,7 +72,7 @@ namespace Hydro
             case ImageFormat::RGBA16: Size = m_Width * m_Height * 4 * 2; break;
             case ImageFormat::RGBA32F: Size = m_Width * m_Height * 4 * 4; break;
         }
-        uint8_t* Data = (uint8_t*)HYDRO_MALLOC(Size);
+        uint8* Data = (uint8*)HYDRO_MALLOC(Size);
         glGetTextureImage(m_Handle, 0, GL_RGBA, FormatToType(m_Format), (GLsizei)Size, Data);
         Ref<Image> ImageData = CreateRef<Image>(m_Width, m_Height, m_Format, Data);
         HYDRO_FREE(Data);
@@ -97,7 +97,7 @@ namespace Hydro
         return m_Handle;
     }
 
-    uint32_t OpenGLTexture2D::FormatToType(ImageFormat Format) const
+    uint32 OpenGLTexture2D::FormatToType(ImageFormat Format) const
     {
         switch (Format) {
         case ImageFormat::RGBA8: return GL_UNSIGNED_BYTE;
@@ -127,7 +127,7 @@ namespace Hydro
         return 0;
     }
 
-    uint32_t OpenGLTexture2D::FormatToOpenGLFormat(ImageFormat Format) const
+    uint32 OpenGLTexture2D::FormatToOpenGLFormat(ImageFormat Format) const
     {
         switch (Format) {
         case ImageFormat::RGBA8: return GL_RGBA;

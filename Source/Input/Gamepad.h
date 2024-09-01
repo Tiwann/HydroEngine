@@ -23,17 +23,17 @@ namespace Hydro
         Gamepad& operator=(const Gamepad& other);
         Gamepad& operator=(Gamepad&& other) noexcept;
 
-        void Initialize(uint32_t ID, const StringView& Name);
+        void Initialize(uint32 ID, const StringView& Name);
         bool GetButtonDown(GamepadButton Button);
         bool GetButton(GamepadButton Button);
         bool GetButtonUp(GamepadButton Button);
 
-        uint32_t GetID() const;
+        uint32 GetID() const;
         
         ButtonStateMap& GetButtonsStates();
         const StringView& GetName() const;
     private:
-        uint32_t m_ID;
+        uint32 m_ID;
         StringView m_Name;
         ButtonStateMap m_ButtonsStates;
     };

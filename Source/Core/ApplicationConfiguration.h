@@ -9,8 +9,8 @@ namespace Hydro
     {
         std::string AppName{};
         Path IconPath{};
-        uint32_t WindowWidth{0};
-        uint32_t WindowHeight{0};
+        uint32 WindowWidth{0};
+        uint32 WindowHeight{0};
         bool StartFullscreen = false;
         bool WindowResizable = false;
         bool ShowGraphicsAPIName = false;

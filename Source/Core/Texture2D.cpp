@@ -14,19 +14,19 @@
 
 namespace Hydro
 {
-    Texture2D::Texture2D(std::string Name, uint32_t Width, uint32_t Height, const TextureParams& Params, uint32_t Slot) : m_Name(std::move(Name)),
+    Texture2D::Texture2D(std::string Name, uint32 Width, uint32 Height, const TextureParams& Params, uint32 Slot) : m_Name(std::move(Name)),
         m_Width(Width), m_Height(Height), m_Slot(Slot), m_Params(Params)
     {
         
     }
     
     
-    Ref<Texture2D> Texture2D::Create(const std::string& Name, uint32_t Width, uint32_t Height, const TextureParams& Params, uint32_t Slot)
+    Ref<Texture2D> Texture2D::Create(const std::string& Name, uint32 Width, uint32 Height, const TextureParams& Params, uint32 Slot)
     {
         HYDRO_RHI_PLATFORM_RETURN(Texture2D, Name, Width, Height, Params, Slot);
     }
 
-    Ref<Texture2D> Texture2D::CreateFromFile(const std::string& Name, const Path& Filepath, const TextureParams& Params, uint32_t Slot)
+    Ref<Texture2D> Texture2D::CreateFromFile(const std::string& Name, const Path& Filepath, const TextureParams& Params, uint32 Slot)
     {
         Ref<Texture2D> Texture = Create(Name, 0, 0, Params, Slot);
         ScopedBuffer RawImageData = File::ReadToBuffer(Filepath);
@@ -41,12 +41,12 @@ namespace Hydro
         return {(float)m_Width, (float)m_Height};
     }
 
-    uint32_t Texture2D::GetSlot() const
+    uint32 Texture2D::GetSlot() const
     {
         return m_Slot;
     }
 
-    void Texture2D::SetSlot(uint32_t Slot)
+    void Texture2D::SetSlot(uint32 Slot)
     {
         m_Slot = Slot;
     }
@@ -66,15 +66,15 @@ namespace Hydro
         return { shared_from_this(), Vector2::Zero, GetSize() };
     }
 
-    Ref<SpriteAnimation> Texture2D::CreateAnimation(uint32_t NumRows, uint32_t NumColumns, uint32_t NumSprites, uint32_t SpriteSize)
+    Ref<SpriteAnimation> Texture2D::CreateAnimation(uint32 NumRows, uint32 NumColumns, uint32 NumSprites, uint32 SpriteSize)
     {
         Ref<SpriteAnimation> Result = SpriteAnimation::Create();
 
-        uint32_t Processed = 0;
-        for(uint32_t Row = 0; Row < NumRows; Row++)
+        uint32 Processed = 0;
+        for(uint32 Row = 0; Row < NumRows; Row++)
         {
             if(Processed >= NumSprites) break;
-            for(uint32_t Column = 0; Column < NumColumns; Column++)
+            for(uint32 Column = 0; Column < NumColumns; Column++)
             {
                 if(Processed >= NumSprites) break;
                 const Vector2 Position = {(float)(Column * SpriteSize), (float)(Row * SpriteSize)};

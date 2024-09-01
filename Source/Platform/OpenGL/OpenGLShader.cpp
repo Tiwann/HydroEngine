@@ -17,7 +17,7 @@ namespace Hydro
         
     }
 
-    OpenGLShader::OpenGLShader(const std::string& Name, Buffer<uint8_t> Buffer, ShaderSourceLanguage Language)
+    OpenGLShader::OpenGLShader(const std::string& Name, Buffer<uint8> Buffer, ShaderSourceLanguage Language)
         : Shader(Name, Buffer, Language), m_Program(UINT32_MAX), m_VertexHandle(UINT32_MAX), m_FragmentHandle(UINT32_MAX)
     {
     }
@@ -43,7 +43,7 @@ namespace Hydro
             m_VertexHandle = glCreateShader(GL_VERTEX_SHADER);
 
             const char* VertexSource = m_Source.Vertex.c_str();
-            const int32_t VertexSize = (int32_t)m_Source.Vertex.size();
+            const int32 VertexSize = (int32)m_Source.Vertex.size();
             glShaderSource(m_VertexHandle, 1, &VertexSource, &VertexSize);
             glCompileShader(m_VertexHandle);
             
@@ -51,7 +51,7 @@ namespace Hydro
             glGetShaderiv(m_VertexHandle, GL_COMPILE_STATUS, &Success);
             if(!Success)
             {
-                int32_t Length = 0;
+                int32 Length = 0;
                 char Message[GL_INFO_LOG_LENGTH];
                 glGetShaderInfoLog(m_VertexHandle, GL_INFO_LOG_LENGTH, &Length, Message);
                 HYDRO_LOG(Shader, Verbosity::Error, "Failed to compile vertex shader: {}", Message);
@@ -68,7 +68,7 @@ namespace Hydro
             m_FragmentHandle = glCreateShader(GL_FRAGMENT_SHADER);
 
             const char* FragmentSource = m_Source.Fragment.c_str();
-            const int32_t FragmentSize = (int32_t)m_Source.Fragment.size();
+            const int32 FragmentSize = (int32)m_Source.Fragment.size();
             glShaderSource(m_FragmentHandle, 1, &FragmentSource, &FragmentSize);
             glCompileShader(m_FragmentHandle);
             
@@ -76,7 +76,7 @@ namespace Hydro
             glGetShaderiv(m_FragmentHandle, GL_COMPILE_STATUS, &Success);
             if(!Success)
             {
-                int32_t Length = 0;
+                int32 Length = 0;
                 char Message[GL_INFO_LOG_LENGTH];
                 glGetShaderInfoLog(m_FragmentHandle, GL_INFO_LOG_LENGTH, &Length, Message);
                 HYDRO_LOG(Shader, Verbosity::Error, "Failed to compiled fragment shader: {}", Message);
@@ -111,11 +111,11 @@ namespace Hydro
         }
         
         glLinkProgram(m_Program);
-        int32_t Success = 0;
+        int32 Success = 0;
         glGetProgramiv(m_Program, GL_LINK_STATUS, &Success);
         if(!Success)
         {
-            int32_t Length = 0;
+            int32 Length = 0;
             char Message[GL_INFO_LOG_LENGTH];
             glGetProgramInfoLog(m_Program, GL_INFO_LOG_LENGTH, &Length, Message);
             HYDRO_LOG(Shader, Verbosity::Error, "Shader program failed to link: {}", Message);
@@ -134,11 +134,11 @@ namespace Hydro
             return Validated = false;
         }
         glValidateProgram(m_Program);
-        int32_t Success = 0;
+        int32 Success = 0;
         glGetProgramiv(m_Program, GL_VALIDATE_STATUS, &Success);
         if(!Success)
         {
-            int32_t Length = 0;
+            int32 Length = 0;
             char Message[GL_INFO_LOG_LENGTH];
             glGetProgramInfoLog(m_Program, GL_INFO_LOG_LENGTH, &Length, Message);
             HYDRO_LOG(Shader, Verbosity::Error, "Shader program failed to validate: {}", Message);
@@ -178,7 +178,7 @@ namespace Hydro
     
     void OpenGLShader::SetUniformFloat(const std::string& Name, float Value)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
         glUniform1f(Location, Value);
     }
@@ -186,35 +186,35 @@ namespace Hydro
 
     void OpenGLShader::SetUniformFloat2(const std::string& Name, const Vector2& Value)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
         glUniform2f(Location, Value.x, Value.y);
     }
 
     void OpenGLShader::SetUniformFloat3(const std::string& Name, const Vector3& Value)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
         glUniform3f(Location, Value.x, Value.y, Value.z);
     }
 
     void OpenGLShader::SetUniformFloat4(const std::string& Name, const Vector4& Value)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
         glUniform4fv(Location, 1, (const float*)&Value);
     }
 
     void OpenGLShader::SetUniformMat4(const std::string& Name, const Matrix4& Value)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
         glUniformMatrix4fv(Location, 1, false, (const float*)&Value);
     }
 
-    void OpenGLShader::SetUniformInt(const std::string& Name, int32_t Value)
+    void OpenGLShader::SetUniformInt(const std::string& Name, int32 Value)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
         glUniform1i(Location, Value);
     }
@@ -227,26 +227,26 @@ namespace Hydro
             return;
         }
         Texture->Bind();
-        SetUniformInt(Name, (int32_t)Texture->GetSlot());
+        SetUniformInt(Name, (int32)Texture->GetSlot());
     }
 
     void OpenGLShader::SetUniformMat2(const std::string& Name, const Matrix2& Value)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
         glUniformMatrix2fv(Location, 1, false, (const float*)&Value);
     }
 
     void OpenGLShader::SetUniformMat3(const std::string& Name, const Matrix3& Value)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         HYDRO_SHADER_UNIFORM_CHECK(Location, Name);
         glUniformMatrix3fv(Location, 1, false, (const float*)&Value);
     }
 
     float OpenGLShader::GetUniformFloat(const std::string& Name)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         if(!Location) \
         { \
             HYDRO_LOG(Shader, Verbosity::Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
@@ -261,7 +261,7 @@ namespace Hydro
 
     Vector2 OpenGLShader::GetUniformFloat2(const std::string& Name)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         if(!Location) \
         { \
             HYDRO_LOG(Shader, Verbosity::Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
@@ -276,7 +276,7 @@ namespace Hydro
 
     Vector3 OpenGLShader::GetUniformFloat3(const std::string& Name)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         if(!Location) \
         { \
             HYDRO_LOG(Shader, Verbosity::Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
@@ -291,7 +291,7 @@ namespace Hydro
 
     Vector4 OpenGLShader::GetUniformFloat4(const std::string& Name)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         if(!Location) \
         { \
             HYDRO_LOG(Shader, Verbosity::Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
@@ -306,7 +306,7 @@ namespace Hydro
 
     Matrix4 OpenGLShader::GetUniformMat4(const std::string& Name)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         if(!Location) \
         { \
             HYDRO_LOG(Shader, Verbosity::Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", (Name), m_Name); \
@@ -319,9 +319,9 @@ namespace Hydro
         return Result;
     }
 
-    int32_t OpenGLShader::GetUniformInt(const std::string& Name)
+    int32 OpenGLShader::GetUniformInt(const std::string& Name)
     {
-        const int32_t Location = glGetUniformLocation(m_Program, Name.c_str());
+        const int32 Location = glGetUniformLocation(m_Program, Name.c_str());
         if(!Location) \
         { \
             HYDRO_LOG(Shader, Verbosity::Error, "Uniform \"{}\" doesn't exist in shader \"{}\"", Name, m_Name); \
@@ -329,7 +329,7 @@ namespace Hydro
             return 0; \
         }
 
-        int32_t Result;
+        int32 Result;
         glGetUniformiv(m_Program, Location, &Result);
         return Result;
     }

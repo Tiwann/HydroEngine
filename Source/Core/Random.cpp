@@ -20,7 +20,7 @@ namespace Hydro
         return Distribution(s_RandomDevice);
     }
 
-    int32_t Random::Integer(int32_t Min, int32_t Max)
+    int32 Random::Integer(int32 Min, int32 Max)
     {
         std::uniform_int_distribution Distribution(Min, Max);
         return Distribution(s_RandomDevice);

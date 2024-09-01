@@ -17,7 +17,7 @@ namespace Hydro
         using ConstPointerType = typename ArrayType::ConstPointerType;
         using ReferenceType = typename ArrayType::ReferenceType;
         using ConstReferenceType = typename ArrayType::ConstReferenceType;
-        static constexpr uint32_t UninitializedValue = HYDRO_UNINITIALIZED;
+        static constexpr uint32 UninitializedValue = HYDRO_UNINITIALIZED;
 
         BumpAllocator()
         {

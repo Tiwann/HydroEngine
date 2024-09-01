@@ -18,7 +18,7 @@ namespace Hydro
         m_Stream->WriteString(FormattedComment);
     }
 
-    void XmlWriter::BeginDocument(int32_t VersionMaj, int32_t VersionMin)
+    void XmlWriter::BeginDocument(int32 VersionMaj, int32 VersionMin)
     {
         const String Version = Format("{}.{}", VersionMaj, VersionMin);
         const String BeginDocument = Format("<?xml version=\"{}\"?>\n", Version);
@@ -92,7 +92,7 @@ namespace Hydro
     String XmlWriter::GetIndentation()
     {
         String Indentation = "";
-        for(uint32_t i = 0; i < m_NumIndentation * m_Settings.Indentation; i++)
+        for(uint32 i = 0; i < m_NumIndentation * m_Settings.Indentation; i++)
             Indentation.Append(m_Settings.IndentationCharacter);
         return Indentation;
     }

@@ -29,8 +29,8 @@ namespace Hydro
         nlohmann::json File = nlohmann::json::parse(Content);
         OutConfiguration.AppName = File["Application Name"];
         OutConfiguration.IconPath = Path(File["Window Icon"].get<std::string>());
-        OutConfiguration.WindowWidth = File["Window Width"].get<uint32_t>();
-        OutConfiguration.WindowHeight = File["Window Height"].get<uint32_t>();
+        OutConfiguration.WindowWidth = File["Window Width"].get<uint32>();
+        OutConfiguration.WindowHeight = File["Window Height"].get<uint32>();
         OutConfiguration.StartFullscreen = File["Start Fullscreen"].get<bool>();
         OutConfiguration.WindowResizable = File["Window Resizable"].get<bool>();
         OutConfiguration.ShowGraphicsAPIName = File["Show Graphics API Name"].get<bool>();
@@ -74,8 +74,8 @@ namespace Hydro
         nlohmann::json File = nlohmann::json::parse(Content);
         OutConfiguration.AppName = File["Application Name"];
         OutConfiguration.IconPath = Path(File["Window Icon"].get<std::string>());
-        OutConfiguration.WindowWidth = File["Window Width"].get<uint32_t>();
-        OutConfiguration.WindowHeight = File["Window Height"].get<uint32_t>();
+        OutConfiguration.WindowWidth = File["Window Width"].get<uint32>();
+        OutConfiguration.WindowHeight = File["Window Height"].get<uint32>();
         OutConfiguration.StartFullscreen = File["Start Fullscreen"].get<bool>();
         OutConfiguration.WindowResizable = File["Window Resizable"].get<bool>();
         OutConfiguration.ShowGraphicsAPIName = File["Show Graphics API Name"].get<bool>();

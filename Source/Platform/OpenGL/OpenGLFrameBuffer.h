@@ -1,7 +1,8 @@
 #pragma once
 #include "Core/FrameBuffer.h"
+#include "Core/Types.h"
 
-typedef uint32_t GLenum;
+typedef uint32 GLenum;
 
 namespace Hydro
 {
@@ -23,6 +24,6 @@ namespace Hydro
         static GLenum GetOpenGLAttachment(FrameBufferAttachment Attachment);
 
     protected:
-        uint32_t m_Handle;
+        uint32 m_Handle;
     };
 }

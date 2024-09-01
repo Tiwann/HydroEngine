@@ -57,10 +57,10 @@ namespace Hydro
     void SoundListener::OnInspectorGUI(const ImGuiIO& IO)
     {
         Component::OnInspectorGUI(IO);
-        UI::SliderValue<uint32_t>("Index", m_Index, 0, FMOD_MAX_LISTENERS, "%d", SliderFlagBits::AlwaysClamp);
+        UI::SliderValue<uint32>("Index", m_Index, 0, FMOD_MAX_LISTENERS, "%d", SliderFlagBits::AlwaysClamp);
     }
 
-    void SoundListener::SetIndex(uint32_t Index)
+    void SoundListener::SetIndex(uint32 Index)
     {
         m_Index = Index;
     }

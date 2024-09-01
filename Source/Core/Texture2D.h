@@ -49,23 +49,23 @@ namespace Hydro
     class Texture2D : public std::enable_shared_from_this<Texture2D>
     {
     public:
-        Texture2D(std::string Name, uint32_t Width, uint32_t Height, const TextureParams& Params, uint32_t Slot = 0);
+        Texture2D(std::string Name, uint32 Width, uint32 Height, const TextureParams& Params, uint32 Slot = 0);
         virtual ~Texture2D() = default;
 
         
-        static Ref<Texture2D> Create(const std::string& Name, uint32_t Width, uint32_t Height, const TextureParams& Params, uint32_t Slot = 0);
-        static Ref<Texture2D> CreateFromFile(const std::string& Name, const Path& Filepath, const TextureParams& Params, uint32_t Slot = 0);
+        static Ref<Texture2D> Create(const std::string& Name, uint32 Width, uint32 Height, const TextureParams& Params, uint32 Slot = 0);
+        static Ref<Texture2D> CreateFromFile(const std::string& Name, const Path& Filepath, const TextureParams& Params, uint32 Slot = 0);
 
         virtual void SetTextureParameters(const TextureParams& Params) = 0;
-        virtual void SetData(uint8_t* Data, uint32_t Width, uint32_t Height, ImageFormat Format) = 0;
+        virtual void SetData(uint8* Data, uint32 Width, uint32 Height, ImageFormat Format) = 0;
         virtual void SetData(const Ref<Image>& Image) = 0;
         virtual Ref<Image> GetImage() const = 0;
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
         
         Vector2 GetSize() const;
-        uint32_t GetSlot() const;
-        void SetSlot(uint32_t Slot);
+        uint32 GetSlot() const;
+        void SetSlot(uint32 Slot);
 
         virtual uintptr_t GetHandle() const = 0;
 
@@ -75,12 +75,12 @@ namespace Hydro
 
         Sprite CreateSprite(const Vector2& Position, const Vector2& Size);
         Sprite CreateSprite();
-        Ref<SpriteAnimation> CreateAnimation(uint32_t NumRows, uint32_t NumColumns, uint32_t NumSprites, uint32_t SpriteSize);
+        Ref<SpriteAnimation> CreateAnimation(uint32 NumRows, uint32 NumColumns, uint32 NumSprites, uint32 SpriteSize);
         Ref<SpriteAnimation> CreateAnimation(const SpriteSheet& SpriteSheet);
     protected:
         std::string m_Name;
-        uint32_t m_Width{0}, m_Height{0};
-        uint32_t m_Slot{0};
+        uint32 m_Width{0}, m_Height{0};
+        uint32 m_Slot{0};
         ImageFormat m_Format{ImageFormat::RGBA8};
         TextureParams m_Params;
     };

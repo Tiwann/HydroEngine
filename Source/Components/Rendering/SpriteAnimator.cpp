@@ -35,7 +35,7 @@ namespace Hydro
     void SpriteAnimator::OnInspectorGUI(const ImGuiIO& IO)
     {
         Component::OnInspectorGUI(IO);
-        UI::DragValue<int32_t>("Speed (FPS)", m_Speed, 1, 60);
+        UI::DragValue<int32>("Speed (FPS)", m_Speed, 1, 60);
     }
 
     Ref<SpriteRenderer> SpriteAnimator::GetSpriteRenderer() const
@@ -60,12 +60,12 @@ namespace Hydro
         m_Timer.Reset();
     }
 
-    void SpriteAnimator::SetSpeed(int32_t Speed)
+    void SpriteAnimator::SetSpeed(int32 Speed)
     {
         m_Speed = Math::Max(0, Speed);
     }
 
-    int32_t SpriteAnimator::GetSpeed() const
+    int32 SpriteAnimator::GetSpeed() const
     {
         return m_Speed;
     }

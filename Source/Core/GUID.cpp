@@ -10,7 +10,7 @@ namespace Hydro
     {
         std::random_device RandomDevice;
         std::mt19937_64 RandomEngine(RandomDevice());
-        std::uniform_int_distribution<uint64_t> UniformDistribution;
+        std::uniform_int_distribution<uint64> UniformDistribution;
     }
     
     GUID::GUID()
@@ -24,11 +24,11 @@ namespace Hydro
         
     }
 
-    GUID::GUID(const uint64_t Low, const uint64_t High) : m_Values{ Low, High }
+    GUID::GUID(const uint64 Low, const uint64 High) : m_Values{ Low, High }
     {
     }
 
-    const uint64_t* GUID::GetValues() const
+    const uint64* GUID::GetValues() const
     {
         return m_Values;
     }

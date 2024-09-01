@@ -1,5 +1,5 @@
 #pragma once
-#include <cstdint>
+#include "Core/Types.h"
 
 namespace Hydro
 {
@@ -17,29 +17,29 @@ namespace Hydro
     struct IsInteger : FalseType{};
 
     template<>
-    struct IsInteger<int8_t> : TrueType{};
+    struct IsInteger<int8> : TrueType{};
 
     template<>
-    struct IsInteger<int16_t> : TrueType{};
+    struct IsInteger<int16> : TrueType{};
 
     template<>
-    struct IsInteger<int32_t> : TrueType{};
+    struct IsInteger<int32> : TrueType{};
 
     template<>
-    struct IsInteger<int64_t> : TrueType{};
+    struct IsInteger<int64> : TrueType{};
 
 
     template<>
-    struct IsInteger<uint8_t> : TrueType{};
+    struct IsInteger<uint8> : TrueType{};
 
     template<>
-    struct IsInteger<uint16_t> : TrueType{};
+    struct IsInteger<uint16> : TrueType{};
 
     template<>
-    struct IsInteger<uint32_t> : TrueType{};
+    struct IsInteger<uint32> : TrueType{};
 
     template<>
-    struct IsInteger<uint64_t> : TrueType{};
+    struct IsInteger<uint64> : TrueType{};
 
     template<typename T>
     static inline constexpr bool IsIntegerValue = IsInteger<T>::Value;

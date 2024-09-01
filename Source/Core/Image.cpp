@@ -4,11 +4,11 @@
 
 namespace Hydro
 {
-    Image::Image(uint32_t Width, uint32_t Height, ImageFormat Format, const void* Pixels): m_Width(Width), m_Height(Height), m_Format(Format)
+    Image::Image(uint32 Width, uint32 Height, ImageFormat Format, const void* Pixels): m_Width(Width), m_Height(Height), m_Format(Format)
     {
         const size_t Size = m_Format == ImageFormat::RGBA8 ? 1 : m_Format == ImageFormat::RGBA16 ? 2 : 4;
         m_Pixels = malloc((size_t)(m_Width * m_Height) * 4 * Size);
-        std::copy_n((const uint8_t*)Pixels, Size, (uint8_t*)m_Pixels);
+        std::copy_n((const uint8*)Pixels, Size, (uint8*)m_Pixels);
     }
 
     Image::Image(const std::filesystem::path& Filepath, ImageFormat Fmt): m_Format(Fmt), m_Pixels(nullptr)
@@ -17,53 +17,53 @@ namespace Hydro
         switch (m_Format)
         {
         case ImageFormat::RGBA8:
-            m_Pixels = stbi_load(Filepath.string().c_str(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_load(Filepath.string().c_str(), (int32*)&m_Width, (int32*)&m_Height, nullptr, 4);
             break;
         
         case ImageFormat::RGBA16:
-            m_Pixels = stbi_load_16(Filepath.string().c_str(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_load_16(Filepath.string().c_str(), (int32*)&m_Width, (int32*)&m_Height, nullptr, 4);
             break;
         
         case ImageFormat::RGBA32F:
-            m_Pixels = stbi_loadf(Filepath.string().c_str(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_loadf(Filepath.string().c_str(), (int32*)&m_Width, (int32*)&m_Height, nullptr, 4);
             break;
         }
     }
 
-    Image::Image(const Buffer<uint8_t>& Buffer, ImageFormat Fmt) : m_Format(Fmt), m_Pixels(nullptr)
+    Image::Image(const Buffer<uint8>& Buffer, ImageFormat Fmt) : m_Format(Fmt), m_Pixels(nullptr)
     {
         stbi_set_flip_vertically_on_load(true);
         switch (m_Format)
         {
         case ImageFormat::RGBA8:
-            m_Pixels = stbi_load_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_load_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32*)&m_Width, (int32*)&m_Height, nullptr, 4);
             break;
         
         case ImageFormat::RGBA16:
-            m_Pixels = stbi_load_16_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_load_16_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32*)&m_Width, (int32*)&m_Height, nullptr, 4);
             break;
         
         case ImageFormat::RGBA32F:
-            m_Pixels = stbi_loadf_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_loadf_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32*)&m_Width, (int32*)&m_Height, nullptr, 4);
             break;
         }
     }
 
-    Image::Image(const BufferView<uint8_t>& Buffer, ImageFormat Fmt) : m_Format(Fmt), m_Pixels(nullptr)
+    Image::Image(const BufferView<uint8>& Buffer, ImageFormat Fmt) : m_Format(Fmt), m_Pixels(nullptr)
     {
         stbi_set_flip_vertically_on_load(true);
         switch (m_Format)
         {
         case ImageFormat::RGBA8:
-            m_Pixels = stbi_load_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_load_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32*)&m_Width, (int32*)&m_Height, nullptr, 4);
             break;
         
         case ImageFormat::RGBA16:
-            m_Pixels = stbi_load_16_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_load_16_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32*)&m_Width, (int32*)&m_Height, nullptr, 4);
             break;
         
         case ImageFormat::RGBA32F:
-            m_Pixels = stbi_loadf_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32_t*)&m_Width, (int32_t*)&m_Height, nullptr, 4);
+            m_Pixels = stbi_loadf_from_memory(Buffer.GetData(), (int)Buffer.Count(), (int32*)&m_Width, (int32*)&m_Height, nullptr, 4);
             break;
         }
     }
@@ -73,12 +73,12 @@ namespace Hydro
         stbi_image_free(m_Pixels);
     }
 
-    uint32_t Image::GetWidth() const
+    uint32 Image::GetWidth() const
     {
         return m_Width;
     }
 
-    uint32_t Image::GetHeight() const
+    uint32 Image::GetHeight() const
     {
         return m_Height;
     }
@@ -113,12 +113,12 @@ namespace Hydro
         return CreateRef<Image>(Filepath, Format);
     }
 
-    Ref<Image> Image::Create(const Buffer<uint8_t>& Buffer, ImageFormat Format)
+    Ref<Image> Image::Create(const Buffer<uint8>& Buffer, ImageFormat Format)
     {
         return CreateRef<Image>(Buffer, Format);
     }
     
-    Ref<Image> Image::Create(const BufferView<uint8_t>& BufferView, ImageFormat Format)
+    Ref<Image> Image::Create(const BufferView<uint8>& BufferView, ImageFormat Format)
     {
         return CreateRef<Image>(BufferView, Format);
     }

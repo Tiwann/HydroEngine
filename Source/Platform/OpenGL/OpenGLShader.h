@@ -8,7 +8,7 @@ namespace Hydro
     {
     public:
         explicit OpenGLShader(const std::string& Name, Path Filepath, ShaderSourceLanguage Language);
-        explicit OpenGLShader(const std::string& Name, Buffer<uint8_t> Buffer, ShaderSourceLanguage Language);
+        explicit OpenGLShader(const std::string& Name, Buffer<uint8> Buffer, ShaderSourceLanguage Language);
         explicit OpenGLShader(const std::string& Name, const ShaderSource& ShaderSource, ShaderSourceLanguage Language);
         ~OpenGLShader() override;
         bool Compile() override;
@@ -22,7 +22,7 @@ namespace Hydro
         void SetUniformFloat2(const std::string& Name, const Vector2& Value) override;
         void SetUniformFloat3(const std::string& Name, const Vector3& Value) override;
         void SetUniformFloat4(const std::string& Name, const Vector4& Value) override;
-        void SetUniformInt(const std::string& Name, int32_t Value) override;
+        void SetUniformInt(const std::string& Name, int32 Value) override;
         void SetUniformTexture(const std::string& Name, const Ref<Texture2D>& Texture) override;
         void SetUniformMat2(const std::string& Name, const Matrix2& Value) override;
         void SetUniformMat3(const std::string& Name, const Matrix3& Value) override;
@@ -33,12 +33,12 @@ namespace Hydro
         Vector3 GetUniformFloat3(const std::string& Name) override;
         Vector4 GetUniformFloat4(const std::string& Name) override;
         Matrix4 GetUniformMat4(const std::string& Name) override;
-        int32_t GetUniformInt(const std::string& Name) override;
+        int32 GetUniformInt(const std::string& Name) override;
         
     protected:
-        uint32_t m_Program;
-        uint32_t m_VertexHandle;
-        uint32_t m_FragmentHandle;
+        uint32 m_Program;
+        uint32 m_VertexHandle;
+        uint32 m_FragmentHandle;
 
     private:
         bool CompileOpenGL();

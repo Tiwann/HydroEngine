@@ -26,7 +26,7 @@ namespace Hydro
         bool operator==(const VertexAttribute&) const;
     };
 
-    uint32_t GetNumComponents(VertexAttributeType Type);
+    uint32 GetNumComponents(VertexAttributeType Type);
     
     class VertexBufferLayout
     {

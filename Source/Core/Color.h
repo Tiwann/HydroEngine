@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <cstdint>
+#include "Core/Types.h"
 
 namespace Hydro
 {
@@ -11,7 +11,7 @@ namespace Hydro
         float r{0.0f}, g{0.0f}, b{0.0f}, a{0.0f};
 
         Color();
-        Color(uint32_t color);
+        Color(uint32 color);
         Color(float red, float green, float blue, float alpha);
 
         operator Vector4() const;

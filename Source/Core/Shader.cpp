@@ -21,7 +21,7 @@ namespace Hydro
     }
 
 
-    Ref<Shader> Shader::Create(const std::string& Name, const Buffer<uint8_t>& Buffer, ShaderSourceLanguage Language)
+    Ref<Shader> Shader::Create(const std::string& Name, const Buffer<uint8>& Buffer, ShaderSourceLanguage Language)
     {
         HYDRO_RHI_PLATFORM_RETURN(Shader, Name, Buffer, Language);
     }
@@ -60,7 +60,7 @@ namespace Hydro
     }
     
 
-    Shader::Shader(std::string Name, const Buffer<uint8_t>& Buffer, ShaderSourceLanguage Language)
+    Shader::Shader(std::string Name, const Buffer<uint8>& Buffer, ShaderSourceLanguage Language)
         : m_Name(std::move(Name)), m_SourceLanguage(Language)
     {
         const std::string Source((const char*)Buffer.GetData(), Buffer.Count());

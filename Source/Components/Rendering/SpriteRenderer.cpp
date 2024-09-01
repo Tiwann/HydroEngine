@@ -168,12 +168,12 @@ namespace Hydro
         m_ColorTint = Color;
     }
 
-    int32_t SpriteRenderer::GetPixelsPerUnit() const
+    int32 SpriteRenderer::GetPixelsPerUnit() const
     {
         return m_PixelsPerUnit;
     }
 
-    void SpriteRenderer::SetPixelsPerUnit(int32_t PixelsPerUnit)
+    void SpriteRenderer::SetPixelsPerUnit(int32 PixelsPerUnit)
     {
         m_PixelsPerUnit = PixelsPerUnit;
     }

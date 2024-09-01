@@ -72,7 +72,7 @@ namespace Hydro
 
             if(m_Sound)
             {
-                uint32_t Position, Length;
+                uint32 Position, Length;
                 m_Channel->getPosition(&Position, FMOD_TIMEUNIT_PCM);
                 m_Sound->GetHandle()->getLength(&Length, FMOD_TIMEUNIT_PCM);
                 if(IsPlaying())
@@ -219,7 +219,7 @@ namespace Hydro
         return m_Pitch;
     }
 
-    void SoundEmitter::OnPlaying(Ref<Sound> Sound, uint32_t Position, uint32_t Length)
+    void SoundEmitter::OnPlaying(Ref<Sound> Sound, uint32 Position, uint32 Length)
     {
         m_PlaybackPosition = Position;
         m_Length = Length;

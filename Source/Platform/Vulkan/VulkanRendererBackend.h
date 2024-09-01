@@ -38,8 +38,8 @@ namespace Hydro
         vk::Instance GetInstance() const;
         vk::PhysicalDevice GetPhysicalDevice() const;
         vk::Queue GetGraphicsQueue() const;
-        uint32_t GetImageCount() const;
-        uint32_t GetGraphicsQueueFamilyIndex() const;
+        uint32 GetImageCount() const;
+        uint32 GetGraphicsQueueFamilyIndex() const;
 
         void DrawIndexed(DrawMode Mode, const Vao& VAO, const Vbo& VBO, const Ibo& IBO, const Ref<Shader>& Shader) override;
         void SetCullMode(CullMode Mode) override;
@@ -62,8 +62,8 @@ namespace Hydro
         std::vector<const char*> m_InstanceExtensions{};
         std::vector<const char*> m_DeviceExtensions{};
         std::vector<const char*> m_Layers{};
-        std::optional<uint32_t>  m_GraphicsQueueIndex;
-        std::optional<uint32_t>  m_PresentQueueIndex;
+        std::optional<uint32>  m_GraphicsQueueIndex;
+        std::optional<uint32>  m_PresentQueueIndex;
         vk::PresentModeKHR       m_PresentMode{vk::PresentModeKHR::eFifo};
         vk::Format               m_Format{vk::Format::eUndefined};
         vk::SwapchainKHR         m_Swapchain{nullptr};
@@ -72,7 +72,7 @@ namespace Hydro
 
         std::vector<vk::Image> m_TextureImages;
         std::vector<vk::DeviceMemory> m_Memories;
-        uint32_t m_ImageCount;
+        uint32 m_ImageCount;
 #if defined(HYDRO_DEBUG)
         vk::DebugUtilsMessengerEXT m_DebugMessenger;
 #endif
@@ -91,7 +91,7 @@ namespace Hydro
         vk::Viewport GetViewport() const;
         std::string GetGPUTypeString(const vk::PhysicalDeviceType& DeviceType) const;
         vk::CullModeFlags ConvertCullMode(CullMode Mode);
-        uint32_t GetNextSwapchainImage() const;
+        uint32 GetNextSwapchainImage() const;
     public:
         
 

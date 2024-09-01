@@ -20,7 +20,7 @@ namespace Hydro
     public:
         using EmitterStartedDelegate = MulticastDelegate<void(Ref<Sound> Sound, bool WasPaused)>;
         using EmitterStopDelegate = MulticastDelegate<void(Ref<Sound> Sound, bool IsPause)>;
-        using EmitterPlayingDelegate = MulticastDelegate<void(Ref<Sound> Sound, uint32_t Position, uint32_t Length)>;
+        using EmitterPlayingDelegate = MulticastDelegate<void(Ref<Sound> Sound, uint32 Position, uint32 Length)>;
         
         SoundEmitter(Entity* Owner);
 
@@ -46,14 +46,14 @@ namespace Hydro
         EmitterStopDelegate OnStopEvent;
         EmitterPlayingDelegate OnPlayingEvent;
     
-        void OnPlaying(Ref<Sound> Sound, uint32_t Position, uint32_t Length);
+        void OnPlaying(Ref<Sound> Sound, uint32 Position, uint32 Length);
     private:
         Ref<Sound> m_Sound = nullptr;
         float m_Volume = 1.0f;
         float m_Pitch = 1.0f;
         bool m_Looping = false;
-        uint32_t m_PlaybackPosition = 0;
-        uint32_t m_Length = 0;
+        uint32 m_PlaybackPosition = 0;
+        uint32 m_Length = 0;
         
         FMOD::Channel* m_Channel = nullptr;
     };
