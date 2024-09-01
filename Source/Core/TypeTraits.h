@@ -1,6 +1,5 @@
 #pragma once
 #include <cstdint>
-#include "Math/LinearAlgebra.h"
 
 namespace Hydro
 {
@@ -66,13 +65,13 @@ namespace Hydro
     struct IsVector : FalseType {};
     
     template<>
-    struct IsVector<Vector2> : TrueType{};
+    struct IsVector<class Vector2> : TrueType{};
 
     template<>
-    struct IsVector<Vector3> : TrueType{};
+    struct IsVector<class Vector3> : TrueType{};
 
     template<>
-    struct IsVector<Vector4> : TrueType{};
+    struct IsVector<class Vector4> : TrueType{};
 
     template<typename T>
     static constexpr bool IsVectorValue = IsVector<T>::Value;
