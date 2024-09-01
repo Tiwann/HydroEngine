@@ -84,6 +84,16 @@ namespace Hydro
         {
             return m_Data.GetAt(Index);    
         }
+
+        void Clear()
+        {
+            m_Data.Clear();
+        }
+
+        bool operator==(const Map& Other) const
+        {
+            return m_Data == Other.m_Data;
+        }
         
         Iterator begin() override { return m_Data.begin(); }
         Iterator end() override { return m_Data.end(); }
