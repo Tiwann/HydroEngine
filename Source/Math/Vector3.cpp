@@ -203,7 +203,7 @@ namespace Hydro
     float Vector3::Angle(const Vector3& VecA, const Vector3& VecB)
     {
         const float CosAngle = VecA.Dot(VecB) / (VecA.Magnitude() * VecB.Magnitude());
-        return Math::Arccos(CosAngle);
+        return Math::Acos(CosAngle);
     }
 
     Vector3 Vector3::MoveTowards(const Vector3& Current, const Vector3& Target, float MaxDelta)
