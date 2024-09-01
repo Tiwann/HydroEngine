@@ -2,7 +2,7 @@
 #include "Core/Physics/PhysicsBody2D.h"
 #include "Core/Physics/Physics2D.h"
 #include "Core/Time.h"
-
+#include "Math/Functions.h"
 #include <box2d/b2_world.h>
 #include <box2d/b2_body.h>
 

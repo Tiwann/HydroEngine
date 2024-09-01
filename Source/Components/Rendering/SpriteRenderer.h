@@ -5,6 +5,8 @@
 #include "Math/Vector2.h"
 #include "Core/Sprite.h"
 
+#include "Core/LogCategory.h"
+
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(SpriteRenderer, "SPRITE RENDERER")
 
 namespace Hydro

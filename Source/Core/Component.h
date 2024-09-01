@@ -1,10 +1,10 @@
 ﻿#pragma once
 #include "Macros.h"
-#include <string>
-
 #include "SharedPointer.h"
 #include "Core/GUID.h"
 #include "Platform/PlatformImGui.h"
+
+#include <string>
 
 
 namespace Hydro

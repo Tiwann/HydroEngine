@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "Core/Shader.h"
 #include "Core/ShaderSourceLanguage.h"
-#include "shaderc/shaderc.h"
 
 namespace Hydro
 {
