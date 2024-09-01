@@ -20,17 +20,17 @@ namespace Hydro
         return std::tan(Val);
     }
 
-    float Math::Arccos(float Val)
+    float Math::Acos(float Val)
     {
         return std::acos(Val);
     }
 
-    float Math::Arcsin(float Val)
+    float Math::Asin(float Val)
     {
         return std::asin(Val);
     }
 
-    float Math::Arctan(float Val)
+    float Math::Atan(float Val)
     {
         return std::atan(Val);
     }

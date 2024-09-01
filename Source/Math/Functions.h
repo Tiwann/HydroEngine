@@ -1,6 +1,7 @@
 #pragma once
-#include "Vector3.h"
 #include <limits>
+#include <cmath>
+#include "Core/TypeTraits.h"
 
 namespace Hydro
 {
@@ -17,9 +18,9 @@ namespace Hydro
         static float Cos(float Val);
         static float Sin(float Val);
         static float Tan(float Val);
-        static float Arccos(float Val);
-        static float Arcsin(float Val);
-        static float Arctan(float Val);
+        static float Acos(float Val);
+        static float Asin(float Val);
+        static float Atan(float Val);
         static float Abs(float Value);
         static float Clamp(float Value, float Min, float Max);
         static float Lerp(float A, float B, float Alpha);
@@ -29,6 +30,17 @@ namespace Hydro
         static float Smoothstep(float Value, float Min, float Max);
         static float MappedSin(float Val, float Min, float Max);
         static float MappedCos(float Val, float Min, float Max);
+
+        template<typename T, typename U, typename = EnableIfType<IsIntegerValue<T>>, typename = EnableIfType<IsArithmeticValue<U>>>
+        static T NearestPowerOfTwo(U Number)
+        {
+            if(Number < 1) return 1;
+
+            T Lower = (T)Pow(2, Floor(std::log2f((float)Number)));
+            T Upper = (T)Pow(2, Ceil(std::log2f((float)Number)));
+
+            return Number - Lower < Upper - Number ? Lower : Upper;
+        }
         
         static float Min(float A, float B);
         
