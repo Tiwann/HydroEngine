@@ -222,14 +222,17 @@ namespace Hydro
         {
             return *this;
         }
-
         
-        
-
         Iterator begin() override { return m_Data; }
         Iterator end() override { return m_Data + m_Count; }
         ConstIterator begin() const override { return m_Data; }
         ConstIterator end() const override { return m_Data + m_Count; }
+
+
+        StringBase& operator+(const StringBase& Other)
+        {
+            return Append(Other);
+        }
     
     private:
         CharacterType* m_Data = nullptr;
@@ -262,6 +265,8 @@ struct fmt::formatter<Hydro::String> : formatter<string_view>
         return fmt::formatter<string_view>::format(string_view(Str.Data(), Str.Count()), Context);
     }
 };
+
+
 
 
 
