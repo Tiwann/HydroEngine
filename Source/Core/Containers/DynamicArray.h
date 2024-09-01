@@ -2,13 +2,15 @@
 #include "Core/Iterator.h"
 #include "Core/Assertion.h"
 #include "Core/Memory.h"
+#include "Math/Functions.h"
+
 #include <initializer_list>
 #include <algorithm>
 
 namespace Hydro
 {
     template<typename T>
-    class Array : public Iterable<T>
+    class Array final : public Iterable<T>
     {
     public:
         using ValueType = T;
@@ -24,6 +26,13 @@ namespace Hydro
         Array()
         {
             m_Allocated = 1;
+            m_Data = Memory::Calloc<T>(m_Allocated);
+            m_Count = 0;
+        }
+
+        Array(SizeType Count)
+        {
+            m_Allocated = Math::NearestPowerOfTwo<SizeType>(Count);
             m_Data = Memory::Calloc<T>(m_Allocated);
             m_Count = 0;
         }
@@ -151,7 +160,7 @@ namespace Hydro
                 m_Allocated = Realloc(m_Allocated);
                 PointerType Realloc = Memory::Calloc<T>(m_Allocated);
                 for(SizeType i = 0; i < m_Count; ++i)
-                    Realloc[i] = std::move(m_Data[i]);
+                    Realloc[i] = m_Data[i];
                 Memory::Free(m_Data);
                 m_Data = Realloc;
             }
@@ -196,15 +205,15 @@ namespace Hydro
             SizeType Index = Find(Element);
             if(Index == -1) return false;
 
-            if(Index < m_Count) std::move(m_Data + Index + 1, m_Data + m_Count, m_Data + Index);
+            std::move(m_Data + Index + 1, m_Data + m_Count, m_Data + Index);
             m_Count--;
             return true;
         }
 
         void RemoveAt(SizeType Index)
         {
-            HYDRO_ASSERT(Index <= m_Count, "Index out of bounds!");
-            if(Index < m_Count) std::move(m_Data + Index + 1, m_Data + m_Count, m_Data + Index);
+            HYDRO_ASSERT(Index < m_Count, "Index out of bounds!");
+            std::move(m_Data + Index + 1, m_Data + m_Count, m_Data + Index);
             m_Count--;
         }
 
@@ -244,7 +253,6 @@ namespace Hydro
         
         void Clear()
         {
-            Memory::Memset(m_Data, 0, m_Count);
             m_Count = 0;
         }
 
@@ -260,6 +268,14 @@ namespace Hydro
         PointerType Data() { return m_Data; }
 
         SizeType Count() const { return m_Count; }
+
+        bool operator==(const Array& Other) const
+        {
+            if(m_Count != Other.m_Count) return false;
+            for(SizeType i = 0; i < m_Count; ++i)
+                if(m_Data[i] != Other.m_Data[i]) return false;
+            return true;
+        }
     private:
         PointerType m_Data = nullptr;
         SizeType m_Count = 0;
