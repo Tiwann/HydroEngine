@@ -1,5 +1,6 @@
 #pragma once
 #include "TypeTraits.h"
+#include <type_traits>
 
 #define HYDRO_ENUM_TYPE_V(Type, Value) std::underlying_type_t<Type>(Value)
 #define HYDRO_FLAG_APPEND(Left, Right) ((Left) | (Right))
