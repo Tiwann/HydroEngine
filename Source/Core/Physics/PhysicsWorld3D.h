@@ -24,7 +24,7 @@ namespace Hydro
     public:
         PhysicsWorld3D();
         void OnInit() override;
-        void Step(float TimeStep) override;
+        void Step(f32 TimeStep) override;
         void OnDestroy() override;
 
         PhysicsBody3D* CreateBody(const PhysicsBodyDefinition& Definition, const PhysicsMaterial& Material) override;

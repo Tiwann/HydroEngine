@@ -249,27 +249,27 @@ namespace ImGui
 {
     void PushID(const Hydro::GUID& guid)
     {
-        const uint64* begin = guid.GetValues();
-        const uint64* end = begin + 2;
+        const u64* begin = guid.GetValues();
+        const u64* end = begin + 2;
         PushID((const char*)begin, (const char*)end);
     }
 
     ImGuiID GetID(const Hydro::GUID& guid)
     {
         ImGuiWindow* window = GImGui->CurrentWindow;
-        const uint64* begin = guid.GetValues();
-        const uint64* end = begin + 2;
+        const u64* begin = guid.GetValues();
+        const u64* end = begin + 2;
         return window->GetID((const char*)begin, (const char*)end);
     }  
 }
 
-void ImGuizmo::DecomposeMatrixToComponents(const float* matrix, Hydro::Vector3& translation, Hydro::Vector3& rotation, Hydro::Vector3& scale)
+void ImGuizmo::DecomposeMatrixToComponents(const f32* matrix, Hydro::Vector3& translation, Hydro::Vector3& rotation, Hydro::Vector3& scale)
 {
     ImGuizmo::DecomposeMatrixToComponents(matrix, translation.ValuePtr(), rotation.ValuePtr(), scale.ValuePtr());
 }
 
 void ImGuizmo::RecomposeMatrixFromComponents(const Hydro::Vector3& translation, const Hydro::Vector3& rotation,
-    const Hydro::Vector3& scale, float* matrix)
+    const Hydro::Vector3& scale, f32* matrix)
 {
     ImGuizmo::RecomposeMatrixFromComponents(translation.ValuePtr(), rotation.ValuePtr(), scale.ValuePtr(), matrix);
 }

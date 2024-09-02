@@ -13,7 +13,7 @@ namespace Hydro
     public:
         virtual ~PhysicsWorld() = default;
         virtual void OnInit() = 0;
-        virtual void Step(float TimeStep) = 0;
+        virtual void Step(f32 TimeStep) = 0;
         virtual void OnDestroy() = 0;
 
         

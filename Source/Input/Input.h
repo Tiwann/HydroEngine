@@ -27,13 +27,13 @@ namespace Hydro
         
         static Vector2 GetMousePosition();
 
-        static const Array<uint8>& GetGamepadButtons(size_t ID);
+        static const Array<u8>& GetGamepadButtons(size_t ID);
     private:
         inline static Map<KeyCode, InputState> s_KeyStates;
         inline static Map<MouseButton, InputState> s_MouseButtonStates;
         
-        inline static StaticArray<Array<uint8>, 16> s_GamepadButtons;
-        inline static StaticArray<Array<uint8>, 16> s_LastGamepadButtons;
+        inline static StaticArray<Array<u8>, 16> s_GamepadButtons;
+        inline static StaticArray<Array<u8>, 16> s_LastGamepadButtons;
         
 
         static void UpdateGamepadButtons();

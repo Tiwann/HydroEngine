@@ -1,9 +1,10 @@
 #include "Vector4.h"
 #include "Vector3.h"
+#include "Functions.h"
 #include "Core/Color.h"
+
 #include <nlohmann/json.hpp>
 #include <Jolt/Jolt.h>
-#include <Jolt/Math/Vec4.h>
 
 namespace Hydro
 {
@@ -17,11 +18,11 @@ namespace Hydro
     Vector4 Vector4::Backward = { 0.0f, 0.0f, -1.0f, 0.0f };
     
 
-    Vector4::Vector4(float X, float Y, float Z, float W): x(X), y(Y), z(Z), w(W)
+    Vector4::Vector4(f32 X, f32 Y, f32 Z, f32 W): x(X), y(Y), z(Z), w(W)
     {
     }
 
-    Vector4::Vector4(float Value): x(Value), y(Value), z(Value), w(Value)
+    Vector4::Vector4(f32 Value): x(Value), y(Value), z(Value), w(Value)
     {
     }
 
@@ -29,7 +30,7 @@ namespace Hydro
     {
     }
 
-    Vector4::Vector4(const Vector3& Vec, float W) : x(Vec.x), y(Vec.y), z(Vec.z), w(W)
+    Vector4::Vector4(const Vector3& Vec, f32 W) : x(Vec.x), y(Vec.y), z(Vec.z), w(W)
     {
     }
 
@@ -37,37 +38,37 @@ namespace Hydro
     {
     }
 
-    float Vector4::Magnitude() const
+    f32 Vector4::Magnitude() const
     {
         return Math::Sqrt(x * x + y * y + z * z + w * w);
     }
 
-    float* Vector4::ValuePtr()
+    f32* Vector4::ValuePtr()
     {
-        return (float*)this;
+        return (f32*)this;
     }
 
-    float Vector4::Dot(const Vector4& Vec) const
+    f32 Vector4::Dot(const Vector4& Vec) const
     {
         return x * Vec.x + y * Vec.y + z * Vec.z + w * Vec.w;
     }
 
-    Vector4 Vector4::WithX(float X) const
+    Vector4 Vector4::WithX(f32 X) const
     {
         return {X, y, z, w};
     }
 
-    Vector4 Vector4::WithY(float Y) const
+    Vector4 Vector4::WithY(f32 Y) const
     {
         return {x, Y, z, w};
     }
 
-    Vector4 Vector4::WithZ(float Z) const
+    Vector4 Vector4::WithZ(f32 Z) const
     {
         return {x, y, Z, w};
     }
 
-    Vector4 Vector4::WithW(float W) const
+    Vector4 Vector4::WithW(f32 W) const
     {
         return {x, y, z, W};
     }
@@ -92,12 +93,12 @@ namespace Hydro
         return {-x, -y, -z, -w};
     }
 
-    Vector4 operator*(float Scalar, const Vector4& Vec)
+    Vector4 operator*(f32 Scalar, const Vector4& Vec)
     {
         return {Vec.x * Scalar, Vec.y * Scalar, Vec.z * Scalar, Vec.w * Scalar};
     }
 
-    Vector4 operator*(const Vector4& Vec, float Scalar)
+    Vector4 operator*(const Vector4& Vec, f32 Scalar)
     {
         return {Vec.x * Scalar, Vec.y * Scalar, Vec.z * Scalar, Vec.w * Scalar};
     }
@@ -107,7 +108,7 @@ namespace Hydro
         return { x * Vec.x, y * Vec.y, z * Vec.z, w * Vec.w};
     }
 
-    Vector4& Vector4::operator*=(float Scalar)
+    Vector4& Vector4::operator*=(f32 Scalar)
     {
         x *= Scalar;
         y *= Scalar;

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "Buffer.h"
 #include "LogCategory.h"
-#include "Types.h"
+#include "NumericTypes.h"
 #include <string>
 #include <filesystem>
 
@@ -17,11 +17,11 @@ namespace Hydro
         File() = delete;
         static bool Exists(const Path& Filepath);
         static bool Create(const Path& Filepath);
-        static Buffer<uint8> ReadToBuffer(const Path& Filepath);
+        static Buffer<u8> ReadToBuffer(const Path& Filepath);
         static std::string ReadToString(const Path& Filepath);
         static Path OpenFileDialog(const std::string& Title, const Path& DefaultPath, const char* Filters);
         static Path SaveFileDialog(const std::string& Title, const Path& DefaultPath, const char* Filters);
-        static std::string BytesToString(uint64 Bytes);
+        static std::string BytesToString(u64 Bytes);
         static Path GetDirectory(const Path& Filepath);
     };
 

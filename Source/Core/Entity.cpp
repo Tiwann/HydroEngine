@@ -72,7 +72,7 @@ namespace Hydro
         ForEach([](const auto& Component) { Component->OnStart(); });
     }
 
-    void Entity::OnUpdate(float Delta)
+    void Entity::OnUpdate(f32 Delta)
     {
         if(!m_Enabled) return;
         for(const Ref<Component>& Component : m_Components)
@@ -95,7 +95,7 @@ namespace Hydro
         }
     }
 
-    void Entity::OnPhysicsUpdate(float Delta)
+    void Entity::OnPhysicsUpdate(f32 Delta)
     {
         if(!m_Enabled) return;
         for(const Ref<Component>& Component : m_Components)

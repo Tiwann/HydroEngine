@@ -5,162 +5,162 @@
 
 namespace Hydro
 {
-    float Math::Cos(float Val)
+    f32 Math::Cos(f32 Val)
     {
         return std::cos(Val);
     }
 
-    float Math::Sin(float Val)
+    f32 Math::Sin(f32 Val)
     {
         return std::sin(Val);
     }
 
-    float Math::Tan(float Val)
+    f32 Math::Tan(f32 Val)
     {
         return std::tan(Val);
     }
 
-    float Math::Acos(float Val)
+    f32 Math::Acos(f32 Val)
     {
         return std::acos(Val);
     }
 
-    float Math::Asin(float Val)
+    f32 Math::Asin(f32 Val)
     {
         return std::asin(Val);
     }
 
-    float Math::Atan(float Val)
+    f32 Math::Atan(f32 Val)
     {
         return std::atan(Val);
     }
 
-    float Math::Abs(float Value)
+    f32 Math::Abs(f32 Value)
     {
         return Value > 0 ? Value : -Value;
     }
 
-    float Math::Clamp(float Value, float Min, float Max)
+    f32 Math::Clamp(f32 Value, f32 Min, f32 Max)
     {
         return Value < Min ? Min : Value > Max ? Max : Value;
     }
 
-    float Math::Lerp(float A, float B, float Alpha)
+    f32 Math::Lerp(f32 A, f32 B, f32 Alpha)
     {
         return A + (B - A) * Alpha;
     }
 
-    float Math::Map(float Value, float MinA, float MaxA, float MinB, float MaxB)
+    f32 Math::Map(f32 Value, f32 MinA, f32 MaxA, f32 MinB, f32 MaxB)
     {
         return MinB + (MaxB - MinB) * ((Value - MinA) / (MaxA - MinA));
     }
 
-    float Math::Floor(float Value)
+    f32 Math::Floor(f32 Value)
     {
         return std::floor(Value);
     }
 
-    float Math::Ceil(float Value)
+    f32 Math::Ceil(f32 Value)
     {
         return std::ceil(Value);
     }
 
-    float Math::Smoothstep(float Value, float Min, float Max)
+    f32 Math::Smoothstep(f32 Value, f32 Min, f32 Max)
     {
-        const float Val = Clamp((Value - Min) / (Max - Min), 0.0f, 1.0f);
+        const f32 Val = Clamp((Value - Min) / (Max - Min), 0.0f, 1.0f);
         return Val * Val * (3.0f - 2.0f * Val);
     }
 
-    float Math::MappedSin(float Val, float Min, float Max)
+    f32 Math::MappedSin(f32 Val, f32 Min, f32 Max)
     {
         return Map(Sin(Val), -1.0f, 1.0f, Min, Max);
     }
 
-    float Math::MappedCos(float Val, float Min, float Max)
+    f32 Math::MappedCos(f32 Val, f32 Min, f32 Max)
     {
         return Map(Cos(Val), -1.0f, 1.0f, Min, Max);
     }
 
-    float Math::Min(float A, float B)
+    f32 Math::Min(f32 A, f32 B)
     {
         return A < B ? A : B;
     }
     
-    float Math::Max(float A, float B)
+    f32 Math::Max(f32 A, f32 B)
     {
         return A > B ? A : B;
     }
 
-    float Math::Sign(float Val)
+    f32 Math::Sign(f32 Val)
     {
         return Val > 0.0f ? 1.0f : Val < 0.0f ? -1.0f : 0.0f;
     }
 
-    float Math::Distance(const Vector2& VecA, const Vector2& VecB)
+    f32 Math::Distance(const Vector2& VecA, const Vector2& VecB)
     {
         return Sqrt(Pow(VecB.x - VecA.x, 2) + Pow(VecB.y - VecA.y, 2));
     }
 
-    float Math::Distance(const Vector3& VecA, const Vector3& VecB)
+    f32 Math::Distance(const Vector3& VecA, const Vector3& VecB)
     {
         return Sqrt(Pow(VecB.x - VecA.x, 2) + Pow(VecB.y - VecA.y, 2) + Pow(VecB.z - VecA.z, 2));
     }
 
     
-    bool Math::AreSame(float Lhs, float Rhs)
+    bool Math::AreSame(f32 Lhs, f32 Rhs)
     {
-        return Abs(Lhs - Rhs) <= std::numeric_limits<float>::epsilon();
+        return Abs(Lhs - Rhs) <= std::numeric_limits<f32>::epsilon();
     }
 
-    bool Math::IsZero(float Val)
+    bool Math::IsZero(f32 Val)
     {
         return AreSame(Val, 0.0f);
     }
 
-    float Math::Sqrt(float Val)
+    f32 Math::Sqrt(f32 Val)
     {
         return std::sqrt(Val);
     }
 
-    float Math::Pow(float Val, float Exp)
+    f32 Math::Pow(f32 Val, f32 Exp)
     {
         return std::pow(Val, Exp);
     }
 
-    float Math::Radians(float Degrees)
+    f32 Math::Radians(f32 Degrees)
     {
         return Degrees * Pi / 180.0f;
     }
 
-    float Math::Degrees(float Radians)
+    f32 Math::Degrees(f32 Radians)
     {
         return Radians * 180.0f / Pi;
     }
 
-    float Math::MoveTowards(float Current, float Target, float MaxDelta)
+    f32 Math::MoveTowards(f32 Current, f32 Target, f32 MaxDelta)
     {
-        const float MovedValue = Current + Sign(Target - Current) * MaxDelta;
+        const f32 MovedValue = Current + Sign(Target - Current) * MaxDelta;
         return Abs(Target - Current) <= MaxDelta ? Target : MovedValue;
     }
 
-    float Math::SmoothDamp(float Current, float Target, float& CurrentVelocity, float SmoothTime, float Delta, float MaxSpeed)
+    f32 Math::SmoothDamp(f32 Current, f32 Target, f32& CurrentVelocity, f32 SmoothTime, f32 Delta, f32 MaxSpeed)
     {
         SmoothTime = Max(0.0001f, SmoothTime);
-        const float Omega = 2.0f / SmoothTime;
+        const f32 Omega = 2.0f / SmoothTime;
 
-        const float X = Omega * Delta;
-        const float Exp = 1.0f / (1.0f + X + 0.48F * X * X + 0.235F * X * X * X);
-        float Change = Current - Target;
-        const float OriginalTo = Target;
+        const f32 X = Omega * Delta;
+        const f32 Exp = 1.0f / (1.0f + X + 0.48F * X * X + 0.235F * X * X * X);
+        f32 Change = Current - Target;
+        const f32 OriginalTo = Target;
 
         // Clamp maximum speed
-        const float MaxChange = MaxSpeed * SmoothTime;
+        const f32 MaxChange = MaxSpeed * SmoothTime;
         Change = Clamp(Change, -MaxChange, MaxChange);
         Target = Current - Change;
 
-        const float Temp = (CurrentVelocity + Omega * Change) * Delta;
+        const f32 Temp = (CurrentVelocity + Omega * Change) * Delta;
         CurrentVelocity = (CurrentVelocity - Omega * Temp) * Exp;
-        float Output = Target + (Change + Temp) * Exp;
+        f32 Output = Target + (Change + Temp) * Exp;
 
         // Prevent overshooting
         if (OriginalTo - Current > 0.0F == Output > OriginalTo)
@@ -172,12 +172,12 @@ namespace Hydro
         return Output;
     }
 
-    int32 Math::IntegerPart(float Val)
+    i32 Math::IntegerPart(f32 Val)
     {
-        return (int32)Floor(Val);
+        return (i32)Floor(Val);
     }
 
-    float Math::DecimalPart(float Val)
+    f32 Math::DecimalPart(f32 Val)
     {
         return Val - IntegerPart(Val);
     }

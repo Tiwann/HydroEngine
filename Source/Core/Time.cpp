@@ -1,10 +1,10 @@
 ﻿#include "Time.h"
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 namespace Hydro
 {
-    float Time::GetTime()
+    f32 Time::GetTime()
     {
-        return (float)glfwGetTime();
+        return (f32)glfwGetTime();
     }
 }

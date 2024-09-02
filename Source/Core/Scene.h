@@ -26,7 +26,7 @@ namespace Hydro
         Scene() = default;
         ~Scene() = default;
         void OnInit();
-        void OnUpdate(float Delta);
+        void OnUpdate(f32 Delta);
         void OnRender(const Ref<RendererBackend>& Renderer) const;
         void OnDestroy();
         

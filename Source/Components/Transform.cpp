@@ -35,22 +35,22 @@ namespace Hydro
         m_Position = Position;
     }
 
-    void Transform::SetPosition(float X, float Y, float Z)
+    void Transform::SetPosition(f32 X, f32 Y, f32 Z)
     {
         SetPosition({X, Y, Z});
     }
 
-    void Transform::SetRotation(float X, float Y, float Z)
+    void Transform::SetRotation(f32 X, f32 Y, f32 Z)
     {
         SetRotation({X, Y, Z});
     }
 
-    void Transform::SetScale(float X, float Y, float Z)
+    void Transform::SetScale(f32 X, f32 Y, f32 Z)
     {
         SetScale({X, Y, Z});
     }
 
-    void Transform::SetScale(float UniformScale)
+    void Transform::SetScale(f32 UniformScale)
     {
         SetScale({UniformScale, UniformScale, UniformScale});
     }
@@ -74,7 +74,7 @@ namespace Hydro
         m_Position += Translation;
     }
 
-    void Transform::Translate(float X, float Y, float Z)
+    void Transform::Translate(f32 X, f32 Y, f32 Z)
     {
         m_Position += {X, Y, Z};
     }
@@ -89,7 +89,7 @@ namespace Hydro
         m_Scale *= Vector;
     }
 
-    void Transform::Scale(float Scalar)
+    void Transform::Scale(f32 Scalar)
     {
         m_Scale *= Scalar;
     }
@@ -131,7 +131,7 @@ namespace Hydro
     {
         Component::OnInspectorGUI(IO);
         
-        if(UI::DragVector3<float>("Position", m_Position, 0.01f, 0, 0, "%.2f"))
+        if(UI::DragVector3<f32>("Position", m_Position, 0.01f, 0, 0, "%.2f"))
         {
             if(const auto& Shape = m_Entity->GetComponent<RigidBody2D>())
             {
@@ -140,7 +140,7 @@ namespace Hydro
             }
         }
         
-        if(UI::DragVector3<float>("Rotation", m_Rotation, 0.01f, 0, 360.0f, "%.2f"))
+        if(UI::DragVector3<f32>("Rotation", m_Rotation, 0.01f, 0, 360.0f, "%.2f"))
         {
             if(const auto& Shape = m_Entity->GetComponent<RigidBody2D>())
             {
@@ -149,7 +149,7 @@ namespace Hydro
             }
         }
         
-        if(UI::DragVector3<float>("Scale", m_Scale, 0.01f, 0, 0, "%.2f"))
+        if(UI::DragVector3<f32>("Scale", m_Scale, 0.01f, 0, 0, "%.2f"))
         {
             if(const auto& Shape = m_Entity->GetComponent<RigidBody2D>())
             {

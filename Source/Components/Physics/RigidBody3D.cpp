@@ -28,12 +28,12 @@ namespace Hydro
         PhysicsComponentInterface::OnStart();
     }
 
-    void RigidBody3D::OnPhysicsUpdate(float Delta)
+    void RigidBody3D::OnPhysicsUpdate(f32 Delta)
     {
         PhysicsComponentInterface::OnPhysicsUpdate(Delta);
     }
 
-    void RigidBody3D::SetGravityScale(float Scale)
+    void RigidBody3D::SetGravityScale(f32 Scale)
     {
         m_PhysicsBody->SetGravityScale(Scale);
     }
@@ -48,17 +48,17 @@ namespace Hydro
         m_PhysicsBody->SetAngularVelocity(AngularVelocity);
     }
 
-    void RigidBody3D::SetLinearDamping(float LinearDamping)
+    void RigidBody3D::SetLinearDamping(f32 LinearDamping)
     {
         m_PhysicsBody->SetLinearDamping(LinearDamping);
     }
 
-    void RigidBody3D::SetAngularDamping(float AngularDamping)
+    void RigidBody3D::SetAngularDamping(f32 AngularDamping)
     {
         m_PhysicsBody->SetAngularDamping(AngularDamping);
     }
 
-    float RigidBody3D::GetGravityScale() const
+    f32 RigidBody3D::GetGravityScale() const
     {
         return m_PhysicsBody->GetGravityScale();
     }
@@ -78,12 +78,12 @@ namespace Hydro
         return m_PhysicsBody->GetAngularVelocity();
     }
 
-    float RigidBody3D::GetLinearDamping() const
+    f32 RigidBody3D::GetLinearDamping() const
     {
         return m_PhysicsBody->GetLinearDamping();
     }
 
-    float RigidBody3D::GetAngularDamping() const
+    f32 RigidBody3D::GetAngularDamping() const
     {
         return m_PhysicsBody->GetAngularDamping();
     }

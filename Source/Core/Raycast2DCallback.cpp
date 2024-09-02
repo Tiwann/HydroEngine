@@ -4,8 +4,8 @@
 
 namespace Hydro
 {
-    float Raycast2DCallback::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal,
-        float fraction)
+    f32 Raycast2DCallback::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal,
+        f32 fraction)
     {
         const RigidBody2D* Collider = (RigidBody2D*)fixture->GetUserData().pointer;
         if(Collider->IsSensor())

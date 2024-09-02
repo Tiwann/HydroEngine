@@ -17,7 +17,7 @@ namespace Hydro
 
 namespace Hydro
 {
-    BoxShape2D::BoxShape2D(const Vector2& HalfExtents, const Vector2& Center, float Rotation)
+    BoxShape2D::BoxShape2D(const Vector2& HalfExtents, const Vector2& Center, f32 Rotation)
         : m_HalfExtents(HalfExtents), m_Center(Center), m_Rotation(Rotation)
     {
         m_Shape = new b2PolygonShape();
@@ -26,7 +26,7 @@ namespace Hydro
         AsPolygonShape->SetAsBox(Extents.x, Extents.y, m_Center, m_Rotation);
     }
 
-    CircleShape2D::CircleShape2D(float Radius, const Vector2& Center)
+    CircleShape2D::CircleShape2D(f32 Radius, const Vector2& Center)
         : m_Radius(Radius), m_Center(Center)
     {
         m_Shape = new b2CircleShape();
@@ -50,7 +50,7 @@ namespace Hydro
         m_Shape = new JPH::BoxShape(m_HalfExtents);
     }
 
-    SphereShape3D::SphereShape3D(float Radius) : m_Radius(Radius)
+    SphereShape3D::SphereShape3D(f32 Radius) : m_Radius(Radius)
     {
         m_Shape = new JPH::SphereShape(m_Radius);
     }

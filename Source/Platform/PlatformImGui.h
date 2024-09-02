@@ -8,7 +8,7 @@
 #include <imgui_impl_dx12.h>
 #endif
 
-
+#include "Core/NumericTypes.h"
 
 namespace Hydro
 {
@@ -23,8 +23,8 @@ namespace ImGui
 
 namespace ImGuizmo
 {
-    IMGUI_API void DecomposeMatrixToComponents(const float* matrix, Hydro::Vector3& translation, Hydro::Vector3& rotation, Hydro::Vector3& scale);
-    IMGUI_API void RecomposeMatrixFromComponents(const Hydro::Vector3& translation, const Hydro::Vector3& rotation, const Hydro::Vector3& scale, float* matrix);
+    IMGUI_API void DecomposeMatrixToComponents(const f32* matrix, Hydro::Vector3& translation, Hydro::Vector3& rotation, Hydro::Vector3& scale);
+    IMGUI_API void RecomposeMatrixFromComponents(const Hydro::Vector3& translation, const Hydro::Vector3& rotation, const Hydro::Vector3& scale, f32* matrix);
 }
 
 namespace Hydro

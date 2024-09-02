@@ -9,6 +9,6 @@ namespace Hydro
     {
     public:
         RaycastHit2D HitInfo;
-        float ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float fraction) override;
+        f32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, f32 fraction) override;
     };
 }

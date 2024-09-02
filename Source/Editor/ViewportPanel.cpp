@@ -24,7 +24,7 @@ namespace Hydro
         }
     }
 
-    void ViewportPanel::OnUpdate(float Delta)
+    void ViewportPanel::OnUpdate(f32 Delta)
     {
         EditorWindow::OnUpdate(Delta);
         m_FrameBuffer->Resize(m_Size);

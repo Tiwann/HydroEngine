@@ -15,44 +15,44 @@ Hydro::Stream::SizeType Hydro::Stream::ReadChar(char& OutChar)
     return Read(&OutChar, sizeof(char));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::ReadInt8(int8& OutInt)
+Hydro::Stream::SizeType Hydro::Stream::ReadInt8(i8& OutInt)
 {
-    return Read(&OutInt, sizeof(int8));
+    return Read(&OutInt, sizeof(i8));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::ReadInt16(int16& OutInt)
+Hydro::Stream::SizeType Hydro::Stream::ReadInt16(i16& OutInt)
 {
-    return Read(&OutInt, sizeof(int16));
+    return Read(&OutInt, sizeof(i16));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::ReadInt32(int32& OutInt)
+Hydro::Stream::SizeType Hydro::Stream::ReadInt32(i32& OutInt)
 {
-    return Read(&OutInt, sizeof(int32));
+    return Read(&OutInt, sizeof(i32));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::ReadInt64(int64& OutInt)
+Hydro::Stream::SizeType Hydro::Stream::ReadInt64(i64& OutInt)
 {
-    return Read(&OutInt, sizeof(int64));
+    return Read(&OutInt, sizeof(i64));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::ReadUInt8(uint8& OutInt)
+Hydro::Stream::SizeType Hydro::Stream::ReadUInt8(u8& OutInt)
 {
-    return Read(&OutInt, sizeof(uint8));
+    return Read(&OutInt, sizeof(u8));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::ReadUInt16(uint16& OutInt)
+Hydro::Stream::SizeType Hydro::Stream::ReadUInt16(u16& OutInt)
 {
-    return Read(&OutInt, sizeof(uint16));
+    return Read(&OutInt, sizeof(u16));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::ReadUInt32(uint32& OutInt)
+Hydro::Stream::SizeType Hydro::Stream::ReadUInt32(u32& OutInt)
 {
-    return Read(&OutInt, sizeof(uint32));
+    return Read(&OutInt, sizeof(u32));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::ReadUInt64(uint64& OutInt)
+Hydro::Stream::SizeType Hydro::Stream::ReadUInt64(u64& OutInt)
 {
-    return Read(&OutInt, sizeof(uint64));
+    return Read(&OutInt, sizeof(u64));
 }
 
 Hydro::Stream::SizeType Hydro::Stream::ReadString(String& Str, SizeType Count)
@@ -66,44 +66,44 @@ Hydro::Stream::SizeType Hydro::Stream::WriteChar(const char InChar)
     return Write(&InChar, sizeof(char));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::WriteInt8(const int8& InInt)
+Hydro::Stream::SizeType Hydro::Stream::WriteInt8(const i8& InInt)
 {
-    return Write(&InInt, sizeof(int8));
+    return Write(&InInt, sizeof(i8));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::WriteInt16(const int16& InInt)
+Hydro::Stream::SizeType Hydro::Stream::WriteInt16(const i16& InInt)
 {
-    return Write(&InInt, sizeof(int16));
+    return Write(&InInt, sizeof(i16));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::WriteInt32(const int32& InInt)
+Hydro::Stream::SizeType Hydro::Stream::WriteInt32(const i32& InInt)
 {
-    return Write(&InInt, sizeof(int32));
+    return Write(&InInt, sizeof(i32));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::WriteInt64(const int64& InInt)
+Hydro::Stream::SizeType Hydro::Stream::WriteInt64(const i64& InInt)
 {
-    return Write(&InInt, sizeof(int64));
+    return Write(&InInt, sizeof(i64));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::WriteUInt8(const uint8& InInt)
+Hydro::Stream::SizeType Hydro::Stream::WriteUInt8(const u8& InInt)
 {
-    return Write(&InInt, sizeof(uint8));
+    return Write(&InInt, sizeof(u8));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::WriteUInt16(const uint16& InInt)
+Hydro::Stream::SizeType Hydro::Stream::WriteUInt16(const u16& InInt)
 {
-    return Write(&InInt, sizeof(uint16));
+    return Write(&InInt, sizeof(u16));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::WriteUInt32(const uint32& InInt)
+Hydro::Stream::SizeType Hydro::Stream::WriteUInt32(const u32& InInt)
 {
-    return Write(&InInt, sizeof(uint32));
+    return Write(&InInt, sizeof(u32));
 }
 
-Hydro::Stream::SizeType Hydro::Stream::WriteUInt64(const uint64& InInt)
+Hydro::Stream::SizeType Hydro::Stream::WriteUInt64(const u64& InInt)
 {
-    return Write(&InInt, sizeof(uint64));
+    return Write(&InInt, sizeof(u64));
 }
 
 Hydro::Stream::SizeType Hydro::Stream::WriteString(const String& Str)

@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Math/Vector3.h"
-#include "Core/Types.h"
+#include "Core/NumericTypes.h"
 
 namespace Hydro
 {
@@ -8,9 +8,9 @@ namespace Hydro
     {
     public:
         static Vector3 Gravity;
-        static float TimeStep;
-        static constexpr uint32 MaxBodies = 0xFFFFui32;
-        static constexpr uint32 MaxBodyPairs = 0xFFFFui32;
-        static constexpr uint32 MaxContactConstraints = 10240;
+        static f32 TimeStep;
+        static constexpr u32 MaxBodies = 0xFFFFui32;
+        static constexpr u32 MaxBodyPairs = 0xFFFFui32;
+        static constexpr u32 MaxContactConstraints = 10240;
     };
 }

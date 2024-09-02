@@ -27,8 +27,8 @@ namespace Hydro
     {
         RigidBody2D::OnInspectorGUI(IO);
         
-        UI::DragVector2<float>("Center", m_Center, 0.01f);
-        UI::DragVector2<float>("Half Extents", m_HalfExtents, 0.01f);
+        UI::DragVector2<f32>("Center", m_Center, 0.01f);
+        UI::DragVector2<f32>("Half Extents", m_HalfExtents, 0.01f);
         StaticArray<const char*, 3> BodyTypes = { "Static", "Kinematic", "Dynamic" };
 
         PhysicsBodyType BodyType = m_PhysicsBody->GetType();

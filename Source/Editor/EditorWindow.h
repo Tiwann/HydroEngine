@@ -11,7 +11,7 @@ namespace Hydro
         EditorWindow(String Name);
         virtual ~EditorWindow() = default;
         virtual void OnInit(){}
-        virtual void OnUpdate(float Delta){}
+        virtual void OnUpdate(f32 Delta){}
         virtual void OnInspectorGUI(const ImGuiIO& IO){}
 
         bool* OpenedPtr();

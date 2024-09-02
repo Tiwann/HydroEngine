@@ -85,7 +85,7 @@ namespace Hydro
         BodyInterface.SetPositionAndRotation(BodyHandle->GetID(), Position, NewRotation, JPH::EActivation::Activate);
     }
 
-    void PhysicsBody3D::SetGravityScale(float Scale)
+    void PhysicsBody3D::SetGravityScale(f32 Scale)
     {
         Body* BodyHandle = GetHandle();
         JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
@@ -106,21 +106,21 @@ namespace Hydro
         MotionProperties->SetAngularVelocity(AngularVelocity);
     }
 
-    void PhysicsBody3D::SetLinearDamping(float LinearDamping)
+    void PhysicsBody3D::SetLinearDamping(f32 LinearDamping)
     {
         Body* BodyHandle = GetHandle();
         JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         MotionProperties->SetLinearDamping(LinearDamping);
     }
 
-    void PhysicsBody3D::SetAngularDamping(float AngularDamping)
+    void PhysicsBody3D::SetAngularDamping(f32 AngularDamping)
     {
         Body* BodyHandle = GetHandle();
         JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         MotionProperties->SetAngularDamping(AngularDamping);
     }
 
-    float PhysicsBody3D::GetGravityScale() const
+    f32 PhysicsBody3D::GetGravityScale() const
     {
         const Body* BodyHandle = GetHandle();
         const JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
@@ -150,14 +150,14 @@ namespace Hydro
         return MotionProperties->GetAngularVelocity();
     }
 
-    float PhysicsBody3D::GetLinearDamping() const
+    f32 PhysicsBody3D::GetLinearDamping() const
     {
         const Body* BodyHandle = GetHandle();
         const JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         return MotionProperties->GetLinearDamping();
     }
 
-    float PhysicsBody3D::GetAngularDamping() const
+    f32 PhysicsBody3D::GetAngularDamping() const
     {
         const Body* BodyHandle = GetHandle();
         const JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();

@@ -36,17 +36,17 @@ namespace Hydro
         virtual Vector3 GetRotation() const = 0;
         virtual void SetPositionAndRotation(const Vector3& Position, const Vector3& Rotation) = 0;
         
-        virtual void SetGravityScale(float Scale) = 0;
+        virtual void SetGravityScale(f32 Scale) = 0;
         virtual void SetLinearVelocity(const Vector3& Velocity) = 0;
         virtual void SetAngularVelocity(const Vector3& AngularVelocity) = 0;
-        virtual void SetLinearDamping(float LinearDamping) = 0;
-        virtual void SetAngularDamping(float AngularDamping) = 0;
+        virtual void SetLinearDamping(f32 LinearDamping) = 0;
+        virtual void SetAngularDamping(f32 AngularDamping) = 0;
 
-        virtual float GetGravityScale() const = 0;
+        virtual f32 GetGravityScale() const = 0;
         virtual Vector3 GetLinearVelocity() const = 0;
         virtual Vector3 GetAngularVelocity() const = 0;
-        virtual float GetLinearDamping() const = 0;
-        virtual float GetAngularDamping() const = 0;
+        virtual f32 GetLinearDamping() const = 0;
+        virtual f32 GetAngularDamping() const = 0;
         virtual Vector3 GetLinearVelocityPoint(const Vector3& Point) const = 0;
 
         virtual void AddForce(const Vector3& Force) = 0;

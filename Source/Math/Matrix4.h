@@ -1,6 +1,5 @@
 #pragma once
 #include "Vector4.h"
-#include "Components/Transform.h"
 
 namespace JPH { class Mat44; }
 
@@ -16,14 +15,14 @@ namespace Hydro
         Matrix4(const Vector4& Col1, const Vector4& Col2, const Vector4& Col3, const Vector4& Col4);
         Matrix4(const JPH::Mat44& Matrix);
         
-        float* ValuePtr();
-        const float* ValuePtr() const;
+        f32* ValuePtr();
+        const f32* ValuePtr() const;
 
-        const float* operator*() const { return (const float*)this; }
-        float* operator*() { return (float*)this; }
+        const f32* operator*() const { return (const f32*)this; }
+        f32* operator*() { return (f32*)this; }
         
-        float Magnitude() const;
-        float Determinant() const;
+        f32 Magnitude() const;
+        f32 Determinant() const;
         Matrix4 Inverse() const;
 
         Vector4 Multiply(const Vector4& Vec) const;
@@ -36,13 +35,13 @@ namespace Hydro
         
         Vector4& operator[](size_t i);
         const Vector4& operator[](size_t i) const;
-        Matrix4& operator*(float Scalar);
+        Matrix4& operator*(f32 Scalar);
 
-        void Rotate(float Radians, const Vector3& Axis);
+        void Rotate(f32 Radians, const Vector3& Axis);
         void Rotate(const Vector3& EulerAngles);
         void RotateDegrees(const Vector3& EulerAnglesDegrees);
-        void RotateDegrees(float Degrees, const Vector3& Axis);
-        void Scale(float Scalar);
+        void RotateDegrees(f32 Degrees, const Vector3& Axis);
+        void Scale(f32 Scalar);
         void Scale(const Vector3& Scale);
         void Translate(const Vector3& Translation);
 
@@ -52,7 +51,7 @@ namespace Hydro
         union
         {
             Vector4 Columns[4];
-            struct { float m00, m10, m20, m30, m01, m11, m21, m31, m02, m12, m22, m32, m03, m13, m23, m33; };
+            struct { f32 m00, m10, m20, m30, m01, m11, m21, m31, m02, m12, m22, m32, m03, m13, m23, m33; };
         };
     };
 }

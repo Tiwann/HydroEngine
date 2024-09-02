@@ -14,13 +14,13 @@ namespace Hydro
         Vector2 GetCenter() const;
         void SetCenter(const Vector2& Center);
 
-        float GetRadius() const;
-        void SetRadius(float radius);
+        f32 GetRadius() const;
+        void SetRadius(f32 radius);
         
     
     protected:
         Vector2 m_Center = Vector2::Zero;
-        float m_Radius = 1.0f;
+        f32 m_Radius = 1.0f;
         void RenderCollisions(const Ref<RendererBackend>& Renderer) const override;
     };
 }

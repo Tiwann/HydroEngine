@@ -17,25 +17,25 @@ namespace Hydro
         m_SpriteRenderer = m_Entity->GetComponent<SpriteRenderer>();
         
         m_Timer.FinishedEvent.BindMember(this, &SpriteAnimator::OnSpriteChange);
-        m_Timer.SetDuration(1.0f / (float)m_Speed);
+        m_Timer.SetDuration(1.0f / (f32)m_Speed);
         m_Timer.SetLoop(true);
         m_Timer.Start();
     }
 
-    void SpriteAnimator::OnUpdate(float Delta)
+    void SpriteAnimator::OnUpdate(f32 Delta)
     {
         Component::OnUpdate(Delta);
         if(!m_SpriteRenderer) return;
         if(!m_Animation) return;
         
-        m_Timer.SetDuration(1.0f / (float)m_Speed);
+        m_Timer.SetDuration(1.0f / (f32)m_Speed);
         m_Timer.Update(Delta);
     }
 
     void SpriteAnimator::OnInspectorGUI(const ImGuiIO& IO)
     {
         Component::OnInspectorGUI(IO);
-        UI::DragValue<int32>("Speed (FPS)", m_Speed, 1, 60);
+        UI::DragValue<i32>("Speed (FPS)", m_Speed, 1, 60);
     }
 
     Ref<SpriteRenderer> SpriteAnimator::GetSpriteRenderer() const
@@ -60,12 +60,12 @@ namespace Hydro
         m_Timer.Reset();
     }
 
-    void SpriteAnimator::SetSpeed(int32 Speed)
+    void SpriteAnimator::SetSpeed(i32 Speed)
     {
         m_Speed = Math::Max(0, Speed);
     }
 
-    int32 SpriteAnimator::GetSpeed() const
+    i32 SpriteAnimator::GetSpeed() const
     {
         return m_Speed;
     }

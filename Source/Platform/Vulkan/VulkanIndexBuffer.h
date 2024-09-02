@@ -7,7 +7,7 @@ namespace Hydro
     class VulkanIndexBuffer : public IndexBuffer
     {
     public:
-        VulkanIndexBuffer(uint32* Indices, size_t Count) : IndexBuffer(Indices, Count)
+        VulkanIndexBuffer(u32* Indices, size_t Count) : IndexBuffer(Indices, Count)
         {
         }
 

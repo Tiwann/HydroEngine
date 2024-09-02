@@ -29,8 +29,8 @@ namespace Hydro
         nlohmann::json File = nlohmann::json::parse(Content);
         OutConfiguration.AppName = File["Application Name"];
         OutConfiguration.IconPath = Path(File["Window Icon"].get<std::string>());
-        OutConfiguration.WindowWidth = File["Window Width"].get<uint32>();
-        OutConfiguration.WindowHeight = File["Window Height"].get<uint32>();
+        OutConfiguration.WindowWidth = File["Window Width"].get<u32>();
+        OutConfiguration.WindowHeight = File["Window Height"].get<u32>();
         OutConfiguration.StartFullscreen = File["Start Fullscreen"].get<bool>();
         OutConfiguration.WindowResizable = File["Window Resizable"].get<bool>();
         OutConfiguration.ShowGraphicsAPIName = File["Show Graphics API Name"].get<bool>();
@@ -38,7 +38,7 @@ namespace Hydro
         OutConfiguration.ShowOSName = File["Show OS Name"].get<bool>();
         OutConfiguration.ShowDeltaTime = File["Show DeltaTime"].get<bool>();
         OutConfiguration.ShowFPS = File["Show FPS"].get<bool>();
-        OutConfiguration.WindowTitleUpdateTime = File["Window Title Update Time"].get<float>();
+        OutConfiguration.WindowTitleUpdateTime = File["Window Title Update Time"].get<f32>();
         OutConfiguration.WithEditor = File["With Editor"].get<bool>();
         OutConfiguration.Graphics.BufferType = File["SwapchainBufferType"].get<GraphicsSettings::SwapchainBufferType>();
         MemoryStream.clear();
@@ -74,8 +74,8 @@ namespace Hydro
         nlohmann::json File = nlohmann::json::parse(Content);
         OutConfiguration.AppName = File["Application Name"];
         OutConfiguration.IconPath = Path(File["Window Icon"].get<std::string>());
-        OutConfiguration.WindowWidth = File["Window Width"].get<uint32>();
-        OutConfiguration.WindowHeight = File["Window Height"].get<uint32>();
+        OutConfiguration.WindowWidth = File["Window Width"].get<u32>();
+        OutConfiguration.WindowHeight = File["Window Height"].get<u32>();
         OutConfiguration.StartFullscreen = File["Start Fullscreen"].get<bool>();
         OutConfiguration.WindowResizable = File["Window Resizable"].get<bool>();
         OutConfiguration.ShowGraphicsAPIName = File["Show Graphics API Name"].get<bool>();
@@ -83,7 +83,7 @@ namespace Hydro
         OutConfiguration.ShowOSName = File["Show OS Name"].get<bool>();
         OutConfiguration.ShowDeltaTime = File["Show DeltaTime"].get<bool>();
         OutConfiguration.ShowFPS = File["Show FPS"].get<bool>();
-        OutConfiguration.WindowTitleUpdateTime = File["Window Title Update Time"].get<float>();
+        OutConfiguration.WindowTitleUpdateTime = File["Window Title Update Time"].get<f32>();
         OutConfiguration.WithEditor = File["With Editor"].get<bool>();
         OutConfiguration.Graphics.BufferType = File["SwapchainBufferType"].get<GraphicsSettings::SwapchainBufferType>();
         return true;

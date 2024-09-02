@@ -9,8 +9,8 @@ namespace Hydro
     {
         std::string AppName{};
         Path IconPath{};
-        uint32 WindowWidth{0};
-        uint32 WindowHeight{0};
+        u32 WindowWidth{0};
+        u32 WindowHeight{0};
         bool StartFullscreen = false;
         bool WindowResizable = false;
         bool ShowGraphicsAPIName = false;
@@ -18,7 +18,7 @@ namespace Hydro
         bool ShowOSName = false;
         bool ShowDeltaTime = false;
         bool ShowFPS = false;
-        float WindowTitleUpdateTime = 0.0f;
+        f32 WindowTitleUpdateTime = 0.0f;
         bool WithEditor = false;
         GraphicsSettings Graphics;
 

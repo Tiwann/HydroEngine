@@ -171,12 +171,12 @@ namespace Hydro
     Vector2 Input::GetMousePosition()
     {
         GLFWwindow* NativeWindow = g_Application->GetWindow()->GetNativeWindow();
-        double X, Y;
+        f64 X, Y;
         glfwGetCursorPos(NativeWindow, &X, &Y);
-        return {(float)X, (float)Y};
+        return {(f32)X, (f32)Y};
     }
 
-    const Array<uint8>& Input::GetGamepadButtons(size_t ID)
+    const Array<u8>& Input::GetGamepadButtons(size_t ID)
     {
         return s_GamepadButtons[ID];
     }
@@ -187,7 +187,7 @@ namespace Hydro
         for(size_t i = 0; i < 16; ++i)
         {
             int ButtonCount;
-            const uint8* Buttons = glfwGetJoystickButtons((int)i, &ButtonCount);
+            const u8* Buttons = glfwGetJoystickButtons((int)i, &ButtonCount);
             s_GamepadButtons[i] = Array(Buttons, ButtonCount);
             for(size_t j = 0 ; j < s_GamepadButtons.Count(); ++j)
             {

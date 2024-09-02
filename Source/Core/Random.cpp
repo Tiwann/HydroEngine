@@ -8,25 +8,25 @@ namespace Hydro
     
     Color Random::Color()
     {
-        const float Red = Float(0.0f, 1.0f);
-        const float Green = Float(0.0f, 1.0f);
-        const float Blue = Float(0.0f, 1.0f);
+        const f32 Red = Float(0.0f, 1.0f);
+        const f32 Green = Float(0.0f, 1.0f);
+        const f32 Blue = Float(0.0f, 1.0f);
         return {Red, Green, Blue, 1.0f};
     }
 
-    float Random::Float(float Min, float Max)
+    f32 Random::Float(f32 Min, f32 Max)
     {
         std::uniform_real_distribution Distribution(Min, Max);
         return Distribution(s_RandomDevice);
     }
 
-    int32 Random::Integer(int32 Min, int32 Max)
+    i32 Random::Integer(i32 Min, i32 Max)
     {
         std::uniform_int_distribution Distribution(Min, Max);
         return Distribution(s_RandomDevice);
     }
 
-    Vector2 Random::Vector2(float MinX, float MaxX, float MinY, float MaxY)
+    Vector2 Random::Vector2(f32 MinX, f32 MaxX, f32 MinY, f32 MaxY)
     {
         return { Float(MinX, MaxX), Float(MinY, MaxY) };
     }

@@ -38,7 +38,7 @@ namespace Hydro
         
     }
 
-    void PhysicsWorld3D::Step(const float TimeStep)
+    void PhysicsWorld3D::Step(const f32 TimeStep)
     {
         m_System.Update(TimeStep * Time::Scale, 2, &m_TempAllocator, &m_JobSystem);
     }

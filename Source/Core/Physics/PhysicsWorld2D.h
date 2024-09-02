@@ -11,7 +11,7 @@ namespace Hydro
     {
     public:
         void OnInit() override;
-        void Step(float TimeStep) override;
+        void Step(f32 TimeStep) override;
         void OnDestroy() override;
         PhysicsBody2D* CreateBody(const PhysicsBodyDefinition& Definition, const PhysicsMaterial& Material) override;
         void DestroyBody(PhysicsBody2D* Body) override;

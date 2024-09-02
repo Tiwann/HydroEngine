@@ -29,7 +29,7 @@ namespace Hydro
     {
         Flags() : m_Value((Enum)0){}
         Flags(Enum Val) : m_Value(Val){}
-        explicit Flags(uint32 Val) : m_Value((Enum)Val){}
+        explicit Flags(u32 Val) : m_Value((Enum)Val){}
         
         Flags Append(Flags Value)
         {

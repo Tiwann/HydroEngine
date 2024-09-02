@@ -1,5 +1,5 @@
 #include "SpriteRenderer.h"
-
+#include "Components/Transform.h"
 #include "Core/Application.h"
 #include "Core/VertexArray.h"
 #include "Core/VertexBuffer.h"
@@ -51,8 +51,8 @@ namespace Hydro
 
         const Vector2 Position = m_Sprite.GetPosition();
         const Vector2 Size = m_Sprite.GetSize();
-        const float Width = m_Sprite.GetTexture()->GetSize().x;
-        const float Height = m_Sprite.GetTexture()->GetSize().y;
+        const f32 Width = m_Sprite.GetTexture()->GetSize().x;
+        const f32 Height = m_Sprite.GetTexture()->GetSize().y;
         
         const Vector2 Uv0 = {Position.x / Width, (Position.y + Size.y) / Height};
         const Vector2 Uv1 = {(Position.x + Size.x) / Width, (Position.y + Size.y) / Height};
@@ -78,7 +78,7 @@ namespace Hydro
         if(m_Sprite.GetTexture())
         {
             const Vector2 TextureSize = m_Sprite.GetTexture()->GetSize();
-            const float AspectRatio = TextureSize.x / TextureSize.y;
+            const f32 AspectRatio = TextureSize.x / TextureSize.y;
             
             const Vector2 NewSize = TextureSize.x < TextureSize.y
                 ? Vector2(1.0f, AspectRatio)
@@ -86,7 +86,7 @@ namespace Hydro
 
             const Matrix3 SpriteScale = Flags.Contains(SpriteRendererFlagBit::NormalizeSize)
             ? Math::Scale(Matrix3::Identity, NewSize)
-            : Math::Scale(Matrix3::Identity, m_Sprite.GetSize() / (float)m_PixelsPerUnit);
+            : Math::Scale(Matrix3::Identity, m_Sprite.GetSize() / (f32)m_PixelsPerUnit);
             
             m_Shader->SetUniformMat3("uSpriteScale", SpriteScale);
             m_Shader->SetUniformTexture("uTexture", m_Sprite.GetTexture());
@@ -110,8 +110,8 @@ namespace Hydro
         
         UI::Sprite(m_Sprite);
 
-        UI::DragVector2<float>("Tiling", m_Tiling, 0.1f);
-        UI::DragVector2<float>("Size", m_Size, 0.1f);
+        UI::DragVector2<f32>("Tiling", m_Tiling, 0.1f);
+        UI::DragVector2<f32>("Size", m_Size, 0.1f);
         
         const char* FlagNames[] = { "None",
                                     "Tile With Scale",
@@ -133,7 +133,7 @@ namespace Hydro
             ImGui::EndCombo();
         }
 
-        ImGui::ColorEdit4("Tint", (float*)&m_ColorTint, ImGuiColorEditFlags_DisplayHex);
+        ImGui::ColorEdit4("Tint", (f32*)&m_ColorTint, ImGuiColorEditFlags_DisplayHex);
         UI::DragValue<int>("Pixels Per Unit", m_PixelsPerUnit, 1);
     }
 
@@ -168,12 +168,12 @@ namespace Hydro
         m_ColorTint = Color;
     }
 
-    int32 SpriteRenderer::GetPixelsPerUnit() const
+    i32 SpriteRenderer::GetPixelsPerUnit() const
     {
         return m_PixelsPerUnit;
     }
 
-    void SpriteRenderer::SetPixelsPerUnit(int32 PixelsPerUnit)
+    void SpriteRenderer::SetPixelsPerUnit(i32 PixelsPerUnit)
     {
         m_PixelsPerUnit = PixelsPerUnit;
     }

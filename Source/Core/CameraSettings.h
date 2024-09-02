@@ -1,63 +1,28 @@
 ﻿#pragma once
 #include "CameraProjectionType.h"
-#include "Math/Vector2.h"
+#include "Core/NumericTypes.h"
 
 namespace Hydro
 {
+    class Vector2;
+    
     struct CameraSettings
     {
         CameraProjectionType Projection;
-        float Width, Height;
-        float FieldOfView;
-        float OrthoSize;
-        float NearPlane, FarPlane;
+        f32 Width, Height;
+        f32 FieldOfView;
+        f32 OrthoSize;
+        f32 NearPlane, FarPlane;
 
         static CameraSettings DefaultPerspective;
         static CameraSettings DefaultOrthographic;
 
-        CameraSettings& WithDimension(float Width, float Height)
-        {
-            this->Width = Width;
-            this->Height = Height;
-            return *this;
-        }
-
-        CameraSettings& WithDimensions(const Vector2& Dimensions)
-        {
-            this->Width = Dimensions.x;
-            this->Height = Dimensions.y;
-            return *this;
-        }
-
-        CameraSettings& WithFOV(float FOV)
-        {
-            FieldOfView = FOV;
-            return *this;
-        }
-
-        CameraSettings& WithOrthoSize(float OrthographicSize)
-        {
-            OrthoSize = OrthographicSize;
-            return *this;
-        }
-
-        CameraSettings& SetType(CameraProjectionType Type)
-        {
-            Projection = Type;
-            return *this;
-        }
-
-        CameraSettings& WithNearFarPlanes(float Near, float Far)
-        {
-            NearPlane = Near;
-            FarPlane = Far;
-            return *this;
-        }
-
-        void SetDimensions(Vector2 Size)
-        {
-            Width = Size.x;
-            Height = Size.y;
-        }
+        CameraSettings& WithDimension(f32 Width, f32 Height);
+        CameraSettings& WithDimensions(const Vector2& Dimensions);
+        CameraSettings& WithFOV(f32 FOV);
+        CameraSettings& WithOrthoSize(f32 OrthographicSize);
+        CameraSettings& SetType(CameraProjectionType Type);
+        CameraSettings& WithNearFarPlanes(f32 Near, f32 Far);
+        void SetDimensions(Vector2 Size);
     };    
 }

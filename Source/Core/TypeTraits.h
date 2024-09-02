@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Types.h"
+#include "Core/NumericTypes.h"
 
 namespace Hydro
 {
@@ -17,29 +17,29 @@ namespace Hydro
     struct IsInteger : FalseType{};
 
     template<>
-    struct IsInteger<int8> : TrueType{};
+    struct IsInteger<i8> : TrueType{};
 
     template<>
-    struct IsInteger<int16> : TrueType{};
+    struct IsInteger<i16> : TrueType{};
 
     template<>
-    struct IsInteger<int32> : TrueType{};
+    struct IsInteger<i32> : TrueType{};
 
     template<>
-    struct IsInteger<int64> : TrueType{};
+    struct IsInteger<i64> : TrueType{};
 
 
     template<>
-    struct IsInteger<uint8> : TrueType{};
+    struct IsInteger<u8> : TrueType{};
 
     template<>
-    struct IsInteger<uint16> : TrueType{};
+    struct IsInteger<u16> : TrueType{};
 
     template<>
-    struct IsInteger<uint32> : TrueType{};
+    struct IsInteger<u32> : TrueType{};
 
     template<>
-    struct IsInteger<uint64> : TrueType{};
+    struct IsInteger<u64> : TrueType{};
 
     template<typename T>
     static inline constexpr bool IsIntegerValue = IsInteger<T>::Value;
@@ -49,10 +49,10 @@ namespace Hydro
     struct IsFloatingPoint : FalseType {};
     
     template<>
-    struct IsFloatingPoint<float> : TrueType{};
+    struct IsFloatingPoint<f32> : TrueType{};
 
     template<>
-    struct IsFloatingPoint<double> : TrueType{};
+    struct IsFloatingPoint<f64> : TrueType{};
 
     template<typename T>
     static inline constexpr bool IsFloatingPointValue = IsFloatingPoint<T>::Value;

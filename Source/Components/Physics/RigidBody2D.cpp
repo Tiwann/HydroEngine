@@ -48,7 +48,7 @@ namespace Hydro
         World.DestroyBody(m_PhysicsBody);
     }
     
-    void RigidBody2D::OnPhysicsUpdate(float Delta)
+    void RigidBody2D::OnPhysicsUpdate(f32 Delta)
     {
         const Ref<Transform> Transform = GetTransform();
         const Vector3 NewPosition = m_PhysicsBody->GetPosition();
@@ -57,12 +57,12 @@ namespace Hydro
         Transform->SetRotation(NewRotation);
     }
     
-    float RigidBody2D::GetGravityScale() const
+    f32 RigidBody2D::GetGravityScale() const
     {
         return m_PhysicsBody->GetGravityScale();
     }
 
-    void RigidBody2D::SetGravityScale(float Scale)
+    void RigidBody2D::SetGravityScale(f32 Scale)
     {
         m_PhysicsBody->SetGravityScale(Scale);
     }
@@ -87,22 +87,22 @@ namespace Hydro
         return m_PhysicsBody->GetAngularVelocity();
     }
 
-    void RigidBody2D::SetLinearDamping(float LinearDamping)
+    void RigidBody2D::SetLinearDamping(f32 LinearDamping)
     {
         m_PhysicsBody->SetLinearDamping(LinearDamping);
     }
 
-    void RigidBody2D::SetAngularDamping(float AngularDamping)
+    void RigidBody2D::SetAngularDamping(f32 AngularDamping)
     {
         m_PhysicsBody->SetAngularDamping(AngularDamping);
     }
 
-    float RigidBody2D::GetLinearDamping() const
+    f32 RigidBody2D::GetLinearDamping() const
     {
         return m_PhysicsBody->GetLinearDamping();
     }
 
-    float RigidBody2D::GetAngularDamping() const
+    f32 RigidBody2D::GetAngularDamping() const
     {
         return m_PhysicsBody->GetAngularDamping();
     }

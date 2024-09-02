@@ -116,9 +116,9 @@ namespace Hydro
     protected:
         virtual void OnInit();
         virtual void OnStart();
-        virtual void OnUpdate(float Delta);
+        virtual void OnUpdate(f32 Delta);
         virtual void OnRender(const Ref<RendererBackend>& Renderer);
-        virtual void OnPhysicsUpdate(float Delta);
+        virtual void OnPhysicsUpdate(f32 Delta);
         virtual void OnDestroy();
         void SetEnabled(bool Enabled);
 

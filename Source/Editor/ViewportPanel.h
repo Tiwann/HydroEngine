@@ -22,7 +22,7 @@ namespace Hydro
         }
 
         void OnInit() override;
-        void OnUpdate(float Delta) override;
+        void OnUpdate(f32 Delta) override;
         void OnInspectorGUI(const ImGuiIO& IO) override;
 
         bool IsAvailable() const;

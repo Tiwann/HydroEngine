@@ -12,7 +12,7 @@ namespace Hydro
     {                             
     }
 
-    void Camera::OnUpdate(float Delta)
+    void Camera::OnUpdate(f32 Delta)
     {
         const Application& App = *g_Application;
         const Ref<Window>& Window = App.GetWindow();
@@ -25,20 +25,20 @@ namespace Hydro
     {
         Component::OnInspectorGUI(IO);
         
-        UI::DragValue<float>("Width", Settings.Width, 1, 0, 0, "%.0f");
-        UI::DragValue<float>("Height", Settings.Height, 1, 0, 0, "%.0f");
-        UI::DragValue<float>("Near Plane", Settings.NearPlane);
-        UI::DragValue<float>("Far Plane", Settings.FarPlane);
+        UI::DragValue<f32>("Width", Settings.Width, 1, 0, 0, "%.0f");
+        UI::DragValue<f32>("Height", Settings.Height, 1, 0, 0, "%.0f");
+        UI::DragValue<f32>("Near Plane", Settings.NearPlane);
+        UI::DragValue<f32>("Far Plane", Settings.FarPlane);
 
         const char* ProjectionTypes[2] = { "Perspective", "Orthographic" };
         ImGui::Combo("Projection", (int*)&Settings.Projection, ProjectionTypes, 2);
             
         if(Settings.Projection == CameraProjectionType::Orthographic)
         {
-            UI::DragValue<float>("Orthographic Size", Settings.OrthoSize);
+            UI::DragValue<f32>("Orthographic Size", Settings.OrthoSize);
         } else
         {
-            UI::DragValue<float>("Field Of View", Settings.FieldOfView);
+            UI::DragValue<f32>("Field Of View", Settings.FieldOfView);
         }
     }
 
@@ -49,7 +49,7 @@ namespace Hydro
 
     Matrix4 Camera::GetProjectionMatrix() const
     {
-        const float AspectRatio = Settings.Width / Settings.Height;
+        const f32 AspectRatio = Settings.Width / Settings.Height;
         
         const Matrix4 PerspectiveProj = Math::Perspective(
             Settings.FieldOfView,

@@ -13,8 +13,8 @@ namespace Hydro
         Vector Point;
         Vector Normal;
         Vector Location;
-        float Fraction;
-        float Distance;
+        f32 Fraction;
+        f32 Distance;
         Ref<Component> HitComponent;
     };
 

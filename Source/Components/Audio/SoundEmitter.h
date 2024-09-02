@@ -20,12 +20,12 @@ namespace Hydro
     public:
         using EmitterStartedDelegate = MulticastDelegate<void(Ref<Sound> Sound, bool WasPaused)>;
         using EmitterStopDelegate = MulticastDelegate<void(Ref<Sound> Sound, bool IsPause)>;
-        using EmitterPlayingDelegate = MulticastDelegate<void(Ref<Sound> Sound, uint32 Position, uint32 Length)>;
+        using EmitterPlayingDelegate = MulticastDelegate<void(Ref<Sound> Sound, u32 Position, u32 Length)>;
         
         SoundEmitter(Entity* Owner);
 
         void OnInit() override;
-        void OnUpdate(float Delta) override;
+        void OnUpdate(f32 Delta) override;
         void OnInspectorGUI(const ImGuiIO& IO) override;
         void OnDestroy() override;
 
@@ -37,23 +37,23 @@ namespace Hydro
 
         Ref<Sound> GetSound() const;
         void SetSound(const Ref<Sound>& Clip);
-        void SetVolume(float Vol);
-        void SetPitch(float Pitch);
-        float GetVolume() const;
-        float GetPitch() const;
+        void SetVolume(f32 Vol);
+        void SetPitch(f32 Pitch);
+        f32 GetVolume() const;
+        f32 GetPitch() const;
 
         EmitterStartedDelegate OnStartedEvent;
         EmitterStopDelegate OnStopEvent;
         EmitterPlayingDelegate OnPlayingEvent;
     
-        void OnPlaying(Ref<Sound> Sound, uint32 Position, uint32 Length);
+        void OnPlaying(Ref<Sound> Sound, u32 Position, u32 Length);
     private:
         Ref<Sound> m_Sound = nullptr;
-        float m_Volume = 1.0f;
-        float m_Pitch = 1.0f;
+        f32 m_Volume = 1.0f;
+        f32 m_Pitch = 1.0f;
         bool m_Looping = false;
-        uint32 m_PlaybackPosition = 0;
-        uint32 m_Length = 0;
+        u32 m_PlaybackPosition = 0;
+        u32 m_Length = 0;
         
         FMOD::Channel* m_Channel = nullptr;
     };

@@ -38,7 +38,7 @@ namespace Hydro
             m_CurrentState->OnEnter();
         }
 
-        void OnUpdate(float Delta) override
+        void OnUpdate(f32 Delta) override
         {
             if(!m_CurrentState)
             {

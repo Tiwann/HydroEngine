@@ -2,7 +2,7 @@
 #include "Macros.h"
 #include "Iterator.h"
 #include <cstring>
-#include "Core/Types.h"
+#include "Core/NumericTypes.h"
 
 #define HYDRO_MALLOC(Size) ::operator new []((Size))
 #define HYDRO_REALLOC(Ptr, Size) ::operator new []((Size), (Ptr))
@@ -24,7 +24,7 @@ namespace Hydro::Memory
     }
 
     template<typename T>
-    T* Memset(T* Ptr, int32 Value, size_t Count = 1)
+    T* Memset(T* Ptr, i32 Value, size_t Count = 1)
     {
         return (T*)HYDRO_MEMSET(Ptr, Value, Count * sizeof(T));
     }

@@ -13,12 +13,12 @@ namespace Hydro
         UI::NewWindow(m_Name, m_Opened, WindowFlagBits::None, []
         {
             ImGui::SeparatorText("Physics2D");
-            UI::DragVector2<float>("Base Gravity", Physics2D::Gravity, 0.01f);
-            UI::DragValue<float>("Timestep", Physics2D::TimeStep, 0.01f);
+            UI::DragVector2<f32>("Base Gravity", Physics2D::Gravity, 0.01f);
+            UI::DragValue<f32>("Timestep", Physics2D::TimeStep, 0.01f);
 
             ImGui::SeparatorText("Physics3D");
-            UI::DragVector3<float>("Base Gravity", Physics3D::Gravity, 0.01f);
-            UI::DragValue<float>("Timestep", Physics3D::TimeStep, 0.01f);
+            UI::DragVector3<f32>("Base Gravity", Physics3D::Gravity, 0.01f);
+            UI::DragValue<f32>("Timestep", Physics3D::TimeStep, 0.01f);
         });
         
     }

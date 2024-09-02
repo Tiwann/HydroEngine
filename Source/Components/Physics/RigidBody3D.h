@@ -16,18 +16,18 @@ namespace Hydro
 
         void OnInit() override;
         void OnStart() override;
-        void OnPhysicsUpdate(float Delta) override;
+        void OnPhysicsUpdate(f32 Delta) override;
         
-        void SetGravityScale(float Scale) override;
+        void SetGravityScale(f32 Scale) override;
         void SetLinearVelocity(const Vector3& Velocity) override;
         void SetAngularVelocity(const Vector3& AngularVelocity) override;
-        void SetLinearDamping(float LinearDamping) override;
-        void SetAngularDamping(float AngularDamping) override;
-        float GetGravityScale() const override;
+        void SetLinearDamping(f32 LinearDamping) override;
+        void SetAngularDamping(f32 AngularDamping) override;
+        f32 GetGravityScale() const override;
         Vector3 GetLinearVelocity() const override;
         Vector3 GetAngularVelocity() const override;
-        float GetLinearDamping() const override;
-        float GetAngularDamping() const override;
+        f32 GetLinearDamping() const override;
+        f32 GetAngularDamping() const override;
         Vector3 GetLinearVelocityPoint(const Vector3& Point) const override;
         void AddForce(const Vector3& Force) override;
         void AddImpulse(const Vector3& Force) override;

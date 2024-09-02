@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Types.h"
+#include "Core/NumericTypes.h"
 #include <string>
 
 namespace Hydro
@@ -9,10 +9,10 @@ namespace Hydro
     public:
         GUID();
         GUID(const GUID& Guid);
-        GUID(uint64 Low, uint64 High);
-        const uint64* GetValues() const;
+        GUID(u64 Low, u64 High);
+        const u64* GetValues() const;
         std::string GetString() const;
     private:
-        uint64 m_Values[2] = {};
+        u64 m_Values[2] = {};
     };
 }

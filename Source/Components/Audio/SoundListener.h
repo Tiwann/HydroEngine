@@ -16,10 +16,10 @@ namespace Hydro
         void OnInit() override;
         void OnDestroy() override;
         void OnStart() override;
-        void OnUpdate(float Delta) override;
+        void OnUpdate(f32 Delta) override;
         void OnInspectorGUI(const ImGuiIO& IO) override;
-        void SetIndex(uint32 Index);
+        void SetIndex(u32 Index);
     private:
-        uint32 m_Index = 0;
+        u32 m_Index = 0;
     };
 }

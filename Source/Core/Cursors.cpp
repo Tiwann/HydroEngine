@@ -14,13 +14,13 @@ namespace Hydro
 
     void Cursor::SetCursorVisible(const Ref<Window>& Window, bool Visible)
     {
-        const int32 Value = Visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN;
+        const i32 Value = Visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN;
         glfwSetInputMode(Window->GetNativeWindow(), GLFW_CURSOR, Value);
     }
 
     void Cursor::SetCursorLocked(const Ref<Window>& Window, bool Locked)
     {
-        const int32 Value = Locked ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
+        const i32 Value = Locked ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
         glfwSetInputMode(Window->GetNativeWindow(), GLFW_CURSOR, Value);
     }
 

@@ -58,8 +58,8 @@ namespace Hydro
         void SetColorTint(const Color& Color);
 
         /* Pixels per unit */
-        int32 GetPixelsPerUnit() const;
-        void SetPixelsPerUnit(int32 PixelsPerUnit);
+        i32 GetPixelsPerUnit() const;
+        void SetPixelsPerUnit(i32 PixelsPerUnit);
 
     private:
         Ref<VertexBuffer> m_VertexBuffer;
@@ -68,7 +68,7 @@ namespace Hydro
         Ref<Shader> m_Shader;
         Sprite m_Sprite;
 
-        int32 m_PixelsPerUnit = 100;
+        i32 m_PixelsPerUnit = 100;
         Vector2 m_Tiling{Vector2::One};
         Vector2 m_Size;
         Color m_ColorTint{Color::White};

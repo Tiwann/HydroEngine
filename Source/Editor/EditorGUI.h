@@ -3,10 +3,12 @@
 #include "Platform/PlatformImGui.h"
 #include "Core/Flags.h"
 #include "Core/Containers/TreeNode.h"
+#include "Core/Entity.h"
+#include "Core/Containers/StringView.h"
 #include "Input/MouseButton.h"
 #include "Math/LinearAlgebra.h"
-#include "Core/Containers/StringView.h"
 #include <functional>
+
 
 namespace Hydro
 {
@@ -129,7 +131,7 @@ namespace Hydro
 
             if(std::is_floating_point_v<T>)
             {
-                Result = ImGui::SliderFloat(Label.data(), (float*)&Val, (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Result = ImGui::SliderFloat(Label.data(), (f32*)&Val, (f32)Min, (f32)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
             }
             ImGui::EndDisabled();
             return Result;
@@ -150,7 +152,7 @@ namespace Hydro
 
             if(std::is_floating_point_v<T>)
             {
-                Result = ImGui::SliderFloat2(Label.data(), Vec.ValuePtr(), (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Result = ImGui::SliderFloat2(Label.data(), Vec.ValuePtr(), (f32)Min, (f32)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
             }
             ImGui::EndDisabled();
             return Result;
@@ -172,7 +174,7 @@ namespace Hydro
 
             if(std::is_floating_point_v<T>)
             {
-                Result = ImGui::SliderFloat3(Label.data(), Vec.ValuePtr(), (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Result = ImGui::SliderFloat3(Label.data(), Vec.ValuePtr(), (f32)Min, (f32)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
             }
             ImGui::EndDisabled();
             return Result;
@@ -195,7 +197,7 @@ namespace Hydro
 
             if(std::is_floating_point_v<T>)
             {
-                Result = ImGui::SliderFloat4(Label.data(), Vec.ValuePtr(), (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Result = ImGui::SliderFloat4(Label.data(), Vec.ValuePtr(), (f32)Min, (f32)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
             }
             ImGui::EndDisabled();
             return Result;
@@ -204,7 +206,7 @@ namespace Hydro
 
         /* Drags */
         template<typename T, typename = std::enable_if<std::is_arithmetic_v<T>>>
-        bool DragValue(std::string_view Label, T& Val, float Speed = 1, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
+        bool DragValue(std::string_view Label, T& Val, f32 Speed = 1, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
         {
             bool Result = false;
             ImGui::BeginDisabled(!Enabled);
@@ -217,14 +219,14 @@ namespace Hydro
 
             if(std::is_floating_point_v<T>)
             {
-                Result = ImGui::DragFloat(Label.data(), (float*)&Val, Speed, (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Result = ImGui::DragFloat(Label.data(), (f32*)&Val, Speed, (f32)Min, (f32)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
             }
             ImGui::EndDisabled();
             return Result;
         }
 
         template<typename T, typename = std::enable_if<std::is_arithmetic_v<T>>>
-        bool DragVector2(std::string_view Label, Vector2& Vec, float Speed = 1, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
+        bool DragVector2(std::string_view Label, Vector2& Vec, f32 Speed = 1, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
         {
             bool Result = false;
             ImGui::BeginDisabled(!Enabled);
@@ -238,14 +240,14 @@ namespace Hydro
 
             if(std::is_floating_point_v<T>)
             {
-                Result = ImGui::DragFloat2(Label.data(), Vec.ValuePtr(), Speed, (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Result = ImGui::DragFloat2(Label.data(), Vec.ValuePtr(), Speed, (f32)Min, (f32)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
             }
             ImGui::EndDisabled();
             return Result;
         }
 
         template<typename T, typename = std::enable_if<std::is_arithmetic_v<T>>>
-        bool DragVector3(std::string_view Label, Vector3& Vec, float Speed = 1, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
+        bool DragVector3(std::string_view Label, Vector3& Vec, f32 Speed = 1, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
         {
             bool Result = false;
             ImGui::BeginDisabled(!Enabled);
@@ -260,14 +262,14 @@ namespace Hydro
 
             if(std::is_floating_point_v<T>)
             {
-                Result = ImGui::DragFloat3(Label.data(), Vec.ValuePtr(), Speed, (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Result = ImGui::DragFloat3(Label.data(), Vec.ValuePtr(), Speed, (f32)Min, (f32)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
             }
             ImGui::EndDisabled();
             return Result;
         }
 
         template<typename T, typename = std::enable_if<std::is_arithmetic_v<T>>>
-        bool DragVector4(std::string_view Label, Vector4& Vec, float Speed = 1, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
+        bool DragVector4(std::string_view Label, Vector4& Vec, f32 Speed = 1, T Min = 0, T Max = 0, std::string_view Format = std::is_integral_v<T> ? "%d" : "%.3f", SliderFlags Flags = SliderFlagBits::None, bool Enabled = true)
         {
             bool Result = false;
             ImGui::BeginDisabled(!Enabled);
@@ -284,7 +286,7 @@ namespace Hydro
 
             if(std::is_floating_point_v<T>)
             {
-                Result = ImGui::DragFloat4(Label.data(), Vec.ValuePtr(), Speed, (float)Min, (float)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
+                Result = ImGui::DragFloat4(Label.data(), Vec.ValuePtr(), Speed, (f32)Min, (f32)Max, Format.data(), Flags.As<ImGuiSliderFlags>());
             }
             ImGui::EndDisabled();
             return Result;
@@ -302,22 +304,6 @@ namespace Hydro
 
         /* Input */
         bool ItemClicked(MouseButton Button);
-
-        class ScopedID
-        {
-        public:
-            ScopedID(const GUID& Guid) : m_Guid(Guid)
-            {
-                ImGui::PushID(m_Guid);
-            }
-
-            ~ScopedID()
-            {
-                ImGui::PopID();
-            }
-        private:
-            GUID m_Guid;
-        };
         
     }
     

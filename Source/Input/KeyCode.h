@@ -1,7 +1,7 @@
 #pragma once
-#include "Core/Types.h"
+#include "Core/NumericTypes.h"
 
-#define HYDRO_KEY_UNKNOWN            -1
+#define HYDRO_KEY_UNKNOWN            U16_MAX
 #define HYDRO_KEY_SPACE              32
 #define HYDRO_KEY_APOSTROPHE         39  
 #define HYDRO_KEY_COMMA              44  
@@ -130,7 +130,7 @@
 #endif
 namespace Hydro
 {
-    enum class KeyCode : uint16
+    enum class KeyCode : u16
     {
         UNKNOWN       = HYDRO_KEY_UNKNOWN,
         SPACE         = HYDRO_KEY_SPACE,

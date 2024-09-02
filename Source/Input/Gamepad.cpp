@@ -29,7 +29,7 @@ namespace Hydro
         return *this;
     }
 
-    void Gamepad::Initialize(const uint32 ID, const StringView& Name)
+    void Gamepad::Initialize(const u32 ID, const StringView& Name)
     {
         m_ButtonsStates.Clear(); 
         m_ID = ID;
@@ -51,7 +51,7 @@ namespace Hydro
         return m_ButtonsStates[Button] == InputState::Released;
     }
 
-    uint32 Gamepad::GetID() const
+    u32 Gamepad::GetID() const
     {
         return m_ID;
     }

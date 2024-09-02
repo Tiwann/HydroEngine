@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/NumericTypes.h"
 
 namespace Hydro
 {
@@ -7,17 +8,17 @@ namespace Hydro
     class Quaternion
     {
     public:
-        Quaternion(float W, float X, float Y, float Z);
-        float Magnitude() const;
+        Quaternion(f32 W, f32 X, f32 Y, f32 Z);
+        f32 Magnitude() const;
         Quaternion Normalized() const;
         Quaternion Conjugated() const;
         Quaternion Inversed() const;
-        float Dot(const Quaternion& Other);
+        f32 Dot(const Quaternion& Other);
         Quaternion Multiply(const Quaternion& Other) const;
         static Quaternion One;
         static Quaternion Identity;
     private:
-        float w, x, y, z;
+        f32 w, x, y, z;
     };
 }
 

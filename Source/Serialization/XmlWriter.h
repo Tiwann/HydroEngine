@@ -8,7 +8,7 @@ namespace Hydro
 {
     struct XmlSettings
     {
-        int32 Indentation = 4;
+        i32 Indentation = 4;
         char    IndentationCharacter = ' ';
 
         static XmlSettings Default;
@@ -22,7 +22,7 @@ namespace Hydro
         ~XmlWriter();
 
         void Comment(const String& Comment);
-        void BeginDocument(int32 VersionMaj, int32 VersionMin);
+        void BeginDocument(i32 VersionMaj, i32 VersionMin);
         void BeginElement(const String& Name, const AttributeType& Attributes);
         void ElementInline(const String& Name, const AttributeType& Attributes);
         void EndElement();
@@ -32,7 +32,7 @@ namespace Hydro
         Stream* m_Stream;
         XmlSettings m_Settings;
         Array<String> m_Elements;
-        uint32 m_NumIndentation = 0;
+        u32 m_NumIndentation = 0;
         bool m_DocumentBegun = false;
 
         String GetIndentation();

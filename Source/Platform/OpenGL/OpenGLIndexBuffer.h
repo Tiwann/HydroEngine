@@ -7,14 +7,14 @@ namespace Hydro
     {
     public:
         OpenGLIndexBuffer();
-        OpenGLIndexBuffer(uint32* Indices, size_t Count);
+        OpenGLIndexBuffer(u32* Indices, size_t Count);
         
         ~OpenGLIndexBuffer() override;
         void Bind() override;
         void Unbind() override;
-        void SendData(uint32* Indices, size_t Count) override;
-        void SendData(const std::initializer_list<uint32>& List) override;
+        void SendData(u32* Indices, size_t Count) override;
+        void SendData(const std::initializer_list<u32>& List) override;
     private:
-        uint32 m_Handle;
+        u32 m_Handle;
     };
 }

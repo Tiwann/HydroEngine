@@ -16,7 +16,7 @@ namespace Hydro
     public:
         Camera(Entity* Owner);
 
-        void OnUpdate(float Delta) override;
+        void OnUpdate(f32 Delta) override;
         void OnInspectorGUI(const ImGuiIO& IO) override;
         
         Matrix4 GetViewMatrix() const;

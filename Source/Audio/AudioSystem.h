@@ -21,7 +21,7 @@ namespace Hydro
         AudioSystem() = default;
         ~AudioSystem() = default;
 
-        bool Init(uint32 SampleRate, uint32 CallbackBufferSize);
+        bool Init(u32 SampleRate, u32 CallbackBufferSize);
         void Destroy();
         void OnUpdate();
 

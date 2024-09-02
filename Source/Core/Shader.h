@@ -39,35 +39,35 @@ namespace Hydro
         virtual bool Bind() = 0;
         virtual void Delete() = 0;
         
-        virtual void SetUniformFloat(const std::string& Name, float Value){}
+        virtual void SetUniformFloat(const std::string& Name, f32 Value){}
         virtual void SetUniformFloat2(const std::string& Name, const Vector2& Value){}
         virtual void SetUniformFloat3(const std::string& Name, const Vector3& Value){}
         virtual void SetUniformFloat4(const std::string& Name, const Vector4& Value){}
         virtual void SetUniformMat4(const std::string& Name, const Matrix4& Value){}
-        virtual void SetUniformInt(const std::string& Name, int32 Value){}
+        virtual void SetUniformInt(const std::string& Name, i32 Value){}
         virtual void SetUniformTexture(const std::string& Name, const Ref<Texture2D>& Texture){}
         virtual void SetUniformMat2(const std::string& Name, const Matrix2& Value){}
         virtual void SetUniformMat3(const std::string& Name, const Matrix3& Value){}
 
-        virtual float GetUniformFloat(const std::string& Name){ return 0.0f; }
+        virtual f32 GetUniformFloat(const std::string& Name){ return 0.0f; }
         virtual Vector2 GetUniformFloat2(const std::string& Name){ return Vector2::Zero; }
         virtual Vector3 GetUniformFloat3(const std::string& Name){ return Vector3::Zero; }
         virtual Vector4 GetUniformFloat4(const std::string& Name){ return Vector4::Zero; }
         virtual Matrix4 GetUniformMat4(const std::string& Name){ return Matrix4::Identity; }
-        virtual int32 GetUniformInt(const std::string& Name){ return 0;}
+        virtual i32 GetUniformInt(const std::string& Name){ return 0;}
         
         std::string GetFilename() const;
         
 
         static Ref<Shader> Create(const std::string& Name, const Path& Filepath, ShaderSourceLanguage Language);
-        static Ref<Shader> Create(const std::string& Name, const Buffer<uint8>& Buffer, ShaderSourceLanguage Language);
+        static Ref<Shader> Create(const std::string& Name, const Buffer<u8>& Buffer, ShaderSourceLanguage Language);
         static Ref<Shader> Create(const std::string& Name, const ShaderSource& ShaderSource, ShaderSourceLanguage Language);
     
 
         
     protected:
         explicit Shader(std::string Name, Path Filepath, ShaderSourceLanguage Language);
-        explicit Shader(std::string Name, const Buffer<uint8>& Buffer, ShaderSourceLanguage Language);
+        explicit Shader(std::string Name, const Buffer<u8>& Buffer, ShaderSourceLanguage Language);
         explicit Shader(std::string Name, const ShaderSource& ShaderSource, ShaderSourceLanguage Language);
         std::string m_Name;
         Path m_Filepath;

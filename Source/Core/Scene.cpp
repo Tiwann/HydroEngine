@@ -21,7 +21,7 @@ namespace Hydro
         }
     }
 
-    void Scene::OnUpdate(float Delta)
+    void Scene::OnUpdate(f32 Delta)
     {
         for(const Ref<Entity>& Entity : m_Entities)
         {

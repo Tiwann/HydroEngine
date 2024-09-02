@@ -35,8 +35,8 @@ namespace Hydro
         }
         virtual void OnEnable(){}
         virtual void OnDisable(){}
-        virtual void OnUpdate(float Delta){}
-        virtual void OnPhysicsUpdate(float Delta){}
+        virtual void OnUpdate(f32 Delta){}
+        virtual void OnPhysicsUpdate(f32 Delta){}
         virtual void OnRender(const Ref<RendererBackend>& Renderer){}
         virtual void OnInspectorGUI(const ImGuiIO& IO){}
         void SetEnabled(bool Enabled);

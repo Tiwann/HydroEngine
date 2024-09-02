@@ -1,10 +1,12 @@
 #include "Matrix4.h"
-
+#include "Functions.h"
+#include "Vector2.h"
 #include "Vector3.h"
 #include "Core/Assertion.h"
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Math/Mat44.h>
+
 
 namespace Hydro
 {
@@ -36,24 +38,24 @@ namespace Hydro
     	Columns[3] = Matrix.GetColumn4(3);
     }
 
-    float* Matrix4::ValuePtr()
+    f32* Matrix4::ValuePtr()
     {
-    	return (float*)this;
+    	return (f32*)this;
     }
 
-    const float* Matrix4::ValuePtr() const
+    const f32* Matrix4::ValuePtr() const
     {
-        return (const float*)this;
+        return (const f32*)this;
     }
 
-    float Matrix4::Magnitude() const
+    f32 Matrix4::Magnitude() const
     {
         return Math::Sqrt(m00*m00 + m10*m10 + m20*m20 +
                           m01*m01 + m11*m11 + m21*m21 +
                           m02*m02 + m12*m12 + m22*m22);
     }
 
-    float Matrix4::Determinant() const
+    f32 Matrix4::Determinant() const
     {
         //const Matrix2 X{{m11, m12}, {m21, m22}};
         //const Matrix2 Y{{m01, m02}, {m21, m22}};
@@ -64,29 +66,29 @@ namespace Hydro
 
     Matrix4 Matrix4::Inverse() const
     {
-	    float Coef00 = Columns[2].z * Columns[3].w - Columns[3].z * Columns[2].w;
-	    float Coef02 = Columns[1].z * Columns[3].w - Columns[3].z * Columns[1].w;
-	    float Coef03 = Columns[1].z * Columns[2].w - Columns[2].z * Columns[1].w;
+	    f32 Coef00 = Columns[2].z * Columns[3].w - Columns[3].z * Columns[2].w;
+	    f32 Coef02 = Columns[1].z * Columns[3].w - Columns[3].z * Columns[1].w;
+	    f32 Coef03 = Columns[1].z * Columns[2].w - Columns[2].z * Columns[1].w;
 
-	    float Coef04 = Columns[2].y * Columns[3].w - Columns[3].y * Columns[2].w;
-	    float Coef06 = Columns[1].y * Columns[3].w - Columns[3].y * Columns[1].w;
-	    float Coef07 = Columns[1].y * Columns[2].w - Columns[2].y * Columns[1].w;
+	    f32 Coef04 = Columns[2].y * Columns[3].w - Columns[3].y * Columns[2].w;
+	    f32 Coef06 = Columns[1].y * Columns[3].w - Columns[3].y * Columns[1].w;
+	    f32 Coef07 = Columns[1].y * Columns[2].w - Columns[2].y * Columns[1].w;
 
-	    float Coef08 = Columns[2].y * Columns[3].z - Columns[3].y * Columns[2].z;
-	    float Coef10 = Columns[1].y * Columns[3].z - Columns[3].y * Columns[1].z;
-	    float Coef11 = Columns[1].y * Columns[2].z - Columns[2].y * Columns[1].z;
+	    f32 Coef08 = Columns[2].y * Columns[3].z - Columns[3].y * Columns[2].z;
+	    f32 Coef10 = Columns[1].y * Columns[3].z - Columns[3].y * Columns[1].z;
+	    f32 Coef11 = Columns[1].y * Columns[2].z - Columns[2].y * Columns[1].z;
 
-	    float Coef12 = Columns[2].x * Columns[3].w - Columns[3].x * Columns[2].w;
-	    float Coef14 = Columns[1].x * Columns[3].w - Columns[3].x * Columns[1].w;
-	    float Coef15 = Columns[1].x * Columns[2].w - Columns[2].x * Columns[1].w;
+	    f32 Coef12 = Columns[2].x * Columns[3].w - Columns[3].x * Columns[2].w;
+	    f32 Coef14 = Columns[1].x * Columns[3].w - Columns[3].x * Columns[1].w;
+	    f32 Coef15 = Columns[1].x * Columns[2].w - Columns[2].x * Columns[1].w;
 
-	    float Coef16 = Columns[2].x * Columns[3].z - Columns[3].x * Columns[2].z;
-	    float Coef18 = Columns[1].x * Columns[3].z - Columns[3].x * Columns[1].z;
-	    float Coef19 = Columns[1].x * Columns[2].z - Columns[2].x * Columns[1].z;
+	    f32 Coef16 = Columns[2].x * Columns[3].z - Columns[3].x * Columns[2].z;
+	    f32 Coef18 = Columns[1].x * Columns[3].z - Columns[3].x * Columns[1].z;
+	    f32 Coef19 = Columns[1].x * Columns[2].z - Columns[2].x * Columns[1].z;
 
-	    float Coef20 = Columns[2].x * Columns[3].y - Columns[3].x * Columns[2].y;
-	    float Coef22 = Columns[1].x * Columns[3].y - Columns[3].x * Columns[1].y;
-	    float Coef23 = Columns[1].x * Columns[2].y - Columns[2].x * Columns[1].y;
+	    f32 Coef20 = Columns[2].x * Columns[3].y - Columns[3].x * Columns[2].y;
+	    f32 Coef22 = Columns[1].x * Columns[3].y - Columns[3].x * Columns[1].y;
+	    f32 Coef23 = Columns[1].x * Columns[2].y - Columns[2].x * Columns[1].y;
 
 	    Vector4 Fac0(Coef00, Coef00, Coef02, Coef03);
 	    Vector4 Fac1(Coef04, Coef04, Coef06, Coef07);
@@ -112,9 +114,9 @@ namespace Hydro
 	    Vector4 Row0(Inverse[0].x, Inverse[1].x, Inverse[2].x, Inverse[3].x);
 
 	    Vector4 Dot0(Columns[0] * Row0);
-	    float Dot1 = (Dot0.x + Dot0.y) + (Dot0.z + Dot0.w);
+	    f32 Dot1 = (Dot0.x + Dot0.y) + (Dot0.z + Dot0.w);
 
-	    float OneOverDeterminant = 1.0f / Dot1;
+	    f32 OneOverDeterminant = 1.0f / Dot1;
 
 	    return Inverse * OneOverDeterminant;
     }
@@ -183,7 +185,7 @@ namespace Hydro
         return Columns[i];
     }
 
-    Matrix4& Matrix4::operator*(float Scalar)
+    Matrix4& Matrix4::operator*(f32 Scalar)
     {
         Columns[0] *= Scalar;
         Columns[1] *= Scalar;
@@ -192,7 +194,7 @@ namespace Hydro
         return *this;
     }
 
-    void Matrix4::Rotate(float Radians, const Vector3& Axis)
+    void Matrix4::Rotate(f32 Radians, const Vector3& Axis)
     {
         *this = Math::Rotate(*this, Axis, Radians);
     }
@@ -207,12 +209,12 @@ namespace Hydro
         *this = Math::RotateAxisAngleDegrees(*this, EulerAnglesDegrees);
     }
 
-    void Matrix4::RotateDegrees(float Degrees, const Vector3& Axis)
+    void Matrix4::RotateDegrees(f32 Degrees, const Vector3& Axis)
     {
         *this = Math::RotateDegrees(*this, Axis, Degrees);
     }
 
-    void Matrix4::Scale(float Scalar)
+    void Matrix4::Scale(f32 Scalar)
     {
         *this = Math::Scale(*this, Scalar);
     }

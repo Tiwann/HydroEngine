@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Core/Types.h"
+#include "Core/NumericTypes.h"
 
 namespace Hydro
 {
@@ -8,23 +8,23 @@ namespace Hydro
     class Color
     {
     public:
-        float r{0.0f}, g{0.0f}, b{0.0f}, a{0.0f};
+        f32 r{0.0f}, g{0.0f}, b{0.0f}, a{0.0f};
 
         Color();
-        Color(uint32 color);
-        Color(float red, float green, float blue, float alpha);
+        Color(u32 color);
+        Color(f32 red, f32 green, f32 blue, f32 alpha);
 
         operator Vector4() const;
 
-        static Color FromHSL(float hue, float saturation, float lightness, float alpha);
+        static Color FromHSL(f32 hue, f32 saturation, f32 lightness, f32 alpha);
         
-        Color WithHue(float hue);
-        Color WithSaturation(float saturation);
-        Color WithLightness(float lightness);
-        Color WithOpacity(float opacity);
-        Color WithRed(float red);
-        Color WithGreen(float green);
-        Color WithBlue(float blue);
+        Color WithHue(f32 hue);
+        Color WithSaturation(f32 saturation);
+        Color WithLightness(f32 lightness);
+        Color WithOpacity(f32 opacity);
+        Color WithRed(f32 red);
+        Color WithGreen(f32 green);
+        Color WithBlue(f32 blue);
 
         static Color Red;
         static Color Green;

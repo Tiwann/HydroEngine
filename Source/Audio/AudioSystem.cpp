@@ -42,7 +42,7 @@ namespace FMOD
 namespace Hydro
 {
     
-    bool AudioSystem::Init(uint32 SampleRate, uint32 CallbackBufferSize)
+    bool AudioSystem::Init(u32 SampleRate, u32 CallbackBufferSize)
     {
         FMOD_RESULT Result = FMOD::System_Create(&m_Handle);
         FMOD_CHECK(Result);

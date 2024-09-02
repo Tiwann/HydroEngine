@@ -6,9 +6,9 @@ namespace Hydro
 {
     Quaternion Quaternion::One = { 1.0f, 1.0f, 1.0f, 1.0f };
     Quaternion Quaternion::Identity = { 1.0f, 0.0f, 0.0f, 0.0f };
-    Quaternion::Quaternion(float W, float X, float Y, float Z): w(W), x(X), y(Y), z(Z){}
+    Quaternion::Quaternion(f32 W, f32 X, f32 Y, f32 Z): w(W), x(X), y(Y), z(Z){}
 
-    float Quaternion::Magnitude() const
+    f32 Quaternion::Magnitude() const
     {
         return Math::Sqrt(x*x + y*y + z*z + w*w);
     }
@@ -28,7 +28,7 @@ namespace Hydro
         return this->Conjugated().Normalized();
     }
 
-    float Quaternion::Dot(const Quaternion& Other)
+    f32 Quaternion::Dot(const Quaternion& Other)
     {
         return 0.0f;
     }

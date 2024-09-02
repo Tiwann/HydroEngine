@@ -8,12 +8,12 @@
 
 namespace Hydro
 {
-    Ref<Window> Window::Create(const std::string& name, uint32 width, uint32 height, bool resizable)
+    Ref<Window> Window::Create(const std::string& name, u32 width, u32 height, bool resizable)
     {
         return CreateRef<Window>(name, width, height, resizable);
     }
     
-    Window::Window(const std::string& name, uint32 width, uint32 height, bool resizable)
+    Window::Window(const std::string& name, u32 width, u32 height, bool resizable)
         : m_Width(width), m_Height(height), m_Name(name), m_Resizable(resizable)
     {
         
@@ -86,12 +86,12 @@ namespace Hydro
 
     Vector2 Window::GetSize() const
     {
-        return { GetWidth<float>(), GetHeight<float>() };
+        return { GetWidth<f32>(), GetHeight<f32>() };
     }
 
     Vector2 Window::GetCenter() const
     {
-        return { (float)m_Width / 2, (float)m_Height / 2 };
+        return { (f32)m_Width / 2, (f32)m_Height / 2 };
     }
 
     const std::string& Window::GetName() const
@@ -103,14 +103,14 @@ namespace Hydro
     {
         Buffer ImageData(File::ReadToBuffer(filepath));
         const Image icon(ImageData, ImageFormat::RGBA8);
-        const GLFWimage glfw_image{(int)icon.GetWidth(), (int)icon.GetHeight(), (uint8*)icon.GetData()};
+        const GLFWimage glfw_image{(int)icon.GetWidth(), (int)icon.GetHeight(), (u8*)icon.GetData()};
         glfwSetWindowIcon(m_Handle, 1, &glfw_image);
         ImageData.Free();
     }
     
     void Window::SetIcon(const Ref<Image>& image) const
     {
-        const GLFWimage glfw_image{(int)image->GetWidth(), (int)image->GetHeight(), (uint8*)image->GetData()};
+        const GLFWimage glfw_image{(int)image->GetWidth(), (int)image->GetHeight(), (u8*)image->GetData()};
         glfwSetWindowIcon(m_Handle, 1, &glfw_image);
     }
     

@@ -7,7 +7,7 @@ namespace Hydro
     class ScopedTimer
     {
     public:
-        using FinishedDelegate = MulticastDelegate<void(float Duration)>;
+        using FinishedDelegate = MulticastDelegate<void(f32 Duration)>;
         FinishedDelegate FinishedEvent;
         
         ScopedTimer(const FinishedDelegate::DelegateType& OnFinished)
@@ -19,12 +19,12 @@ namespace Hydro
         ~ScopedTimer()
         {
             m_End = glfwGetTime();
-            const float Duration = (float)(m_End - m_Start);
+            const f32 Duration = (f32)(m_End - m_Start);
             FinishedEvent.BroadcastChecked(Duration);
             FinishedEvent.ClearAll();
         }
     private:
-        double m_Start;
-        double m_End;
+        f64 m_Start;
+        f64 m_End;
     };
 }

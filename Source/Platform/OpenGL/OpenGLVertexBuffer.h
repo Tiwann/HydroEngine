@@ -18,6 +18,6 @@ namespace Hydro
         void Unbind() const override;
 
     private:
-        uint32 m_Handle;
+        u32 m_Handle;
     };
 }

@@ -10,10 +10,10 @@ namespace Hydro
     {
     public:
         static Color Color();
-        static float Float(float Min, float Max);
-        static int32 Integer(int32 Min, int32 Max);
+        static f32 Float(f32 Min, f32 Max);
+        static i32 Integer(i32 Min, i32 Max);
         
-        static Vector2 Vector2(float MinX, float MinY, float MaxX, float MaxY);
+        static Vector2 Vector2(f32 MinX, f32 MinY, f32 MaxX, f32 MaxY);
     private:
         static std::random_device s_RandomDevice;
         

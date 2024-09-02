@@ -13,7 +13,7 @@ namespace Hydro
         m_World = new b2World(Physics2D::Gravity);
     }
 
-    void PhysicsWorld2D::Step(const float TimeStep)
+    void PhysicsWorld2D::Step(const f32 TimeStep)
     {
         m_World->Step(TimeStep * Time::Scale, 8, 3);
     }

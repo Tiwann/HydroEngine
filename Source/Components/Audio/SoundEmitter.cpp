@@ -38,7 +38,7 @@ namespace Hydro
         OnPlayingEvent.ClearAll();
     }
 
-    void SoundEmitter::OnUpdate(float Delta)
+    void SoundEmitter::OnUpdate(f32 Delta)
     {
         Component::OnUpdate(Delta);
         if(m_Channel)
@@ -72,7 +72,7 @@ namespace Hydro
 
             if(m_Sound)
             {
-                uint32 Position, Length;
+                u32 Position, Length;
                 m_Channel->getPosition(&Position, FMOD_TIMEUNIT_PCM);
                 m_Sound->GetHandle()->getLength(&Length, FMOD_TIMEUNIT_PCM);
                 if(IsPlaying())
@@ -97,7 +97,7 @@ namespace Hydro
                 UI::Text(Format("Channels: {}", m_Sound->GetChannels()));
                 UI::Text(Format("Sound Type: {}", SoundTypeToString(m_Sound->GetType())));
                 UI::Text(Format("Sound Format: {}", SoundFormatToString(m_Sound->GetFormat())));
-                const float Seconds = m_Sound->GetDuration();
+                const f32 Seconds = m_Sound->GetDuration();
                 const int Minutes = Math::IntegerPart(Seconds / 60.0f);
                 const int RemainSeconds = ((int)Seconds) % 60;
                 UI::Text(Format("Duration: {:02}:{:02}", Minutes, RemainSeconds));
@@ -149,8 +149,8 @@ namespace Hydro
             ImGui::TreePop();
         }
         
-        UI::DragValue<float>("Volume", m_Volume, 0.01f, 0.0f, 1.0f, "%.2f");
-        UI::DragValue<float>("Pitch", m_Pitch, 0.01f, 0.0f, 10.0f, "%.2f");
+        UI::DragValue<f32>("Volume", m_Volume, 0.01f, 0.0f, 1.0f, "%.2f");
+        UI::DragValue<f32>("Pitch", m_Pitch, 0.01f, 0.0f, 10.0f, "%.2f");
         ImGui::Checkbox("Looping", &m_Looping);
     }
 
@@ -199,27 +199,27 @@ namespace Hydro
         m_Sound = Clip;
     }
 
-    void SoundEmitter::SetVolume(float Vol)
+    void SoundEmitter::SetVolume(f32 Vol)
     {
         m_Volume = Vol;
     }
 
-    void SoundEmitter::SetPitch(float Pitch)
+    void SoundEmitter::SetPitch(f32 Pitch)
     {
         m_Pitch = Pitch;
     }
 
-    float SoundEmitter::GetVolume() const
+    f32 SoundEmitter::GetVolume() const
     {
         return m_Volume;
     }
 
-    float SoundEmitter::GetPitch() const
+    f32 SoundEmitter::GetPitch() const
     {
         return m_Pitch;
     }
 
-    void SoundEmitter::OnPlaying(Ref<Sound> Sound, uint32 Position, uint32 Length)
+    void SoundEmitter::OnPlaying(Ref<Sound> Sound, u32 Position, u32 Length)
     {
         m_PlaybackPosition = Position;
         m_Length = Length;

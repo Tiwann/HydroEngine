@@ -2,7 +2,7 @@
 
 namespace Hydro
 {
-    Timer::Timer(float Duration, bool Loop, const FinishedDelegate::DelegateType& Callback)
+    Timer::Timer(f32 Duration, bool Loop, const FinishedDelegate::DelegateType& Callback)
         : m_Started(false), m_Loop(Loop), m_Duration(Duration)
     {
         FinishedEvent.Bind(Callback);
@@ -28,7 +28,7 @@ namespace Hydro
         m_Started = false;
     }
 
-    void Timer::Update(float Delta)
+    void Timer::Update(f32 Delta)
     {
         if(!m_Started) return;
         
@@ -46,7 +46,7 @@ namespace Hydro
         m_Loop = Loop;
     }
 
-    void Timer::SetDuration(float Duration)
+    void Timer::SetDuration(f32 Duration)
     {
         m_Duration = Duration;
     }

@@ -15,7 +15,7 @@ namespace Hydro
         SpriteAnimator(Entity* Owner);
         
         void OnInit() override;
-        void OnUpdate(float Delta) override;
+        void OnUpdate(f32 Delta) override;
         void OnInspectorGUI(const ImGuiIO& IO) override;
 
         Ref<SpriteRenderer> GetSpriteRenderer() const;
@@ -24,14 +24,14 @@ namespace Hydro
         const Ref<SpriteAnimation>& GetAnimation() const;
         void SetAnimation(const Ref<SpriteAnimation>& Animation);
 
-        void SetSpeed(int32 Speed);
-        int32 GetSpeed() const;
+        void SetSpeed(i32 Speed);
+        i32 GetSpeed() const;
     private:
         Timer m_Timer;
         Ref<SpriteRenderer> m_SpriteRenderer;
         Ref<SpriteAnimation> m_Animation;
-        int32 m_Speed = 12;
-        uint32 m_Index = 0;
+        i32 m_Speed = 12;
+        u32 m_Index = 0;
         void OnSpriteChange();
     };
 }

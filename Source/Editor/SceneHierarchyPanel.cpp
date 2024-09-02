@@ -1,14 +1,13 @@
 #include "SceneHierarchyPanel.h"
-
 #include "EditorGUI.h"
 #include "Selection.h"
 #include "ViewportPanel.h"
+#include "Components/Transform.h"
 #include "Components/Camera.h"
 #include "Components/Physics/RigidBody2D.h"
 #include "Core/Application.h"
 #include "Core/RendererBackend.h"
 #include "Core/Scene.h"
-#include "Core/Window.h"
 #include "ImGuizmo/ImGuizmo.h"
 
 

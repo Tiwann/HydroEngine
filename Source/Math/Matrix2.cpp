@@ -19,17 +19,17 @@ namespace Hydro
         Columns[1] = Col2;
     }
 
-    const float* Matrix2::ValuePtr() const
+    const f32* Matrix2::ValuePtr() const
     {
-        return (const float*)this;
+        return (const f32*)this;
     }
 
-    float Matrix2::Magnitude() const
+    f32 Matrix2::Magnitude() const
     {
         return Math::Sqrt(m00*m00 + m01*m01 + m10*m10 + m11*m11);
     }
 
-    float Matrix2::Determinant() const
+    f32 Matrix2::Determinant() const
     {
         return m00 * m11 - m01 * m10;
     }
@@ -68,24 +68,24 @@ namespace Hydro
         return Columns[i];
     }
 
-    Matrix2& Matrix2::operator*(float Scalar)
+    Matrix2& Matrix2::operator*(f32 Scalar)
     {
         Columns[0] *= Scalar;
         Columns[1] *= Scalar;
         return *this;
     }
 
-    void Matrix2::Rotate(float Radians)
+    void Matrix2::Rotate(f32 Radians)
     {
         *this = Math::Rotate(*this, Radians);
     }
 
-    void Matrix2::RotateDegrees(float Degrees)
+    void Matrix2::RotateDegrees(f32 Degrees)
     {
         *this = Math::RotateDegrees(*this, Degrees);
     }
 
-    void Matrix2::Scale(float Scalar)
+    void Matrix2::Scale(f32 Scalar)
     {
         *this = Math::Scale(*this, Scalar);
     }

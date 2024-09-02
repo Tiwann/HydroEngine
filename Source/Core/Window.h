@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "SharedPointer.h"
 #include "LogCategory.h"
-#include "Types.h"
+#include "NumericTypes.h"
 #include <string>
 
 
@@ -19,25 +19,25 @@ namespace Hydro
     public:
         friend class Application;
         
-        Window(const std::string& name, uint32 width, uint32 height, bool resizable);
+        Window(const std::string& name, u32 width, u32 height, bool resizable);
         ~Window();
         
 
 
-        static Ref<Window> Create(const std::string& name, uint32 width, uint32 height, bool resizable);
+        static Ref<Window> Create(const std::string& name, u32 width, u32 height, bool resizable);
         const GLFWwindow* GetNativeWindow() const;
         GLFWwindow* GetNativeWindow();
         
         bool ShouldClose() const;
         bool IsValid() const;
 
-        template<typename T = float, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+        template<typename T = f32, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
         T GetWidth() const
         {
             return static_cast<T>(m_Width);
         }
 
-        template<typename T = float, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+        template<typename T = f32, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
         T GetHeight() const
         {
             return static_cast<T>(m_Height);
@@ -63,7 +63,7 @@ namespace Hydro
         
     private:
         GLFWwindow* m_Handle = nullptr;
-        uint32 m_Width{0}, m_Height{0}, m_PositionX{0}, m_PositionY{0};
+        u32 m_Width{0}, m_Height{0}, m_PositionX{0}, m_PositionY{0};
         std::string m_Name;
         bool m_Resizable{false};
         bool m_HasFocus{false};

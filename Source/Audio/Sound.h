@@ -32,9 +32,9 @@ namespace Hydro
         void SetFlags(SoundFlags Flags);
         SoundType GetType() const;
         SoundFormat GetFormat() const;
-        uint32 GetChannels() const;
-        uint32 GetBitsPerSample() const;
-        float GetDuration() const;
+        u32 GetChannels() const;
+        u32 GetBitsPerSample() const;
+        f32 GetDuration() const;
     private:
         friend class AudioSystem;
 
@@ -43,8 +43,8 @@ namespace Hydro
         SoundFlags m_Flags;
         SoundType m_Type;
         SoundFormat m_Format;
-        uint32 m_Channels;
-        uint32 m_BitsPerSample;
-        float m_Duration;
+        u32 m_Channels;
+        u32 m_BitsPerSample;
+        f32 m_Duration;
     };
 }

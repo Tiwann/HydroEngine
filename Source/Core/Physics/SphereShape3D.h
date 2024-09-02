@@ -6,8 +6,8 @@ namespace Hydro
     class SphereShape3D : public PhysicsShape3D
     {
     public:
-        explicit SphereShape3D(float Radius);
+        explicit SphereShape3D(f32 Radius);
     private:
-        float m_Radius;
+        f32 m_Radius;
     };
 }

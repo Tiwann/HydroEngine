@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Iterator.h"
 #include "Core/Assertion.h"
-#include "Core/Types.h"
+#include "Core/NumericTypes.h"
 
 #include <initializer_list>
 #include <algorithm>
@@ -109,7 +109,7 @@ namespace Hydro
                 m_Data[i] = Value;
         }
 
-        void Memset(SizeType Begin, SizeType End, uint32 Value)
+        void Memset(SizeType Begin, SizeType End, u32 Value)
         {
             HYDRO_ASSERT(Begin < End, "Index out of bounds!");
             HYDRO_ASSERT(End <= N, "index out of bounds!");

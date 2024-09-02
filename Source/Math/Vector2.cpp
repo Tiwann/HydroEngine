@@ -17,11 +17,11 @@ namespace Hydro
     Vector2 Vector2::Down    = { 0.0f, -1.0f };
     
 
-    Vector2::Vector2(float X, float Y): x(X), y(Y)
+    Vector2::Vector2(f32 X, f32 Y): x(X), y(Y)
     {
     }
 
-    Vector2::Vector2(float Value): x(Value), y(Value)
+    Vector2::Vector2(f32 Value): x(Value), y(Value)
     {
     }
 
@@ -37,27 +37,27 @@ namespace Hydro
     {
     }
 
-    float Vector2::Magnitude() const
+    f32 Vector2::Magnitude() const
     {
         return Math::Sqrt(x * x + y * y);
     }
 
-    float* Vector2::ValuePtr()
+    f32* Vector2::ValuePtr()
     {
-        return (float*)this;
+        return (f32*)this;
     }
 
-    float Vector2::Dot(const Vector2& Vec) const
+    f32 Vector2::Dot(const Vector2& Vec) const
     {
         return x * Vec.x + y * Vec.y;
     }
 
-    Vector2 Vector2::WithX(float X) const
+    Vector2 Vector2::WithX(f32 X) const
     {
         return {X, y};
     }
 
-    Vector2 Vector2::WithY(float Y) const
+    Vector2 Vector2::WithY(f32 Y) const
     {
         return {x, Y};
     }
@@ -92,22 +92,22 @@ namespace Hydro
         return {x, y};
     }
 
-    Vector2 Vector2::operator/(float Scalar)
+    Vector2 Vector2::operator/(f32 Scalar)
     {
         return { x / Scalar, y / Scalar };
     }
 
-    Vector2 operator*(float Scalar, const Vector2& Vec)
+    Vector2 operator*(f32 Scalar, const Vector2& Vec)
     {
         return {Vec.x * Scalar, Vec.y * Scalar};
     }
 
-    Vector2 operator*(const Vector2& Vec, float Scalar)
+    Vector2 operator*(const Vector2& Vec, f32 Scalar)
     {
         return {Vec.x * Scalar, Vec.y * Scalar};
     }
 
-    Vector2& Vector2::operator*=(float Scalar)
+    Vector2& Vector2::operator*=(f32 Scalar)
     {
         x *= Scalar;
         y *= Scalar;

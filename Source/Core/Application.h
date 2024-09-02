@@ -69,7 +69,7 @@ namespace Hydro
         virtual void OnStart();
         virtual void OnExit();
         virtual void OnRender(const Ref<RendererBackend>& Renderer);
-        virtual void OnUpdate(float Delta);
+        virtual void OnUpdate(f32 Delta);
         virtual void OnGui();
 
         bool SaveSceneAs(const Path& Filepath);
@@ -138,7 +138,7 @@ namespace Hydro
         bool m_IsRunning = true;
         bool m_Start = false;
         bool m_ShowImGuiDemoWindow = false;
-        float m_DeltaTime = 0.0f;
+        f32 m_DeltaTime = 0.0f;
         
         bool PreInitialize();
     };

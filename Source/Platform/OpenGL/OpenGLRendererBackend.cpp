@@ -82,7 +82,7 @@ namespace Hydro
         glViewport((GLint)Position.x, (GLint)Position.y, (GLint)Size.x, (GLint)Size.y);
     }
 
-    void OpenGLRendererBackend::Draw(DrawMode Mode, const Vao& VAO, uint32 NumVert, const Ref<Shader>& Shader)
+    void OpenGLRendererBackend::Draw(DrawMode Mode, const Vao& VAO, u32 NumVert, const Ref<Shader>& Shader)
     {
         VAO->Bind();
         Shader->Bind();
@@ -115,7 +115,7 @@ namespace Hydro
         glDrawElements(GetOpenGLDrawMode(Mode), (GLsizei)IBO->Count(), GL_UNSIGNED_INT, nullptr);
     }
 
-    void OpenGLRendererBackend::DrawLine(const Vector3& PointA, const Vector3& PointB, float Thickness, const Color& Color)
+    void OpenGLRendererBackend::DrawLine(const Vector3& PointA, const Vector3& PointB, f32 Thickness, const Color& Color)
     {
         auto vao = VertexArray::Create();
         vao->Bind();
@@ -144,7 +144,7 @@ namespace Hydro
         vao.reset();
     }
 
-    void OpenGLRendererBackend::DrawWireQuad(const Matrix4& Transform, const Vector3& Position, const Vector2& HalfExtents, float Thickness, const Color& Color)
+    void OpenGLRendererBackend::DrawWireQuad(const Matrix4& Transform, const Vector3& Position, const Vector2& HalfExtents, f32 Thickness, const Color& Color)
     {
         auto vao = VertexArray::Create();
         vao->Bind();
@@ -172,7 +172,7 @@ namespace Hydro
         vao.reset();
     }
 
-    void OpenGLRendererBackend::DrawCircle(const Matrix4& Transform, const Vector3& Position, float Radius, const Color& Color)
+    void OpenGLRendererBackend::DrawCircle(const Matrix4& Transform, const Vector3& Position, f32 Radius, const Color& Color)
     {
         auto vao = VertexArray::Create();
         vao->Bind();
@@ -236,7 +236,7 @@ namespace Hydro
     }
 
 
-    std::string OpenGLRendererBackend::GetDebugSourceName(uint32 Source)
+    std::string OpenGLRendererBackend::GetDebugSourceName(u32 Source)
     {
         switch (Source)
         {
@@ -250,7 +250,7 @@ namespace Hydro
         }
     }
 
-    Verbosity OpenGLRendererBackend::GetDebugVerbosity(uint32 Severity)
+    Verbosity OpenGLRendererBackend::GetDebugVerbosity(u32 Severity)
     {
         switch (Severity)
         {

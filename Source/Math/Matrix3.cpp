@@ -24,19 +24,19 @@ namespace Hydro
         Columns[2] = Col3;
     }
 
-    const float* Matrix3::ValuePtr() const
+    const f32* Matrix3::ValuePtr() const
     {
-        return (const float*)this;
+        return (const f32*)this;
     }
 
-    float Matrix3::Magnitude() const
+    f32 Matrix3::Magnitude() const
     {
         return Math::Sqrt(m00*m00 + m10*m10 + m20*m20 +
                           m01*m01 + m11*m11 + m21*m21 +
                           m02*m02 + m12*m12 + m22*m22);
     }
 
-    float Matrix3::Determinant() const
+    f32 Matrix3::Determinant() const
     {
         const Matrix2 X{{m11, m12}, {m21, m22}};
         const Matrix2 Y{{m01, m02}, {m21, m22}};
@@ -88,7 +88,7 @@ namespace Hydro
         return Columns[i];
     }
 
-    Matrix3& Matrix3::operator*(float Scalar)
+    Matrix3& Matrix3::operator*(f32 Scalar)
     {
         Columns[0] *= Scalar;
         Columns[1] *= Scalar;
@@ -96,17 +96,17 @@ namespace Hydro
         return *this;
     }
 
-    void Matrix3::Rotate(float Radians, const Vector3& Axis)
+    void Matrix3::Rotate(f32 Radians, const Vector3& Axis)
     {
         *this = Math::Rotate(*this, Axis, Radians);
     }
 
-    void Matrix3::RotateDegrees(float Degrees, const Vector3& Axis)
+    void Matrix3::RotateDegrees(f32 Degrees, const Vector3& Axis)
     {
         *this = Math::RotateDegrees(*this, Axis, Degrees);
     }
 
-    void Matrix3::Scale(float Scalar)
+    void Matrix3::Scale(f32 Scalar)
     {
         *this = Math::Scale(*this, Scalar);
     }

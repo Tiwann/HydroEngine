@@ -1,5 +1,5 @@
 #pragma once
-#include "Functions.h"
+#include "Core/NumericTypes.h"
 #include <nlohmann/json_fwd.hpp>
 
 namespace JPH { class Vec4; }
@@ -12,35 +12,35 @@ namespace Hydro
     class Vector4
     {
     public:
-        union{ float x{0.0f}, r; };
-        union{ float y{0.0f}, g; };
-        union{ float z{0.0f}, b; };
-        union{ float w{0.0f}, a; };
+        union{ f32 x{0.0f}, r; };
+        union{ f32 y{0.0f}, g; };
+        union{ f32 z{0.0f}, b; };
+        union{ f32 w{0.0f}, a; };
 
         Vector4() = default;
-        Vector4(float X, float Y, float Z, float W);
-        Vector4(float Value);
+        Vector4(f32 X, f32 Y, f32 Z, f32 W);
+        Vector4(f32 Value);
         Vector4(const Vector3& Vec);
-        Vector4(const Vector3& Vec, float W);
+        Vector4(const Vector3& Vec, f32 W);
         Vector4(const JPH::Vec4& Vec);
         
-        float Magnitude() const;
-        float* ValuePtr();
-        float Dot(const Vector4& Vec) const;
+        f32 Magnitude() const;
+        f32* ValuePtr();
+        f32 Dot(const Vector4& Vec) const;
 
-        Vector4 WithX(float X) const;
-        Vector4 WithY(float Y) const;
-        Vector4 WithZ(float Z) const;
-        Vector4 WithW(float W) const;
+        Vector4 WithX(f32 X) const;
+        Vector4 WithY(f32 Y) const;
+        Vector4 WithZ(f32 Z) const;
+        Vector4 WithW(f32 W) const;
         Vector4 Normalized() const;
         Vector4 operator+(const Vector4& Vec) const;
         Vector4 operator-(const Vector4& Vec) const;
         Vector4 operator-() const;
 
-        friend Vector4 operator*(float Scalar, const Vector4& Vec);
-        friend Vector4 operator*(const Vector4& Vec, float Scalar);
+        friend Vector4 operator*(f32 Scalar, const Vector4& Vec);
+        friend Vector4 operator*(const Vector4& Vec, f32 Scalar);
         Vector4 operator*(const Vector4& Vec) const;
-        Vector4& operator*=(float Scalar);
+        Vector4& operator*=(f32 Scalar);
         bool operator==(const Vector4& Vec) const;
         operator Color() const;
 

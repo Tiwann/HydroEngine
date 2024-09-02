@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/NumericTypes.h"
 #include <nlohmann/json_fwd.hpp>
 
 struct b2Vec2;
@@ -11,22 +12,22 @@ namespace Hydro
     class Vector2
     {
     public:
-        union{ float x{0.0f}, r; };
-        union{ float y{0.0f}, g; };
+        union{ f32 x{0.0f}, r; };
+        union{ f32 y{0.0f}, g; };
 
         Vector2() = default;
-        Vector2(float X, float Y);
-        Vector2(float Value);
+        Vector2(f32 X, f32 Y);
+        Vector2(f32 Value);
         Vector2(const Vector3& Vec);
         Vector2(const b2Vec2& Vec);
         Vector2(const ImVec2& Vec);
         
-        float Magnitude() const;
-        float* ValuePtr();
-        float Dot(const Vector2& Vec) const;
+        f32 Magnitude() const;
+        f32* ValuePtr();
+        f32 Dot(const Vector2& Vec) const;
 
-        Vector2 WithX(float X) const;
-        Vector2 WithY(float Y) const;
+        Vector2 WithX(f32 X) const;
+        Vector2 WithY(f32 Y) const;
         Vector2 Normalized() const;
         Vector2 operator+(const Vector2& Vec) const;
         Vector2 operator-(const Vector2& Vec) const;
@@ -35,11 +36,11 @@ namespace Hydro
         operator b2Vec2() const;
         operator ImVec2() const;
 
-        Vector2 operator/(float Scalar);
-        friend Vector2 operator*(float Scalar, const Vector2& Vec);
-        friend Vector2 operator*(const Vector2& Vec, float Scalar);
+        Vector2 operator/(f32 Scalar);
+        friend Vector2 operator*(f32 Scalar, const Vector2& Vec);
+        friend Vector2 operator*(const Vector2& Vec, f32 Scalar);
         
-        Vector2& operator*=(float Scalar);
+        Vector2& operator*=(f32 Scalar);
         bool operator==(const Vector2& Vec) const;
         Vector2 operator*(const Vector2& Vec) const;
 

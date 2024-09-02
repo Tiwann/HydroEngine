@@ -1,11 +1,10 @@
 #include "Vector3.h"
 #include "Vector2.h"
 #include "Vector4.h"
+#include "Functions.h"
 
 #include <box2d/b2_math.h>
-
 #include <Jolt/Jolt.h>
-#include <Jolt/Math/Vec3.h>
 #include <nlohmann/json.hpp>
 
 namespace Hydro
@@ -20,11 +19,11 @@ namespace Hydro
     Vector3 Vector3::Backward = { 0.0f, 0.0f, -1.0f };
     
 
-    Vector3::Vector3(float X, float Y, float Z): x(X), y(Y), z(Z)
+    Vector3::Vector3(f32 X, f32 Y, f32 Z): x(X), y(Y), z(Z)
     {
     }
 
-    Vector3::Vector3(float Value): x(Value), y(Value), z(Value)
+    Vector3::Vector3(f32 Value): x(Value), y(Value), z(Value)
     {
     }
 
@@ -32,7 +31,7 @@ namespace Hydro
     {
     }
 
-    Vector3::Vector3(const Vector2& Vec, float Z) : x(Vec.x), y(Vec.y), z(Z)
+    Vector3::Vector3(const Vector2& Vec, f32 Z) : x(Vec.x), y(Vec.y), z(Z)
     {
     }
 
@@ -48,37 +47,37 @@ namespace Hydro
     {
     }
 
-    float Vector3::Magnitude() const
+    f32 Vector3::Magnitude() const
     {
         return Math::Sqrt(x * x + y * y + z*z);
     }
 
-    float* Vector3::ValuePtr()
+    f32* Vector3::ValuePtr()
     {
-        return (float*)this;
+        return (f32*)this;
     }
 
-    const float* Vector3::ValuePtr() const
+    const f32* Vector3::ValuePtr() const
     {
-        return (const float*)this;
+        return (const f32*)this;
     }
 
-    float Vector3::Dot(const Vector3& Vec) const
+    f32 Vector3::Dot(const Vector3& Vec) const
     {
         return x * Vec.x + y * Vec.y + z * Vec.z;
     }
 
-    Vector3 Vector3::WithX(float X) const
+    Vector3 Vector3::WithX(f32 X) const
     {
         return {X, y, z};
     }
 
-    Vector3 Vector3::WithY(float Y) const
+    Vector3 Vector3::WithY(f32 Y) const
     {
         return {x, Y, z};
     }
 
-    Vector3 Vector3::WithZ(float Z) const
+    Vector3 Vector3::WithZ(f32 Z) const
     {
         return {x, y, Z};
     }
@@ -129,33 +128,33 @@ namespace Hydro
         return {x, y, z};
     }
 
-    Vector3 Vector3::Apply(float (*Function)(float)) const
+    Vector3 Vector3::Apply(f32 (*Function)(f32)) const
     {
         return {Function(x), Function(y), Function(z)};
     }
 
 
-    Vector3 operator/(float Scalar, const Vector3& Vec)
+    Vector3 operator/(f32 Scalar, const Vector3& Vec)
     {
         return {Scalar / Vec.x, Scalar / Vec.y, Scalar / Vec.z};
     }
 
-    Vector3 operator/(const Vector3& Vec, float Scalar)
+    Vector3 operator/(const Vector3& Vec, f32 Scalar)
     {
         return {Vec.x / Scalar, Vec.y / Scalar, Vec.z / Scalar};
     }
 
-    Vector3 operator*(float Scalar, const Vector3& Vec)
+    Vector3 operator*(f32 Scalar, const Vector3& Vec)
     {
         return {Vec.x * Scalar, Vec.y * Scalar, Vec.z * Scalar};
     }
 
-    Vector3 operator*(const Vector3& Vec, float Scalar)
+    Vector3 operator*(const Vector3& Vec, f32 Scalar)
     {
         return {Vec.x * Scalar, Vec.y * Scalar, Vec.z * Scalar};
     }
 
-    Vector3& Vector3::operator*=(float Scalar)
+    Vector3& Vector3::operator*=(f32 Scalar)
     {
         x *= Scalar;
         y *= Scalar;
@@ -171,7 +170,7 @@ namespace Hydro
         return *this;
     }
 
-    Vector3& Vector3::operator/=(float Scalar)
+    Vector3& Vector3::operator/=(f32 Scalar)
     {
         x /= Scalar;
         y /= Scalar;
@@ -194,32 +193,32 @@ namespace Hydro
             && Math::AreSame(z, Vec.z);
     }
 
-    Vector3 Vector3::Lerp(const Vector3& VecA, const Vector3& VecB, float Alpha)
+    Vector3 Vector3::Lerp(const Vector3& VecA, const Vector3& VecB, f32 Alpha)
     {
         return VecA + VecB * Alpha - VecA * Alpha;
     }
     
 
-    float Vector3::Angle(const Vector3& VecA, const Vector3& VecB)
+    f32 Vector3::Angle(const Vector3& VecA, const Vector3& VecB)
     {
-        const float CosAngle = VecA.Dot(VecB) / (VecA.Magnitude() * VecB.Magnitude());
+        const f32 CosAngle = VecA.Dot(VecB) / (VecA.Magnitude() * VecB.Magnitude());
         return Math::Acos(CosAngle);
     }
 
-    Vector3 Vector3::MoveTowards(const Vector3& Current, const Vector3& Target, float MaxDelta)
+    Vector3 Vector3::MoveTowards(const Vector3& Current, const Vector3& Target, f32 MaxDelta)
     {
         const Vector3 Direction = Target - Current;
-        const float Distance = Direction.Magnitude();
+        const f32 Distance = Direction.Magnitude();
         const Vector3 MovedVector = Current + Direction / Distance * MaxDelta;
         return Distance <= MaxDelta || Math::IsZero(Distance) ? Target : MovedVector;
     }
 
     Vector3 Vector3::SmoothDamp(const Vector3& Current, const Vector3& Target, Vector3& CurrentVelocity,
-        float SmoothTime, float Delta, float MaxSpeed)
+        f32 SmoothTime, f32 Delta, f32 MaxSpeed)
     {
-        const float x = Math::SmoothDamp(Current.x, Target.x, CurrentVelocity.x, SmoothTime, Delta, MaxSpeed);
-        const float y = Math::SmoothDamp(Current.y, Target.y, CurrentVelocity.y, SmoothTime, Delta, MaxSpeed);
-        const float z = Math::SmoothDamp(Current.z, Target.z, CurrentVelocity.z, SmoothTime, Delta, MaxSpeed);
+        const f32 x = Math::SmoothDamp(Current.x, Target.x, CurrentVelocity.x, SmoothTime, Delta, MaxSpeed);
+        const f32 y = Math::SmoothDamp(Current.y, Target.y, CurrentVelocity.y, SmoothTime, Delta, MaxSpeed);
+        const f32 z = Math::SmoothDamp(Current.z, Target.z, CurrentVelocity.z, SmoothTime, Delta, MaxSpeed);
         return {x, y, z};
     }
 

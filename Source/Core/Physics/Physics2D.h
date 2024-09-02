@@ -15,9 +15,9 @@ namespace Hydro
     {
     public:
         static Vector2 Gravity;
-        static float TimeStep;
+        static f32 TimeStep;
         
-        static bool CheckCircle(const Vector3& Center, float Radius);
-        static RaycastHit2D Raycast(const Ray& Ray, float Distance);
+        static bool CheckCircle(const Vector3& Center, f32 Radius);
+        static RaycastHit2D Raycast(const Ray& Ray, f32 Distance);
     };
 }

@@ -26,27 +26,27 @@ namespace Hydro {
 	class Image
 	{
 	public:
-		Image(uint32 Width, uint32 Height, ImageFormat Format, const void* Pixels);
+		Image(u32 Width, u32 Height, ImageFormat Format, const void* Pixels);
 
 		Image(const Path& Filepath, ImageFormat Fmt);
-		Image(const Buffer<uint8>& Buffer, ImageFormat Fmt);
-		Image(const BufferView<uint8>& Buffer, ImageFormat Fmt);
+		Image(const Buffer<u8>& Buffer, ImageFormat Fmt);
+		Image(const BufferView<u8>& Buffer, ImageFormat Fmt);
 		~Image();
 		
 		static Ref<Image> Create(const Path& Filepath, ImageFormat Format);
-		static Ref<Image> Create(const Buffer<uint8>& Buffer, ImageFormat Format);
-		static Ref<Image> Create(const BufferView<uint8>& BufferView, ImageFormat Format);
+		static Ref<Image> Create(const Buffer<u8>& Buffer, ImageFormat Format);
+		static Ref<Image> Create(const BufferView<u8>& BufferView, ImageFormat Format);
 		
 		ImageFormat GetFormat() const;
-		uint32 GetWidth() const;
-		uint32 GetHeight() const;
+		u32 GetWidth() const;
+		u32 GetHeight() const;
 		size_t GetSize() const;
 		const void* GetData() const;
 		void* GetData();
 		bool Valid() const;
 	
 	private:
-		uint32 m_Width{0}, m_Height{0};
+		u32 m_Width{0}, m_Height{0};
 		ImageFormat m_Format{ImageFormat::RGBA8};
 		void* m_Pixels{nullptr};
 	};

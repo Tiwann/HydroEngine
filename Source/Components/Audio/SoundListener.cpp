@@ -32,7 +32,7 @@ namespace Hydro
         Component::OnStart();
     }
 
-    void SoundListener::OnUpdate(float Delta)
+    void SoundListener::OnUpdate(f32 Delta)
     {
         Component::OnUpdate(Delta);
 
@@ -57,10 +57,10 @@ namespace Hydro
     void SoundListener::OnInspectorGUI(const ImGuiIO& IO)
     {
         Component::OnInspectorGUI(IO);
-        UI::SliderValue<uint32>("Index", m_Index, 0, FMOD_MAX_LISTENERS, "%d", SliderFlagBits::AlwaysClamp);
+        UI::SliderValue<u32>("Index", m_Index, 0, FMOD_MAX_LISTENERS, "%d", SliderFlagBits::AlwaysClamp);
     }
 
-    void SoundListener::SetIndex(uint32 Index)
+    void SoundListener::SetIndex(u32 Index)
     {
         m_Index = Index;
     }

@@ -49,7 +49,7 @@ namespace Hydro
     void PhysicsBody2D::SetPosition(const Vector3& Position)
     {
         b2Body* BodyHandle = GetHandle();
-        const float Angle = BodyHandle->GetAngle();
+        const f32 Angle = BodyHandle->GetAngle();
         BodyHandle->SetTransform((Vector2)Position, Angle);
     }
 
@@ -78,7 +78,7 @@ namespace Hydro
         BodyHandle->SetTransform((Vector2)Position, Math::Radians(Rotation.z));
     }
 
-    void PhysicsBody2D::SetGravityScale(float Scale)
+    void PhysicsBody2D::SetGravityScale(f32 Scale)
     {
         b2Body* BodyHandle = GetHandle();
         BodyHandle->SetGravityScale(Scale);
@@ -96,19 +96,19 @@ namespace Hydro
         BodyHandle->SetAngularVelocity(AngularVelocity.z);
     }
 
-    void PhysicsBody2D::SetLinearDamping(float LinearDamping)
+    void PhysicsBody2D::SetLinearDamping(f32 LinearDamping)
     {
         b2Body* BodyHandle = GetHandle();
         BodyHandle->SetLinearDamping(LinearDamping);
     }
 
-    void PhysicsBody2D::SetAngularDamping(float AngularDamping)
+    void PhysicsBody2D::SetAngularDamping(f32 AngularDamping)
     {
         b2Body* BodyHandle = GetHandle();
         BodyHandle->SetAngularDamping(AngularDamping);
     }
 
-    float PhysicsBody2D::GetGravityScale() const
+    f32 PhysicsBody2D::GetGravityScale() const
     {
         const b2Body* BodyHandle = GetHandle();
         return BodyHandle->GetGravityScale();
@@ -132,13 +132,13 @@ namespace Hydro
         return {0.0f, 0.0f, BodyHandle->GetAngularVelocity()};
     }
 
-    float PhysicsBody2D::GetLinearDamping() const
+    f32 PhysicsBody2D::GetLinearDamping() const
     {
         const b2Body* BodyHandle = GetHandle();
         return BodyHandle->GetLinearDamping();
     }
 
-    float PhysicsBody2D::GetAngularDamping() const
+    f32 PhysicsBody2D::GetAngularDamping() const
     {
         const b2Body* BodyHandle = GetHandle();
         return BodyHandle->GetAngularDamping();

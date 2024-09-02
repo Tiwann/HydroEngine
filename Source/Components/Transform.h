@@ -19,18 +19,18 @@ namespace Hydro
         const Vector3& GetScale() const;
 
         void SetPosition(const Vector3& Position);
-        void SetPosition(float X, float Y, float Z);
+        void SetPosition(f32 X, f32 Y, f32 Z);
         void SetRotation(const Vector3& Rotation);
-        void SetRotation(float X, float Y, float Z);
+        void SetRotation(f32 X, f32 Y, f32 Z);
         void SetScale(const Vector3& Scale);
-        void SetScale(float X, float Y, float Z);
-        void SetScale(float UniformScale);
+        void SetScale(f32 X, f32 Y, f32 Z);
+        void SetScale(f32 UniformScale);
         
         void Translate(const Vector3& Translation);
-        void Translate(float X, float Y, float Z);
+        void Translate(f32 X, f32 Y, f32 Z);
         void Rotate(const Vector3& EulerAngles);
         void Scale(const Vector3& Vector);
-        void Scale(float Scalar);
+        void Scale(f32 Scalar);
 
         Vector3 GetForwardVector() const;
         Vector3 GetRightVector() const;

@@ -4,9 +4,9 @@ namespace Hydro
 {
     struct SpriteSheet
     {
-        uint32 NumRows;
-        uint32 NumColumns;
-        uint32 NumSprites;
-        uint32 SpriteSize;
+        u32 NumRows;
+        u32 NumColumns;
+        u32 NumSprites;
+        u32 SpriteSize;
     };
 }

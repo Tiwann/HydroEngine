@@ -133,7 +133,7 @@ namespace Hydro
             Input::ResetInputStates();
             Input::UpdateGamepadButtons();
             glfwPollEvents();
-            ScopedTimer FrameTimer([this](const float Duration) { m_DeltaTime = Duration; });
+            ScopedTimer FrameTimer([this](const f32 Duration) { m_DeltaTime = Duration; });
             
             OnUpdate(m_DeltaTime * Time::Scale);
             OnRender(m_Renderer);
@@ -190,7 +190,7 @@ namespace Hydro
         }
     }
 
-    static void UpdateWindowName(float Delta, const Application* Application)
+    static void UpdateWindowName(f32 Delta, const Application* Application)
     {
         std::string NewWindowName = Application->GetWindow()->GetName();
         if(Application->GetConfiguration().ShowDeltaTime)
@@ -200,19 +200,19 @@ namespace Hydro
 
         if(Application->GetConfiguration().ShowFPS)
         {
-            const uint32 FPS = (uint32)(1.0f / Delta);
+            const u32 FPS = (u32)(1.0f / Delta);
             NewWindowName.append(fmt::format(" FPS: {}", FPS));
         }
         Application->GetWindow()->SetNameTemp(NewWindowName);
     }
     
-    void Application::OnUpdate(float Delta)
+    void Application::OnUpdate(f32 Delta)
     {     
         if(m_Configuration.ShowDeltaTime || m_Configuration.ShowFPS)
         {
             if(m_Configuration.WindowTitleUpdateTime != 0.0f)
             {
-                static float Timer = 0.0f;
+                static f32 Timer = 0.0f;
                 Timer += Delta / Time::Scale;
                 if(Timer >= m_Configuration.WindowTitleUpdateTime)
                 {

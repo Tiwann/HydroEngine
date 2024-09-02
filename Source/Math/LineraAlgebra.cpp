@@ -2,13 +2,13 @@
 
 namespace Hydro
 {
-    Matrix2 Math::Rotate(const Matrix2& Mat, float Radians)
+    Matrix2 Math::Rotate(const Matrix2& Mat, f32 Radians)
     {
         const Matrix2 RotationMatrix = { { Cos(Radians), Sin(Radians) }, { -Sin(Radians), Cos(Radians) } };
         return Mat * RotationMatrix;
     }
 
-    Matrix2 Math::RotateDegrees(const Matrix2& Mat, float Degrees)
+    Matrix2 Math::RotateDegrees(const Matrix2& Mat, f32 Degrees)
     {
         return Rotate(Mat, Radians(Degrees));
     }
@@ -19,16 +19,16 @@ namespace Hydro
         return Mat * ScaleMatrix;
     }
 
-    Matrix2 Math::Scale(const Matrix2& Mat, float Scale)
+    Matrix2 Math::Scale(const Matrix2& Mat, f32 Scale)
     {
         const Matrix2 ScaleMatrix { { Scale, 0.0f }, { 0.0f, Scale }};
         return Mat * ScaleMatrix;
     }
 
-    Matrix3 Math::Rotate(const Matrix3& Mat, const Vector3& Axis, float Radians)
+    Matrix3 Math::Rotate(const Matrix3& Mat, const Vector3& Axis, f32 Radians)
     {
-        const float C = Cos(Radians);
-        const float S = Sin(Radians);
+        const f32 C = Cos(Radians);
+        const f32 S = Sin(Radians);
         
         const Matrix3 XRotationMatrix = {
             { 1, 0, 0 },
@@ -56,7 +56,7 @@ namespace Hydro
         return RotMat * Mat;
     }
 
-    Matrix3 Math::RotateDegrees(const Matrix3& Mat, const Vector3& Axis, float Degrees)
+    Matrix3 Math::RotateDegrees(const Matrix3& Mat, const Vector3& Axis, f32 Degrees)
     {
         return Rotate(Mat, Axis, Radians(Degrees));
     }
@@ -71,7 +71,7 @@ namespace Hydro
         return Mat * ScaleMatrix;
     }
 
-    Matrix3 Math::Scale(const Matrix3& Mat, float Scale)
+    Matrix3 Math::Scale(const Matrix3& Mat, f32 Scale)
     {
         const Matrix3 ScaleMatrix = {
             {Scale, 0.0f, 0.0f},
@@ -81,10 +81,10 @@ namespace Hydro
         return Mat * ScaleMatrix;
     }
 
-    Matrix4 Math::Rotate(const Matrix4& Mat, const Vector3& Axis, float Radians)
+    Matrix4 Math::Rotate(const Matrix4& Mat, const Vector3& Axis, f32 Radians)
     {
-        const float C = Cos(Radians);
-        const float S = Sin(Radians);
+        const f32 C = Cos(Radians);
+        const f32 S = Sin(Radians);
         
         const Matrix4 XRotationMatrix = {
             { 1, 0, 0, 0 },
@@ -115,7 +115,7 @@ namespace Hydro
         return RotMat * Mat;
     }
 
-    Matrix4 Math::RotateDegrees(const Matrix4& Mat, const Vector3& Axis, float Degrees)
+    Matrix4 Math::RotateDegrees(const Matrix4& Mat, const Vector3& Axis, f32 Degrees)
     {
         return Rotate(Mat, Axis, Radians(Degrees));
     }
@@ -131,7 +131,7 @@ namespace Hydro
         return Mat * ScaleMatrix;
     }
 
-    Matrix4 Math::Scale(const Matrix4& Mat, float Scale)
+    Matrix4 Math::Scale(const Matrix4& Mat, f32 Scale)
     {
         const Matrix4 ScaleMatrix = {
             {Scale, 0.0f, 0.0, 0.0f},
@@ -164,11 +164,11 @@ namespace Hydro
         return Result;
     }
 
-    Matrix4 Math::Perspective(float FOV, float AspectRatio, float Near, float Far)
+    Matrix4 Math::Perspective(f32 FOV, f32 AspectRatio, f32 Near, f32 Far)
     {
-        const float m22 = Far / (Far - Near);
-        const float m23 = -(Far * Near / (Far - Near));
-        const float Scale = 1.0f / Tan(Radians(FOV / 2.0f));
+        const f32 m22 = Far / (Far - Near);
+        const f32 m23 = -(Far * Near / (Far - Near));
+        const f32 Scale = 1.0f / Tan(Radians(FOV / 2.0f));
         return {
                 {AspectRatio * Scale, 0.0f, 0.0f, 0.0f},
                   {0.0f, Scale, 0.0f, 0.0f},
@@ -177,11 +177,11 @@ namespace Hydro
             };
     }
     
-    Matrix4 Math::Orthographic(float Width, float Height, float Scale, float Near, float Far)
+    Matrix4 Math::Orthographic(f32 Width, f32 Height, f32 Scale, f32 Near, f32 Far)
     {
-        const float x = Scale * 2.0f / Width;
-        const float y = Scale * 2.0f /  Height;
-        const float z = 1.0f / (Far - Near);
+        const f32 x = Scale * 2.0f / Width;
+        const f32 y = Scale * 2.0f /  Height;
+        const f32 z = 1.0f / (Far - Near);
         
         return {
             {x   , 0.0f, +0.0f, +0.0f},

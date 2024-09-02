@@ -18,7 +18,7 @@ namespace Hydro
         return Name == Other.Name && Type == Other.Type;
     }
 
-    uint32 GetNumComponents(VertexAttributeType Type)
+    u32 GetNumComponents(VertexAttributeType Type)
     {
         switch (Type)
         {
@@ -59,19 +59,19 @@ namespace Hydro
             switch(Attribute.Type)
             {
             case VertexAttributeType::Float:
-                Result += sizeof(float);
+                Result += sizeof(f32);
                 break;
             case VertexAttributeType::Vector2:
-                Result += 2 * sizeof(float);
+                Result += 2 * sizeof(f32);
                 break;
             case VertexAttributeType::Vector3:
-                Result += 3 * sizeof(float);
+                Result += 3 * sizeof(f32);
                 break;
             case VertexAttributeType::Vector4:
-                Result += 4 * sizeof(float);
+                Result += 4 * sizeof(f32);
                 break;
             case VertexAttributeType::Matrix4:
-                Result += 4 * 4 * sizeof(float);
+                Result += 4 * 4 * sizeof(f32);
                 break;
             }
         }
@@ -85,7 +85,7 @@ namespace Hydro
         for(Array<VertexAttribute>::SizeType i = 0; i < Index; i++)
         {
             const VertexAttribute& Att = m_Attributes[i];
-            Result += GetNumComponents(Att.Type) * sizeof(float);
+            Result += GetNumComponents(Att.Type) * sizeof(f32);
         }
         return Result;
     }

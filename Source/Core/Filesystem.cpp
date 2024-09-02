@@ -33,7 +33,7 @@ namespace Hydro
         return true;
     }
 
-    Buffer<uint8> File::ReadToBuffer(const Path& Filepath)
+    Buffer<u8> File::ReadToBuffer(const Path& Filepath)
     {
         FILE* File = fopen(Filepath.string().c_str(), "rb");
         if(!File)
@@ -47,7 +47,7 @@ namespace Hydro
         (void)fseek(File, 0, SEEK_SET);
 
         HYDRO_LOG(Filesystem, Verbosity::Warning, "Reading file to buffer: {}. Size: {}", Filepath.string(), BytesToString(FileSize));
-        Buffer<uint8> OutBuffer(FileSize);
+        Buffer<u8> OutBuffer(FileSize);
         (void)fread(OutBuffer.GetData(), 1, FileSize, File);
         (void)fclose(File);
         return OutBuffer;
@@ -114,22 +114,22 @@ namespace Hydro
 #endif
     }
 
-    std::string File::BytesToString(uint64 Bytes)
+    std::string File::BytesToString(u64 Bytes)
     {
-        constexpr uint64 GB = 1024 * 1024 * 1024;
-        constexpr uint64 MB = 1024 * 1024;
-        constexpr uint64 KB = 1024;
+        constexpr u64 GB = 1024 * 1024 * 1024;
+        constexpr u64 MB = 1024 * 1024;
+        constexpr u64 KB = 1024;
 
         char buffer[32 + 1] {};
 
         if (Bytes > GB)
-            (void)snprintf(buffer, 32, "%.2f GB", (float)Bytes / (float)GB);
+            (void)snprintf(buffer, 32, "%.2f GB", (f32)Bytes / (f32)GB);
         else if (Bytes > MB)
-            (void)snprintf(buffer, 32, "%.2f MB", (float)Bytes / (float)MB);
+            (void)snprintf(buffer, 32, "%.2f MB", (f32)Bytes / (f32)MB);
         else if (Bytes > KB)
-            (void)snprintf(buffer, 32, "%.2f KB", (float)Bytes / (float)KB);
+            (void)snprintf(buffer, 32, "%.2f KB", (f32)Bytes / (f32)KB);
         else
-            (void)snprintf(buffer, 32, "%.2f Bytes", (float)Bytes);
+            (void)snprintf(buffer, 32, "%.2f Bytes", (f32)Bytes);
 
         return buffer;
     }

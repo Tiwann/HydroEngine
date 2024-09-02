@@ -9,12 +9,12 @@ namespace Hydro
         a = 1.0f;
     }
 
-    Color::Color(uint32 color)
+    Color::Color(u32 color)
     : r((color >> 24 & 0xFF) / 255.0f), g((color >> 16 & 0xFF) / 255.0f), b((color >> 8 & 0xFF) / 255.0f), a((color & 0xFF) / 255.0f)
     {
     }
 
-    Color::Color(float red, float green, float blue, float alpha)
+    Color::Color(f32 red, f32 green, f32 blue, f32 alpha)
     : r(red), g(green), b(blue), a(alpha)
     {
     }
@@ -24,42 +24,42 @@ namespace Hydro
         return { r, g, b, a };
     }
 
-    Color Color::FromHSL(float hue, float saturation, float lightness, float alpha)
+    Color Color::FromHSL(f32 hue, f32 saturation, f32 lightness, f32 alpha)
     {
         return 0;
     }
     
-    Color Color::WithHue(float hue)
+    Color Color::WithHue(f32 hue)
     {
         return 0;
     }
 
-    Color Color::WithSaturation(float saturation)
+    Color Color::WithSaturation(f32 saturation)
     {
         return 0;
     }
 
-    Color Color::WithLightness(float lightness)
+    Color Color::WithLightness(f32 lightness)
     {
         return { r * lightness, g * lightness, b * lightness, a };
     }
 
-    Color Color::WithOpacity(float opacity)
+    Color Color::WithOpacity(f32 opacity)
     {
         return { r, g, b, opacity };
     }
 
-    Color Color::WithRed(float red)
+    Color Color::WithRed(f32 red)
     {
         return { red, g, b, a };
     }
 
-    Color Color::WithGreen(float green)
+    Color Color::WithGreen(f32 green)
     {
         return { r, green, b, a };
     }
 
-    Color Color::WithBlue(float blue)
+    Color Color::WithBlue(f32 blue)
     {
         return { r, g, blue, a };
     }

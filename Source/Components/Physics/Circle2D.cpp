@@ -18,8 +18,8 @@ namespace Hydro
     void Circle2D::OnInspectorGUI(const ImGuiIO& IO)
     {
         RigidBody2D::OnInspectorGUI(IO);
-        UI::DragVector2<float>("Center", m_Center);
-        UI::DragValue<float>("Radius", m_Radius);
+        UI::DragVector2<f32>("Center", m_Center);
+        UI::DragValue<f32>("Radius", m_Radius);
         const char* ColliderTypes[3] = { "Static", "Kinematic", "Dynamic" };
 
         PhysicsBodyType BodyType = m_PhysicsBody->GetType();
@@ -44,12 +44,12 @@ namespace Hydro
         m_Center = Center;
     }
 
-    float Circle2D::GetRadius() const
+    f32 Circle2D::GetRadius() const
     {
         return m_Radius;
     }
 
-    void Circle2D::SetRadius(float radius)
+    void Circle2D::SetRadius(f32 radius)
     {
         m_Radius = radius;
     }

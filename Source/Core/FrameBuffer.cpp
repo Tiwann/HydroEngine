@@ -23,7 +23,7 @@ namespace Hydro
         Bind();
         if(m_AttachedTexture)
         {
-            m_AttachedTexture->SetData(nullptr, (uint32)NewSize.x, (uint32)NewSize.y, ImageFormat::RGBA8);
+            m_AttachedTexture->SetData(nullptr, (u32)NewSize.x, (u32)NewSize.y, ImageFormat::RGBA8);
         }
         Unbind();
     }
