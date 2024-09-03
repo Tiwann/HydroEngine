@@ -12,6 +12,6 @@ namespace Hydro
 {
     extern class Application* CreateApplication(const Array<const char*>& Arguments);
     inline bool g_ApplicationRunning = true;
-    int Main(const int Argc, const char** Argv);
+    int Main(int Argc, char** Argv);
 }
 

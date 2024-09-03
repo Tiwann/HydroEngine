@@ -12,7 +12,7 @@ namespace Hydro
         HYDRO_ASSERT(m_NumIndentation == 0, "Bad Xml: Begin/End mismatch!");
     }
 
-    void XmlWriter::Comment(const String& Comment)
+    void XmlWriter::Comment(const String& Comment) const
     {
         const String& FormattedComment = Format("{}# {}", GetIndentation(), Comment);
         m_Stream->WriteString(FormattedComment);
@@ -44,7 +44,7 @@ namespace Hydro
         m_Elements.Add(Name);
     }
 
-    void XmlWriter::ElementInline(const String& Name, const Map<String, String>& Attributes)
+    void XmlWriter::ElementInline(const String& Name, const Map<String, String>& Attributes) const
     {
         HYDRO_ASSERT(m_DocumentBegun, "Bad Xml: Did you call BeginDocument() ?");
         Array<String> FormattedAttributes;
@@ -83,13 +83,13 @@ namespace Hydro
         EndElement();
     }
 
-    void XmlWriter::Write(const String& Value)
+    void XmlWriter::Write(const String& Value) const
     {
         HYDRO_ASSERT(m_NumIndentation > 0, "Bad Xml: Not inside a tag, did you call BeginElement() ?");
         m_Stream->WriteString(Format("{}{}", GetIndentation(), Value));
     }
 
-    String XmlWriter::GetIndentation()
+    String XmlWriter::GetIndentation() const
     {
         String Indentation = "";
         for(u32 i = 0; i < m_NumIndentation * m_Settings.Indentation; i++)

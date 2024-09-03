@@ -27,7 +27,7 @@ namespace Hydro
             std::memset(m_Data, 0, N * sizeof(T));
         }
 
-        StaticArray(const std::initializer_list<T>& List)
+        constexpr StaticArray(const std::initializer_list<T>& List)
         {
             std::copy(List.begin(), List.end(), m_Data);
         }

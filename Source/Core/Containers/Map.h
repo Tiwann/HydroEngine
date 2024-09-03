@@ -10,12 +10,13 @@ namespace Hydro
     {
     public:
         using PairType = TPair;
+        using ArrayType = Array<PairType>;
         using SizeType = typename Array<PairType>::SizeType;
         using Iterator = Iterator<PairType>;
         using ConstIterator = ConstIterator<PairType>;
         
         Map() = default;
-        Map(const std::initializer_list<PairType>& Array) : m_Data(Array){}
+        Map(const std::initializer_list<PairType>& Array) : m_Data(ArrayType(Array)){}
         Map(const Map&) = default;
         Map(Map&&) noexcept = default;
         Map& operator=(const Map&) = default;
@@ -101,6 +102,6 @@ namespace Hydro
         ConstIterator end() const override { return m_Data.end(); }
     
     private:
-        Array<PairType> m_Data;
+        ArrayType m_Data;
     };
 }

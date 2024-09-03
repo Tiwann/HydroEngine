@@ -21,13 +21,13 @@ namespace Hydro
         XmlWriter(Stream& Stream, const XmlSettings& Settings = {});
         ~XmlWriter();
 
-        void Comment(const String& Comment);
+        void Comment(const String& Comment) const;
         void BeginDocument(i32 VersionMaj, i32 VersionMin);
         void BeginElement(const String& Name, const AttributeType& Attributes);
-        void ElementInline(const String& Name, const AttributeType& Attributes);
+        void ElementInline(const String& Name, const AttributeType& Attributes) const;
         void EndElement();
         void Element(const String& Name, const AttributeType& Attributes, const std::function<void()>& Content = nullptr);
-        void Write(const String& Value);
+        void Write(const String& Value) const;
     private:
         Stream* m_Stream;
         XmlSettings m_Settings;
@@ -35,6 +35,6 @@ namespace Hydro
         u32 m_NumIndentation = 0;
         bool m_DocumentBegun = false;
 
-        String GetIndentation();
+        String GetIndentation() const;
     };
 }

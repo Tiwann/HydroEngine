@@ -3,7 +3,7 @@
 
 namespace Hydro
 {
-    int Main(const int Argc, const char** Argv)
+    int Main(int Argc, char** Argv)
     {
         while (g_ApplicationRunning)
         {
@@ -22,7 +22,7 @@ INT APIENTRY WinMain(HINSTANCE, HINSTANCE, PSTR, INT)
     return Hydro::Main(__argc, __argv);
 }
 #else
-int main(const int argc, const char** argv)
+int main(int argc, char** argv)
 {
     return Hydro::Main(argc, argv);
 }

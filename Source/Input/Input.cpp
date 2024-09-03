@@ -2,11 +2,10 @@
 #include "Core/Application.h"
 #include "Core/Window.h"
 #include "Math/Vector2.h"
-#include <GLFW/glfw3.h>
 
 namespace Hydro
 {
-    bool Input::GetKeyDown(KeyCode KeyCode)
+    bool Input::GetKeyDown(const KeyCode KeyCode)
     {
         return s_KeyStates[KeyCode] == InputState::Pressed;
     }
@@ -18,12 +17,12 @@ namespace Hydro
         return State == GLFW_PRESS;
     }
 
-    bool Input::GetKeyUp(KeyCode KeyCode)
+    bool Input::GetKeyUp(const KeyCode KeyCode)
     {
         return s_KeyStates[KeyCode] == InputState::Released;
     }
 
-    String Input::GetKeyName(KeyCode KeyCode)
+    String Input::GetKeyName(const KeyCode KeyCode)
     {
         switch (KeyCode) {
         case KeyCode::UNKNOWN: return "Unknown Key";
@@ -151,7 +150,7 @@ namespace Hydro
         return "Unknown";
     }
 
-    bool Input::GetMouseButtonDown(MouseButton MouseButton)
+    bool Input::GetMouseButtonDown(const MouseButton MouseButton)
     {
         return s_MouseButtonStates[MouseButton] == InputState::Pressed;
     }
@@ -163,7 +162,7 @@ namespace Hydro
         return State == GLFW_PRESS;
     }
 
-    bool Input::GetMouseButtonUp(MouseButton MouseButton)
+    bool Input::GetMouseButtonUp(const MouseButton MouseButton)
     {
         return s_MouseButtonStates[MouseButton] == InputState::Released;
     }
@@ -176,35 +175,78 @@ namespace Hydro
         return {(f32)X, (f32)Y};
     }
 
-    const Array<u8>& Input::GetGamepadButtons(size_t ID)
+    bool Input::IsGamepadConnected(const size_t ID)
     {
-        return s_GamepadButtons[ID];
+        return glfwJoystickPresent((int)ID);
     }
 
-
-    void Input::UpdateGamepadButtons()
+    BufferView<bool> Input::GetGamepadButtons(const size_t ID)
     {
-        for(size_t i = 0; i < 16; ++i)
+        return BufferView(s_GamepadStates[ID].buttons, 15).As<bool>();
+    }
+
+    bool Input::GetGamepadButtonDown(const size_t ID, GamepadButton Button)
+    {
+        return IsGamepadConnected(ID) && s_GamepadButtons[ID][(size_t)Button] == InputState::Pressed;
+    }
+
+    bool Input::GetGamepadButtonUp(const size_t ID, GamepadButton Button)
+    {
+        return IsGamepadConnected(ID) && s_GamepadButtons[ID][(size_t)Button] == InputState::Released;
+    }
+
+    bool Input::GetGamepadButton(size_t ID, GamepadButton Button)
+    {
+        return IsGamepadConnected(ID) && s_GamepadStates[ID].buttons[(size_t)Button];
+    }
+
+    Vector2 Input::GetGamepadStick(size_t ID, GamepadThumbstick Thumbstick)
+    {
+        switch (Thumbstick)
         {
-            int ButtonCount;
-            const u8* Buttons = glfwGetJoystickButtons((int)i, &ButtonCount);
-            s_GamepadButtons[i] = Array(Buttons, ButtonCount);
-            for(size_t j = 0 ; j < s_GamepadButtons.Count(); ++j)
+        case GamepadThumbstick::Left: return {s_GamepadAxes[ID][0], -s_GamepadAxes[ID][1]};
+        case GamepadThumbstick::Right: return {s_GamepadAxes[ID][2], -s_GamepadAxes[ID][3]};
+        }
+        return Vector2::Zero;
+    }
+
+    float Input::GetGamepadLeftShoulder(size_t ID)
+    {
+        return s_GamepadAxes[ID][4];
+    }
+
+    float Input::GetGamepadRightShoulder(size_t ID)
+    {
+        return s_GamepadAxes[ID][5];
+    }
+
+    void Input::UpdateGamepads()
+    {
+        for(size_t ID = 0; ID < 16; ++ID)
+        {
+            glfwGetGamepadState((int)ID, &s_GamepadStates[ID]);
+            for(size_t Button = 0 ; Button < 15; ++Button)
             {
-                if(s_GamepadButtons.Count() == s_LastGamepadButtons.Count() && !s_GamepadButtons[i].IsEmpty() && !s_LastGamepadButtons[i].IsEmpty())
+                if(s_GamepadStates[ID].buttons[Button] != s_LastGamepadStates[ID].buttons[Button])
                 {
-                    if(s_GamepadButtons[i][j] != s_LastGamepadButtons[i][j])
-                    {
-                        const InputState State = s_GamepadButtons[i][j] ? InputState::Pressed : InputState::Released;
-                        ApplicationDelegates::OnGamepadButtonEvent.BroadcastChecked(j, State);
-                    }
+                    const InputState State = s_GamepadStates[ID].buttons[Button] ? InputState::Pressed : InputState::Released;
+                    s_GamepadButtons[ID][Button] = State;
+                    if(ApplicationDelegates::OnGamepadButtonEvent.IsBound())
+                        ApplicationDelegates::OnGamepadButtonEvent.Broadcast(ID, (GamepadButton)Button, State);
                 }
-                
             }
-            s_LastGamepadButtons[i] = s_GamepadButtons[i];
+
+            for(size_t Axis = 0 ; Axis < 6; ++Axis)
+            {
+                s_GamepadAxes[ID][Axis] = s_GamepadStates[ID].axes[Axis];
+                if(ApplicationDelegates::OnGamepadAxisEvent.IsBound())
+                    ApplicationDelegates::OnGamepadAxisEvent.Broadcast(ID, Axis, s_GamepadAxes[ID][Axis]);
+            }
+            
+            s_LastGamepadStates[ID] = s_GamepadStates[ID];
         }
     }
-
+    
     void Input::ResetInputStates()
     {
         for(auto& [Key, State] : s_KeyStates)
@@ -216,8 +258,14 @@ namespace Hydro
         {
             State = InputState::None;
         }
+        
+        for(auto& Gamepad : s_GamepadButtons)
+        {
+            for(size_t i = 0; i < Gamepad.Count(); ++i)
+                Gamepad[i] = InputState::None;
+        }
 
-        s_LastGamepadButtons = s_GamepadButtons;
+        s_LastGamepadStates = s_GamepadStates;
     }
     
 }

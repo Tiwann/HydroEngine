@@ -47,8 +47,11 @@ namespace Hydro
         using MouseButtonDelegate = MulticastDelegate<void(MouseButton, InputState)>;
         static inline MouseButtonDelegate OnMouseButtonEvent;
 
-        using GamepadButtonDelegate = MulticastDelegate<void(size_t, InputState)>;
+        using GamepadButtonDelegate = MulticastDelegate<void(size_t ID, GamepadButton Button, InputState State)>;
         static inline GamepadButtonDelegate OnGamepadButtonEvent;
+
+        using GamepadAxisDelegate = MulticastDelegate<void(size_t ID, size_t Axis, float Value)>;
+        static inline GamepadAxisDelegate OnGamepadAxisEvent;
     };
     
     class Application

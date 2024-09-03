@@ -131,7 +131,7 @@ namespace Hydro
         {
             ApplicationDelegates::OnFrameBegin.Broadcast();
             Input::ResetInputStates();
-            Input::UpdateGamepadButtons();
+            Input::UpdateGamepads();
             glfwPollEvents();
             ScopedTimer FrameTimer([this](const f32 Duration) { m_DeltaTime = Duration; });
             
@@ -514,14 +514,17 @@ namespace Hydro
 
         glfwSetJoystickCallback([](const int JoystickID, const int Event)
         {
+            if(!glfwJoystickIsGamepad(JoystickID)) return;
+            
             if(Event == GLFW_CONNECTED)
             {
                 const StringView GamepadName = glfwGetJoystickName(JoystickID);
-                HYDRO_LOG(Application, Verbosity::Warning, "Joystick {} connected: {}", JoystickID, GamepadName);
+                HYDRO_LOG(Application, Verbosity::Warning, "Gamepad {} connected: {}", JoystickID, GamepadName);
             }
             else if(Event == GLFW_DISCONNECTED)
             {
-               
+                const StringView GamepadName = glfwGetJoystickName(JoystickID);
+                HYDRO_LOG(Application, Verbosity::Warning, "Gamepad {} connected: {}", JoystickID, GamepadName);
             }
         });
         

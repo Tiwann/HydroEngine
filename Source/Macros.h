@@ -72,3 +72,19 @@
 #define HYDRO_MAX_SHADERS           64
 #define HYDRO_MAX_SOUNDS            256
 
+
+#define HYDRO_PASTE_STR(X) #X
+#define HYDRO_PASTE(X) HYDRO_PASTE_STR(#X)
+
+
+#define HYDRO_ENUM_FMT(EnumClass, FormatFunc)\
+template<> \
+struct fmt::formatter<EnumClass> : formatter<string_view> \
+{ \
+    fmt::format_context::iterator format(const EnumClass& Enum, format_context& Context) const \
+    { \
+        const Hydro::String ToString = FormatFunc(Enum); \
+        return fmt::formatter<string_view>::format(string_view(ToString.Data(), ToString.Count()), Context); \
+    } \
+};
+

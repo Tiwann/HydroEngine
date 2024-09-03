@@ -4,6 +4,7 @@
 #include "LogVerbosity.h"
 #include "Window.h"
 
+#include "GLFW/glfw3.h"
 #include <GLFW/glfw3native.h>
 
 #if defined(HYDRO_PLATFORM_WINDOWS)
@@ -11,6 +12,8 @@
 #endif
 
 #include <fstream>
+
+#include "Serialization/FileStream.h"
 
 namespace Hydro
 {
@@ -22,14 +25,13 @@ namespace Hydro
     bool File::Create(const Path& Filepath)
     {
         HYDRO_LOG(Filesystem, Verbosity::Warning, "Creating file: {}", Filepath.string());
-        FILE* file = fopen(Filepath.string().c_str(), "w");
-        if(!file) return false;
+        FileStream File(Filepath, OpenModeFlagBits::Write);
+        if(!File.IsOpened()) return false;
+
+        File.Seek(Seek::End, 0);
+        if(const size_t FileSize = File.Tell(); FileSize > 0) return false;
         
-        (void)fseek(file, 0, SEEK_END);
-        const size_t FileSize = ftell(file);
-        if(FileSize > 0) return false;
-        
-        (void)fclose(file);
+        File.Close();
         return true;
     }
 

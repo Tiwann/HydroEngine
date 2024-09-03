@@ -179,14 +179,17 @@ namespace Hydro
         using Iterator = typename Buffer<Type>::Iterator;
         using ConstIterator = typename Buffer<Type>::Iterator;
         
-        BufferView(const Type* Data, size_t Count) : m_Data(const_cast<Type*>(Data)), m_Count(Count){}
-        BufferView(const Buffer<Type>& Buff) : m_Data(const_cast<Type*>(Buff.GetData())), m_Count(Buff.Count()){}
+        BufferView(const Type* Data, size_t Count) : m_Data(Data), m_Count(Count){}
+        BufferView(const Buffer<Type>& Buff) : m_Data(Buff.GetData()), m_Count(Buff.Count()){}
         BufferView(const BufferView& Buff) : m_Data(Buff.m_Data), m_Count(Buff.m_Count){}
 
-        BufferView& operator=(const BufferView& Buff)
+        BufferView& operator=(const BufferView& Other)
         {
-            m_Data = Buff.m_Data;
-            m_Count = Buff.m_Count;
+            if(this == &Other)
+                return *this;
+            
+            m_Data = Other.m_Data;
+            m_Count = Other.m_Count;
             return *this;
         }
         
@@ -213,13 +216,7 @@ namespace Hydro
         {
             return m_Data[Index];
         }
-
-        Type& operator[](size_t Index)
-        {
-            return m_Data[Index];
-        }
         
-
         const Type* GetData() const { return m_Data; }
 
         void CopyTo(Buffer<Type>& Out) const
@@ -228,7 +225,7 @@ namespace Hydro
             std::copy(m_Data, m_Data + m_Count, Out.GetData());
         }
     private:
-        Type* m_Data;
+        const Type* m_Data;
         size_t m_Count;
     };
     

@@ -2,7 +2,9 @@
 
 #include "Core/Application.h"
 #include "Core/Window.h"
-#include "GLFW/glfw3native.h"
+
+#include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
 
 namespace Hydro
 {
