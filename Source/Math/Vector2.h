@@ -41,6 +41,7 @@ namespace Hydro
         friend Vector2 operator*(const Vector2& Vec, f32 Scalar);
         
         Vector2& operator*=(f32 Scalar);
+        Vector2& operator+=(const Vector2& Vec);
         bool operator==(const Vector2& Vec) const;
         Vector2 operator*(const Vector2& Vec) const;
 

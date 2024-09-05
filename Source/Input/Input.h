@@ -29,6 +29,8 @@ namespace Hydro
         static bool GetKey(KeyCode KeyCode);
         static bool GetKeyUp(KeyCode KeyCode);
         static String GetKeyName(KeyCode KeyCode);
+        static f32 GetAxis(KeyCode Negative, KeyCode Positive);
+        static Vector2 Get2DAxis(KeyCode Up, KeyCode Down, KeyCode Left, KeyCode Right);
 
         static bool GetMouseButtonDown(MouseButton MouseButton);
         static bool GetMouseButton(MouseButton MouseButton);

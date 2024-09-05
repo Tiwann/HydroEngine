@@ -114,6 +114,13 @@ namespace Hydro
         return *this;
     }
 
+    Vector2& Vector2::operator+=(const Vector2& Vec)
+    {
+        x *= Vec.x;
+        y *= Vec.y;
+        return *this;
+    }
+
     bool Vector2::operator==(const Vector2& Vec) const
     {
         return Math::AreSame(x, Vec.x)

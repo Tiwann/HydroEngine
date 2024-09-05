@@ -71,7 +71,7 @@ namespace Hydro
         using ConstRefType = ElementType const&;
     public:
         ConstIterator(PointerType Ptr) : m_Data(Ptr) {}
-        ConstIterator(ConstPointerType Ptr) : m_Data(const_cast<PointerType>(Ptr)) {}
+        ConstIterator(ConstPointerType Ptr) : m_Data(Ptr) {}
 
         ConstIterator operator+(SizeType Count) { m_Data += Count; return *this; }
         ConstIterator operator-(SizeType Count) { m_Data -= Count; return *this; }
@@ -108,7 +108,7 @@ namespace Hydro
         }
     
     private:
-        PointerType m_Data;
+        ConstPointerType m_Data;
     };
 
 

@@ -8,6 +8,11 @@
 
 namespace Hydro
 {
+    PhysicsBody2D::PhysicsBody2D(b2Body* Handle, PhysicsWorld2D& World) : PhysicsBody(Handle, World)
+    {
+        
+    }
+
     void PhysicsBody2D::SetUserPointer(void* User)
     {
         b2Body* BodyHandle = GetHandle();
@@ -26,12 +31,13 @@ namespace Hydro
     {
         b2FixtureDef FixtureDefinition = {};
         const b2Shape& ShapeHandle = Shape->GetHandle();
+        
         FixtureDefinition.shape = &ShapeHandle;
         FixtureDefinition.density = Material.Density;
         FixtureDefinition.friction = Material.Friction;
         FixtureDefinition.restitution = Material.Bounciness;
         FixtureDefinition.isSensor = m_IsSensor;
-
+        
         b2FixtureUserData FixtureUserData;
         FixtureUserData.pointer = (uintptr_t)this;
         FixtureDefinition.userData = FixtureUserData;

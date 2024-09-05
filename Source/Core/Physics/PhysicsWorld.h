@@ -15,7 +15,8 @@ namespace Hydro
         virtual void OnInit() = 0;
         virtual void Step(f32 TimeStep) = 0;
         virtual void OnDestroy() = 0;
-
+        virtual void OnContactBegin(BodyType* BodyA, BodyType* BodyB) = 0;
+        virtual void OnContactEnd(BodyType* BodyA, BodyType* BodyB) = 0;
         
         virtual BodyType* CreateBody(const PhysicsBodyDefinition& Definition, const PhysicsMaterial& Material) = 0;
         virtual void DestroyBody(BodyType* Body) = 0;

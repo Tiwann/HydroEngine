@@ -150,6 +150,19 @@ namespace Hydro
         return "Unknown";
     }
 
+    f32 Input::GetAxis(KeyCode Negative, KeyCode Positive)
+    {
+        f32 Result = 0.0f;
+        if(GetKey(Negative)) Result -= 1.0f;
+        if(GetKey(Positive)) Result += 1.0f;
+        return Result;
+    }
+
+    Vector2 Input::Get2DAxis(KeyCode Up, KeyCode Down, KeyCode Left, KeyCode Right)
+    {
+        return { GetAxis(Left, Right), GetAxis(Up, Down)};
+    }
+
     bool Input::GetMouseButtonDown(const MouseButton MouseButton)
     {
         return s_MouseButtonStates[MouseButton] == InputState::Pressed;

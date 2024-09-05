@@ -6,6 +6,9 @@
 #include <initializer_list>
 #include <algorithm>
 #include <cstring>
+#include <functional>
+
+#include "DynamicArray.h"
 
 namespace Hydro
 {
@@ -21,6 +24,7 @@ namespace Hydro
         using Iterator = Iterator<T>;
         using ConstIterator = ConstIterator<T>;
         using SizeType = size_t;
+        using Predicate = std::function<bool(ConstReferenceType)>;
         
         StaticArray()
         {
@@ -115,6 +119,39 @@ namespace Hydro
             HYDRO_ASSERT(End <= N, "index out of bounds!");
             
             std::memset(m_Data + Begin, Value, (End - Begin) * sizeof(T));
+        }
+
+        Array<T*> Where(const Predicate& Predicate)
+        {
+            Array<T*> Result;
+            for(SizeType i = 0; i < N; ++i)
+            {
+                if(Predicate(m_Data[i]))
+                    Result.Add(&m_Data[i]);
+            }
+            return Result;
+        }
+
+        T* Single(const Predicate& Predicate)
+        {
+            for(SizeType i = 0; i < N; ++i)
+            {
+                if(Predicate(m_Data[i]))
+                    return &m_Data[i];
+            }
+            return nullptr;
+        }
+
+        template<typename Out>
+        Array<Out*> Select(Out*(*Selector)(ReferenceType))
+        {
+            if(!Selector) return {};
+            Array<Out*> Result;
+            for(SizeType i = 0; i < N; ++i)
+            {
+                Result.Add(Selector(m_Data[i]));
+            }
+            return Result;
         }
         
         Iterator begin() override { return m_Data; }

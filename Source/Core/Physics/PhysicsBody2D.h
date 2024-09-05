@@ -13,8 +13,8 @@ namespace Hydro
     class PhysicsBody2D : public PhysicsBody<PhysicsShape2D, PhysicsWorld2D, b2Body>
     {
     public:
-        PhysicsBody2D(b2Body* Handle, PhysicsWorld2D& World) : PhysicsBody(Handle, World) { }
-        
+        PhysicsBody2D(b2Body* Handle, PhysicsWorld2D& World);
+
         void SetUserPointer(void* User) override;
         void* GetUserPointer() const override;
     

@@ -3,7 +3,7 @@
 #include "Math/Vector2.h"
 #include "Core/RaycastHit.h"
 
-HYDRO_DECLARE_LOG_CATEGORY_STATIC(Box2D, "BOX2D")
+HYDRO_DECLARE_LOG_CATEGORY_STATIC(Physics2D, "PHYSICS2D")
 
 namespace Hydro
 {
