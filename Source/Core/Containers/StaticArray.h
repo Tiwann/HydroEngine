@@ -5,7 +5,6 @@
 
 #include <initializer_list>
 #include <algorithm>
-#include <cstring>
 #include <functional>
 
 #include "DynamicArray.h"
@@ -25,10 +24,12 @@ namespace Hydro
         using ConstIterator = ConstIterator<T>;
         using SizeType = size_t;
         using Predicate = std::function<bool(ConstReferenceType)>;
+        template<typename Out>
+        using Selector = std::function<Out*(ReferenceType)>;
         
         StaticArray()
         {
-            std::memset(m_Data, 0, N * sizeof(T));
+            Fill(T());
         }
 
         constexpr StaticArray(const std::initializer_list<T>& List)
@@ -112,17 +113,10 @@ namespace Hydro
             for(SizeType i = 0; i < N; ++i)
                 m_Data[i] = Value;
         }
-
-        void Memset(SizeType Begin, SizeType End, u32 Value)
-        {
-            HYDRO_ASSERT(Begin < End, "Index out of bounds!");
-            HYDRO_ASSERT(End <= N, "index out of bounds!");
-            
-            std::memset(m_Data + Begin, Value, (End - Begin) * sizeof(T));
-        }
-
+        
         Array<T*> Where(const Predicate& Predicate)
         {
+            if(!Predicate) return {};
             Array<T*> Result;
             for(SizeType i = 0; i < N; ++i)
             {
@@ -134,6 +128,7 @@ namespace Hydro
 
         T* Single(const Predicate& Predicate)
         {
+            if(!Predicate) return nullptr;
             for(SizeType i = 0; i < N; ++i)
             {
                 if(Predicate(m_Data[i]))
@@ -143,7 +138,7 @@ namespace Hydro
         }
 
         template<typename Out>
-        Array<Out*> Select(Out*(*Selector)(ReferenceType))
+        Array<Out*> Select(const Selector<Out>& Selector) const
         {
             if(!Selector) return {};
             Array<Out*> Result;
