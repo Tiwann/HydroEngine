@@ -9,16 +9,17 @@ namespace Hydro
     class PhysicsBody2D;
     class PhysicsShape2D;
     class PhysicsWorld2DContactListener;
+    struct PhysicsContact2D;
     
-    class PhysicsWorld2D : public PhysicsWorld<PhysicsBody2D, PhysicsShape2D>
+    class PhysicsWorld2D : public PhysicsWorld<PhysicsBody2D, PhysicsShape2D, PhysicsContact2D>
     {
     public:
         void OnInit() override;
         void Step(f32 TimeStep) override;
         void OnDestroy() override;
         
-        void OnContactBegin(PhysicsBody2D* BodyA, PhysicsBody2D* BodyB) override;
-        void OnContactEnd(PhysicsBody2D* BodyA, PhysicsBody2D* BodyB) override;
+        void OnContactBegin(PhysicsContact2D* Contact) override;
+        void OnContactEnd(PhysicsContact2D* Contact) override;
         
         
         PhysicsBody2D* CreateBody(const PhysicsBodyDefinition& Definition, const PhysicsMaterial& Material) override;

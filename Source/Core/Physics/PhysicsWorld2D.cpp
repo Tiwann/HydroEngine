@@ -7,6 +7,7 @@
 #include <box2d/b2_world.h>
 #include <box2d/b2_body.h>
 
+#include "PhysicsContact2D.h"
 #include "Core/Log.h"
 #include "Core/LogVerbosity.h"
 
@@ -30,22 +31,23 @@ namespace Hydro
         delete m_World;
     }
 
-    void PhysicsWorld2D::OnContactBegin(PhysicsBody2D* BodyA, PhysicsBody2D* BodyB)
+    void PhysicsWorld2D::OnContactBegin(PhysicsContact2D* Contact)
     {
-        HYDRO_LOG(Physics2D, Verbosity::Info, "Contact between two bodies started!");
-
-        if(BodyA->IsSensor() || BodyB->IsSensor()) return;
+        if(Contact->BodyA->IsSensor() || Contact->BodyB->IsSensor()) return;
             
         b2WorldManifold WorldManifold;
-        contact->GetWorldManifold(&WorldManifold);
+        Contact->Handle->GetWorldManifold(&WorldManifold);
+
+        PhysicsBody2D* BodyA = Contact->BodyA;
+        PhysicsBody2D* BodyB = Contact->BodyB;
                 
         Collision2D Collision2DA{};
         Collision2DA.ImpactPoint = WorldManifold.points[0];
         Collision2DA.Normal = WorldManifold.normal;
-        if(!ColliderA->IsColliding)
+        if(!BodyA->m_IsColliding)
         {
             ColliderA->OnCollisionEnterEvent.Broadcast(Collision2DA);
-            ColliderA->IsColliding = true;
+            BodyA->m_IsColliding = true;
         } else
         {
             ColliderA->OnCollisionStayEvent.Broadcast(Collision2DA);
@@ -64,10 +66,22 @@ namespace Hydro
         }
     }
 
+    void PhysicsWorld2D::OnContactEnd(PhysicsContact2D* Contact)
+    {
+    }
+
+    /*void PhysicsWorld2D::OnContactBegin(PhysicsBody2D* BodyA, PhysicsBody2D* BodyB)
+    {
+        HYDRO_LOG(Physics2D, Verbosity::Info, "Contact between two bodies started!");
+
+        
+    }
+
     void PhysicsWorld2D::OnContactEnd(PhysicsBody2D* BodyA, PhysicsBody2D* BodyB)
     {
         HYDRO_LOG(Physics2D, Verbosity::Info, "Contact between two bodies ended!");
     }
+    */
 
     PhysicsBody2D* PhysicsWorld2D::CreateBody(const PhysicsBodyDefinition& Definition, const PhysicsMaterial& Material)
     {

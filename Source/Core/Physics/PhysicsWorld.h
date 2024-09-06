@@ -7,7 +7,7 @@ namespace Hydro
 {
     struct PhysicsMaterial;
     
-    template<typename BodyType, typename ShapeType>
+    template<typename BodyType, typename ShapeType, typename ContactType>
     class PhysicsWorld
     {
     public:
@@ -15,8 +15,9 @@ namespace Hydro
         virtual void OnInit() = 0;
         virtual void Step(f32 TimeStep) = 0;
         virtual void OnDestroy() = 0;
-        virtual void OnContactBegin(BodyType* BodyA, BodyType* BodyB) = 0;
-        virtual void OnContactEnd(BodyType* BodyA, BodyType* BodyB) = 0;
+        
+        virtual void OnContactBegin(ContactType* Contact) = 0;
+        virtual void OnContactEnd(ContactType* Contact) = 0;
         
         virtual BodyType* CreateBody(const PhysicsBodyDefinition& Definition, const PhysicsMaterial& Material) = 0;
         virtual void DestroyBody(BodyType* Body) = 0;

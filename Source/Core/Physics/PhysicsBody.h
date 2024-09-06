@@ -11,6 +11,8 @@ namespace Hydro
     {
     public:
         using Body = BodyHandle;
+        friend WorldBase;
+        
         explicit PhysicsBody(BodyHandle* Handle, WorldBase& World) : m_Handle(Handle), m_World(&World){ }
         virtual ~PhysicsBody() = default;
         PhysicsBody(const PhysicsBody&) = delete;
@@ -64,6 +66,9 @@ namespace Hydro
         virtual bool IsSensor() = 0;
         virtual void SetIsSensor(bool Sensor) = 0;
 
+        virtual void SetColliding(bool Colliding) { m_IsColliding = Colliding; }
+        virtual bool IsColliding() const { return m_IsColliding; }
+
         BodyHandle* GetHandle() { return m_Handle; }
         const BodyHandle* GetHandle() const { return m_Handle; }
 
@@ -72,15 +77,17 @@ namespace Hydro
 
         ShapeBase* GetShape() { return m_Shape; }
         const ShapeBase* GetShape() const { return m_Shape; }
-
+    
     protected:
         PhysicsConstraintsFlags m_Constraints;
         PhysicsMaterial m_Material;
         PhysicsBodyType m_Type = PhysicsBodyType::Static;
         bool m_IsSensor = false;
+        bool m_IsColliding = false;
     private:
         BodyHandle* m_Handle = nullptr;
         WorldBase* m_World = nullptr;
         ShapeBase* m_Shape = nullptr;
+        void* m_UserPointer = nullptr;
     };
 }

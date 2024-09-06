@@ -4,6 +4,7 @@
 namespace Hydro
 {
     class PhysicsWorld2D;
+    class PhysicsBody2D;
     
     class PhysicsWorld2DContactListener : public b2ContactListener
     {
