@@ -1,10 +1,13 @@
 #include "RigidBody2D.h"
+
+#include "Contact2D.h"
 #include "Core/Scene.h"
 #include "Components/Transform.h"
 #include "Core/MulticastDelegate.h"
 
 #include "Core/Physics/PhysicsWorld2D.h"
 #include "Core/Physics/PhysicsBody2D.h"
+#include "Core/Physics/PhysicsContactInfo2D.h"
 #include "Core/Physics/PhysicsShape.h"
 
 namespace Hydro
@@ -27,6 +30,10 @@ namespace Hydro
         m_PhysicsBody->SetGravityScale(1);
         m_PhysicsShape = CreateShape(Transform);
         m_PhysicsBody->CreatePhysicsState(m_PhysicsShape, PhysicsMaterial());
+        
+        m_PhysicsBody->OnContactBeginEvent.BindMember(this, &RigidBody2D::OnContactBegin);
+        m_PhysicsBody->OnContactStayEvent.BindMember(this, &RigidBody2D::OnContactStay);
+        m_PhysicsBody->OnContactEndEvent.BindMember(this, &RigidBody2D::OnContactEnd);
     }
 
     void RigidBody2D::OnStart()
@@ -43,6 +50,10 @@ namespace Hydro
         Scene& Scene = m_Entity->GetScene();
         PhysicsWorld2D& World = Scene.GetPhysicsWorld2D();
 
+        m_PhysicsBody->OnContactBeginEvent.ClearAll();
+        m_PhysicsBody->OnContactStayEvent.ClearAll();
+        m_PhysicsBody->OnContactEndEvent.ClearAll();
+
         delete m_PhysicsShape;
         m_PhysicsBody->DestroyPhysicsState();
         World.DestroyBody(m_PhysicsBody);
@@ -56,7 +67,31 @@ namespace Hydro
         Transform->SetPosition(NewPosition);
         Transform->SetRotation(NewRotation);
     }
-    
+
+    void RigidBody2D::OnContactBegin(const PhysicsContactInfo2D& ContactInfo)
+    {
+        Contact2D Contact;
+        Contact.ImpactPoint = ContactInfo.Point;
+        Contact.Normal = ContactInfo.Normal;
+        OnContactBeginEvent.Broadcast(Contact);
+    }
+
+    void RigidBody2D::OnContactStay(const PhysicsContactInfo2D& ContactInfo)
+    {
+        Contact2D Contact;
+        Contact.ImpactPoint = ContactInfo.Point;
+        Contact.Normal = ContactInfo.Normal;
+        OnContactStayEvent.Broadcast(Contact);
+    }
+
+    void RigidBody2D::OnContactEnd(const PhysicsContactInfo2D& ContactInfo)
+    {
+        Contact2D Contact;
+        Contact.ImpactPoint = ContactInfo.Point;
+        Contact.Normal = ContactInfo.Normal;
+        OnContactEndEvent.Broadcast(Contact);
+    }
+
     f32 RigidBody2D::GetGravityScale() const
     {
         return m_PhysicsBody->GetGravityScale();

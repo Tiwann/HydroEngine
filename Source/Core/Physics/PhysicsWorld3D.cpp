@@ -1,7 +1,8 @@
-﻿#include "Core/Physics/PhysicsWorld3D.h"
-#include "Core/Physics/Physics3D.h"
-#include "Core/Physics/PhysicsBody3D.h"
-#include "Core/Physics/PhysicsMaterial.h"
+﻿#include "PhysicsWorld3D.h"
+#include "Physics3D.h"
+#include "PhysicsBody3D.h"
+#include "PhysicsMaterial.h"
+#include "PhysicsWorld3DContactListener.h"
 #include "Core/Time.h"
 #include "Core/Memory.h"
 #include "Math/Functions.h"
@@ -9,6 +10,7 @@
 #include <Jolt/RegisterTypes.h>
 #include <Jolt/Core/Factory.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
+
 
 namespace Hydro
 {
@@ -25,8 +27,7 @@ namespace Hydro
         JPH::Factory::sInstance = new JPH::Factory();
         JPH::RegisterTypes();
         
-        const JPH::Vec3 Gravity = { Physics3D::Gravity.x, Physics3D::Gravity.y, Physics3D::Gravity.z };
-        m_System.SetGravity(Gravity);
+        m_System.SetGravity(Physics3D::Gravity);
         
         /*m_System->Init(Physics3D::MaxBodies,
             0,
@@ -35,7 +36,9 @@ namespace Hydro
             *m_BroadPhaseLayerInterface,
             *m_ObjectVsBroadPhaseLayerFilter,
             *m_ObjectLayerPairFilter);*/
-        
+
+        m_ContactListener = new PhysicsWorld3DContactListener(this);
+        m_System.SetContactListener(m_ContactListener);
     }
 
     void PhysicsWorld3D::Step(const f32 TimeStep)
@@ -45,10 +48,26 @@ namespace Hydro
 
     void PhysicsWorld3D::OnDestroy()
     {
+        delete m_ContactListener;
         JPH::UnregisterTypes();
         
         delete JPH::Factory::sInstance;
         JPH::Factory::sInstance = nullptr;
+    }
+
+    void PhysicsWorld3D::OnContactBegin(const PhysicsContact3D* Contact)
+    {
+        
+    }
+
+    void PhysicsWorld3D::OnContactStay(const PhysicsContact3D* Contact)
+    {
+        
+    }
+
+    void PhysicsWorld3D::OnContactEnd(const PhysicsContact3D* Contact)
+    {
+        
     }
 
     PhysicsBody3D* PhysicsWorld3D::CreateBody(const PhysicsBodyDefinition& Definition, const PhysicsMaterial& Material)

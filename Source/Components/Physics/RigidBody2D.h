@@ -1,17 +1,17 @@
 #pragma once
 #include "PhysicsComponent.h"
 
-
 namespace Hydro
 {
     class Vector3;
     class Transform;
     struct PhysicsMaterial;
-    struct Collision2D;
+    struct Contact2D;
     class PhysicsBody2D;
     class PhysicsShape2D;
+    struct PhysicsContactInfo2D;
     
-    class RigidBody2D : public PhysicsComponentInterface<PhysicsBody2D, PhysicsShape2D, Collision2D>
+    class RigidBody2D : public PhysicsComponentInterface<PhysicsBody2D, PhysicsShape2D, Contact2D>
     {
     protected:
         friend class Entity;
@@ -21,7 +21,10 @@ namespace Hydro
         void OnStart() override;
         void OnDestroy() override;
         void OnPhysicsUpdate(f32 Delta) override;
-    
+
+        void OnContactBegin(const PhysicsContactInfo2D& ContactInfo);
+        void OnContactStay(const PhysicsContactInfo2D& ContactInfo);
+        void OnContactEnd(const PhysicsContactInfo2D& ContactInfo);
     public:
         f32 GetGravityScale() const override;
         void SetGravityScale(f32 Scale) override;

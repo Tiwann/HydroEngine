@@ -7,8 +7,9 @@ namespace Hydro
 {
     class PhysicsShape3D;
     class PhysicsWorld3D;
+    struct PhysicsContactInfo3D;
     
-    class PhysicsBody3D : public PhysicsBody<PhysicsShape3D, PhysicsWorld3D, JPH::Body>
+    class PhysicsBody3D : public PhysicsBody<PhysicsShape3D, PhysicsWorld3D, JPH::Body, PhysicsContactInfo3D>
     {
     public:
         PhysicsBody3D(JPH::Body* Handle, PhysicsWorld3D& World) : PhysicsBody(Handle, World) { }

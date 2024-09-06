@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Core/Shape2DContactListener.h"
+#include <box2d/b2_world_callbacks.h>
 
 namespace Hydro
 {
@@ -11,6 +11,7 @@ namespace Hydro
     public:
         PhysicsWorld2DContactListener(PhysicsWorld2D* World);
         void BeginContact(b2Contact* contact) override;
+        void PersistContact(b2Contact* contact) override;
         void EndContact(b2Contact* contact) override;
 
     private:

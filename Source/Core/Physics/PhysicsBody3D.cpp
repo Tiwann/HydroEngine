@@ -13,13 +13,13 @@ namespace Hydro
 {
     void PhysicsBody3D::SetUserPointer(void* User)
     {
-        Body* BodyHandle = GetHandle();
+        JPH::Body* BodyHandle = GetHandle();
         BodyHandle->SetUserData((JPH::uint64)User);
     }
 
     void* PhysicsBody3D::GetUserPointer() const
     {
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         return (void*)BodyHandle->GetUserData();
     }
 
@@ -28,7 +28,7 @@ namespace Hydro
         const PhysicsWorld3D* World = GetWorld();
         const JPH::PhysicsSystem& System = World->GetSystem();
         const JPH::BodyInterface& BodyInterface = System.GetBodyInterface();
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         const JPH::Shape& ShapeHandle = Shape->GetHandle();
         BodyInterface.SetShape(BodyHandle->GetID(), &ShapeHandle, true, JPH::EActivation::Activate);
     }
@@ -43,7 +43,7 @@ namespace Hydro
         PhysicsWorld3D* World = GetWorld();
         JPH::PhysicsSystem& System = World->GetSystem();
         JPH::BodyInterface& BodyInterface = System.GetBodyInterface();
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         BodyInterface.SetPosition(BodyHandle->GetID(), Position, JPH::EActivation::Activate);
     }
 
@@ -52,7 +52,7 @@ namespace Hydro
         const PhysicsWorld3D* World = GetWorld();
         const JPH::PhysicsSystem& System = World->GetSystem();
         const JPH::BodyInterface& BodyInterface = System.GetBodyInterface();
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         return BodyInterface.GetPosition(BodyHandle->GetID());
     }
 
@@ -61,7 +61,7 @@ namespace Hydro
         PhysicsWorld3D* World = GetWorld();
         JPH::PhysicsSystem& System = World->GetSystem();
         JPH::BodyInterface& BodyInterface = System.GetBodyInterface();
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         const JPH::Quat NewRotation = JPH::Quat::sEulerAngles(Rotation.Apply(Math::Radians));
         BodyInterface.SetRotation(BodyHandle->GetID(), NewRotation, JPH::EActivation::Activate);
     }
@@ -71,7 +71,7 @@ namespace Hydro
         const PhysicsWorld3D* World = GetWorld();
         const JPH::PhysicsSystem& System = World->GetSystem();
         const JPH::BodyInterface& BodyInterface = System.GetBodyInterface();
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         return Vector3(BodyInterface.GetRotation(BodyHandle->GetID()).GetEulerAngles()).Apply(Math::Degrees);
     }
 
@@ -80,56 +80,56 @@ namespace Hydro
         PhysicsWorld3D* World = GetWorld();
         JPH::PhysicsSystem& System = World->GetSystem();
         JPH::BodyInterface& BodyInterface = System.GetBodyInterface();
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         const JPH::Quat NewRotation = JPH::Quat::sEulerAngles(Rotation.Apply(Math::Radians));
         BodyInterface.SetPositionAndRotation(BodyHandle->GetID(), Position, NewRotation, JPH::EActivation::Activate);
     }
 
     void PhysicsBody3D::SetGravityScale(f32 Scale)
     {
-        Body* BodyHandle = GetHandle();
+        JPH::Body* BodyHandle = GetHandle();
         JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         MotionProperties->SetGravityFactor(Scale);
     }
 
     void PhysicsBody3D::SetLinearVelocity(const Vector3& Velocity)
     {
-        Body* BodyHandle = GetHandle();
+        JPH::Body* BodyHandle = GetHandle();
         JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         MotionProperties->SetLinearVelocity(Velocity);
     }
 
     void PhysicsBody3D::SetAngularVelocity(const Vector3& AngularVelocity)
     {
-        Body* BodyHandle = GetHandle();
+        JPH::Body* BodyHandle = GetHandle();
         JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         MotionProperties->SetAngularVelocity(AngularVelocity);
     }
 
     void PhysicsBody3D::SetLinearDamping(f32 LinearDamping)
     {
-        Body* BodyHandle = GetHandle();
+        JPH::Body* BodyHandle = GetHandle();
         JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         MotionProperties->SetLinearDamping(LinearDamping);
     }
 
     void PhysicsBody3D::SetAngularDamping(f32 AngularDamping)
     {
-        Body* BodyHandle = GetHandle();
+        JPH::Body* BodyHandle = GetHandle();
         JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         MotionProperties->SetAngularDamping(AngularDamping);
     }
 
     f32 PhysicsBody3D::GetGravityScale() const
     {
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         const JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         return MotionProperties->GetGravityFactor();
     }
 
     Vector3 PhysicsBody3D::GetLinearVelocity() const
     {
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         const JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         return MotionProperties->GetLinearVelocity();
     }
@@ -137,7 +137,7 @@ namespace Hydro
 
     Vector3 PhysicsBody3D::GetLinearVelocityPoint(const Vector3& Point) const
     {
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         const JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         return MotionProperties->GetPointVelocityCOM(Point);
     }
@@ -145,46 +145,46 @@ namespace Hydro
 
     Vector3 PhysicsBody3D::GetAngularVelocity() const
     {
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         const JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         return MotionProperties->GetAngularVelocity();
     }
 
     f32 PhysicsBody3D::GetLinearDamping() const
     {
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         const JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         return MotionProperties->GetLinearDamping();
     }
 
     f32 PhysicsBody3D::GetAngularDamping() const
     {
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         const JPH::MotionProperties* MotionProperties = BodyHandle->GetMotionProperties();
         return MotionProperties->GetAngularDamping();
     }
 
     void PhysicsBody3D::AddForce(const Vector3& Force)
     {
-        Body* BodyHandle = GetHandle();
+        JPH::Body* BodyHandle = GetHandle();
         BodyHandle->AddForce(Force);
     }
 
     void PhysicsBody3D::AddImpulse(const Vector3& Force)
     {
-        Body* BodyHandle = GetHandle();
+        JPH::Body* BodyHandle = GetHandle();
         BodyHandle->AddImpulse(Force);
     }
 
     void PhysicsBody3D::AddForceAtPosition(const Vector3& Position, const Vector3& Force)
     {
-        Body* BodyHandle = GetHandle();
+        JPH::Body* BodyHandle = GetHandle();
         BodyHandle->AddForce(Force, Position);
     }
 
     void PhysicsBody3D::AddImpulseAtPosition(const Vector3& Position, const Vector3& Force)
     {
-        Body* BodyHandle = GetHandle();
+        JPH::Body* BodyHandle = GetHandle();
         BodyHandle->AddImpulse(Force, Position);
     }
 
@@ -207,7 +207,7 @@ namespace Hydro
     void PhysicsBody3D::SetMaterial(const PhysicsMaterial& Material)
     {
         m_Material = Material;
-        Body* BodyHandle = GetHandle();
+        JPH::Body* BodyHandle = GetHandle();
         BodyHandle->SetFriction(m_Material.Friction);
         BodyHandle->SetRestitution(m_Material.Bounciness);
     }
@@ -223,7 +223,7 @@ namespace Hydro
         PhysicsWorld3D* World = GetWorld();
         JPH::PhysicsSystem& System = World->GetSystem();
         JPH::BodyInterface& Interface = System.GetBodyInterface();
-        const Body* BodyHandle = GetHandle();
+        const JPH::Body* BodyHandle = GetHandle();
         Interface.SetMotionType(BodyHandle->GetID(), (JPH::EMotionType)m_Type, JPH::EActivation::Activate);
     }
 
@@ -235,7 +235,7 @@ namespace Hydro
     void PhysicsBody3D::SetIsSensor(bool Sensor)
     {
         m_IsSensor = Sensor;
-        Body* BodyHandle = GetHandle();
+        JPH::Body* BodyHandle = GetHandle();
         BodyHandle->SetIsSensor(m_IsSensor);
     }
 }

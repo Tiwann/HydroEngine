@@ -240,6 +240,11 @@ void b2Contact::Update(b2ContactListener* listener)
 		listener->BeginContact(this);
 	}
 
+	if (wasTouching == true && touching == true && listener)
+	{
+		listener->PersistContact(this);
+	}
+
 	if (wasTouching == true && touching == false && listener)
 	{
 		listener->EndContact(this);

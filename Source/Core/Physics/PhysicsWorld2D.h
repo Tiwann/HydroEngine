@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "Core/Shape2DContactListener.h"
 #include "Core/Physics/PhysicsWorld.h"
 
 class b2World;
@@ -18,9 +17,9 @@ namespace Hydro
         void Step(f32 TimeStep) override;
         void OnDestroy() override;
         
-        void OnContactBegin(PhysicsContact2D* Contact) override;
-        void OnContactEnd(PhysicsContact2D* Contact) override;
-        
+        void OnContactBegin(const PhysicsContact2D* Contact) override;
+        void OnContactStay(const PhysicsContact2D* Contact) override;
+        void OnContactEnd(const PhysicsContact2D* Contact) override;
         
         PhysicsBody2D* CreateBody(const PhysicsBodyDefinition& Definition, const PhysicsMaterial& Material) override;
         void DestroyBody(PhysicsBody2D* Body) override;

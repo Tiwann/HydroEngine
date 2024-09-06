@@ -9,8 +9,9 @@ namespace Hydro
 {
     struct PhysicsMaterial;
     class PhysicsWorld2D;
+    struct PhysicsContactInfo2D;
     
-    class PhysicsBody2D : public PhysicsBody<PhysicsShape2D, PhysicsWorld2D, b2Body>
+    class PhysicsBody2D : public PhysicsBody<PhysicsShape2D, PhysicsWorld2D, b2Body, PhysicsContactInfo2D>
     {
     public:
         PhysicsBody2D(b2Body* Handle, PhysicsWorld2D& World);

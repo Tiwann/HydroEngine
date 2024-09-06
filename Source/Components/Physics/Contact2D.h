@@ -6,10 +6,10 @@ namespace Hydro
 {
     class RigidBody2D;
     
-    struct Collision2D
+    struct Contact2D
     {
         Vector2 ImpactPoint;
         Vector2 Normal;
-        Ref<RigidBody2D> OtherCollider;
+        Ref<RigidBody2D> Other;
     };
 }

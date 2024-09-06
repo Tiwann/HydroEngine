@@ -3,14 +3,15 @@
 #include "PhysicsMaterial.h"
 #include "PhysicsBodyType.h"
 #include "PhysicsConstraints.h"
+#include "Core/MulticastDelegate.h"
 
 namespace Hydro
 {
-    template<typename ShapeBase, typename WorldBase, typename BodyHandle>
+    template<typename ShapeBase, typename WorldBase, typename BodyHandle, typename ContactInfoBase>
     class PhysicsBody
     {
     public:
-        using Body = BodyHandle;
+        using ContactDelegate = MulticastDelegate<void(const ContactInfoBase&)>;
         friend WorldBase;
         
         explicit PhysicsBody(BodyHandle* Handle, WorldBase& World) : m_Handle(Handle), m_World(&World){ }
@@ -19,7 +20,10 @@ namespace Hydro
         PhysicsBody(PhysicsBody&&) noexcept = delete;
         PhysicsBody& operator=(const PhysicsBody&) = delete;
         PhysicsBody& operator=(PhysicsBody&&) noexcept = delete;
-        
+
+        ContactDelegate OnContactBeginEvent;
+        ContactDelegate OnContactStayEvent;
+        ContactDelegate OnContactEndEvent;
         
         virtual void CreatePhysicsState(ShapeBase* Shape, const PhysicsMaterial& Material)
         {
@@ -66,8 +70,8 @@ namespace Hydro
         virtual bool IsSensor() = 0;
         virtual void SetIsSensor(bool Sensor) = 0;
 
-        virtual void SetColliding(bool Colliding) { m_IsColliding = Colliding; }
-        virtual bool IsColliding() const { return m_IsColliding; }
+
+        bool IsColliding() const { return m_IsColliding; }
 
         BodyHandle* GetHandle() { return m_Handle; }
         const BodyHandle* GetHandle() const { return m_Handle; }
@@ -88,6 +92,5 @@ namespace Hydro
         BodyHandle* m_Handle = nullptr;
         WorldBase* m_World = nullptr;
         ShapeBase* m_Shape = nullptr;
-        void* m_UserPointer = nullptr;
     };
 }

@@ -3,12 +3,12 @@
 
 namespace Hydro
 {
-    struct Collision3D;
+    struct Contact3D;
     struct PhysicsMaterial;
     class PhysicsBody3D;
     class PhysicsShape3D;
     
-    class RigidBody3D : public PhysicsComponentInterface<PhysicsBody3D, PhysicsShape3D, Collision3D>
+    class RigidBody3D : public PhysicsComponentInterface<PhysicsBody3D, PhysicsShape3D, Contact3D>
     {
     public:
         friend class Entity;

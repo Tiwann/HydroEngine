@@ -47,11 +47,10 @@ namespace Hydro
     class PhysicsComponentInterface : public PhysicsComponent
     {
     public:
-        using CollisionDelegate = MulticastDelegate<void(const CollisionType&)>;
-        CollisionDelegate OnCollisionEnterEvent;
-        CollisionDelegate OnCollisionStayEvent;
-        CollisionDelegate OnCollisionExitEvent;
-        
+        using ContactDelegate = MulticastDelegate<void(const CollisionType&)>;
+        ContactDelegate OnContactBeginEvent;
+        ContactDelegate OnContactStayEvent;
+        ContactDelegate OnContactEndEvent;
     protected:
         PhysicsComponentInterface(Entity* Owner, const std::string& Name = "Physics Component") : PhysicsComponent(Owner, Name){}
         virtual ShapeBase* CreateShape(Ref<Transform> EntityTransform) = 0;
@@ -64,9 +63,12 @@ namespace Hydro
         virtual void SetConstraints(PhysicsConstraintsFlags Constraints) = 0;
         virtual bool IsSensor() const = 0;
         virtual void SetSensor(bool Sensor) = 0;
+        
         virtual PhysicsBodyType GetPhysicsBodyType() const = 0;
         virtual void SetPhysicsBodyType(PhysicsBodyType Type) = 0;
 
+
+        
         void OnRender(const Ref<RendererBackend>& Renderer) override
         {
             if(m_ShowCollisions)

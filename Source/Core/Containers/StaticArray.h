@@ -114,7 +114,7 @@ namespace Hydro
                 m_Data[i] = Value;
         }
         
-        Array<T*> Where(const Predicate& Predicate)
+        Array<T*> Where(const Predicate& Predicate) const
         {
             if(!Predicate) return {};
             Array<T*> Result;
@@ -126,7 +126,7 @@ namespace Hydro
             return Result;
         }
 
-        T* Single(const Predicate& Predicate)
+        T* Single(const Predicate& Predicate) const
         {
             if(!Predicate) return nullptr;
             for(SizeType i = 0; i < N; ++i)

@@ -1,5 +1,7 @@
 ﻿#include "PhysicsWorld2DContactListener.h"
 #include "PhysicsWorld2D.h"
+#include "PhysicsContact2D.h"
+#include <box2d/b2_contact.h>
 
 namespace Hydro
 {
@@ -15,23 +17,32 @@ namespace Hydro
         PhysicsBody2D* BodyA = (PhysicsBody2D*)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
         PhysicsBody2D* BodyB = (PhysicsBody2D*)contact->GetFixtureB()->GetBody()->GetUserData().pointer;
         
-        PhysicsContact2D* Contact = new PhysicsContact2D<b2Contact>;
-        Contact->World = m_World;
-        Contact->BodyA = BodyA;
-        Contact->BodyB = BodyB;
-        Contact->ContactData = contact;
-        m_World->OnContactBegin(BodyA, BodyB);
-        delete Contact;
+        const PhysicsContact2D Contact = PhysicsContact2D(m_World, BodyA, BodyB, contact);
+        m_World->OnContactBegin(&Contact);
     }
 
-    void PhysicsWorld2DContactListener::EndContact(b2Contact* contact)
+    void PhysicsWorld2DContactListener::PersistContact(b2Contact* contact)
     {
         if(!contact->IsTouching())
             return;
         
         PhysicsBody2D* BodyA = (PhysicsBody2D*)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
         PhysicsBody2D* BodyB = (PhysicsBody2D*)contact->GetFixtureB()->GetBody()->GetUserData().pointer;
-        m_World->OnContactEnd(BodyA, BodyB);
+        
+        const PhysicsContact2D Contact = PhysicsContact2D(m_World, BodyA, BodyB, contact);
+        m_World->OnContactStay(&Contact);
+    }
+
+    void PhysicsWorld2DContactListener::EndContact(b2Contact* contact)
+    {
+        if(contact->IsTouching())
+            return;
+        
+        PhysicsBody2D* BodyA = (PhysicsBody2D*)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
+        PhysicsBody2D* BodyB = (PhysicsBody2D*)contact->GetFixtureB()->GetBody()->GetUserData().pointer;
+        
+        const PhysicsContact2D Contact = PhysicsContact2D(m_World, BodyA, BodyB, contact);
+        m_World->OnContactEnd(&Contact);
     }
 }
 

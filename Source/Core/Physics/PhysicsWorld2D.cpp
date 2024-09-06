@@ -1,15 +1,19 @@
-﻿#include "Core/Physics/PhysicsWorld2D.h"
-#include "Core/Physics/PhysicsBody2D.h"
-#include "Core/Physics/Physics2D.h"
+﻿#include "PhysicsWorld2D.h"
+#include "PhysicsBody2D.h"
+#include "Physics2D.h"
 #include "PhysicsWorld2DContactListener.h"
+#include "PhysicsContact2D.h"
+
 #include "Core/Time.h"
 #include "Math/Functions.h"
-#include <box2d/b2_world.h>
-#include <box2d/b2_body.h>
-
-#include "PhysicsContact2D.h"
 #include "Core/Log.h"
 #include "Core/LogVerbosity.h"
+
+#include <box2d/b2_world.h>
+#include <box2d/b2_body.h>
+#include <box2d/b2_contact.h>
+
+#include "PhysicsContactInfo2D.h"
 
 namespace Hydro
 {
@@ -31,67 +35,89 @@ namespace Hydro
         delete m_World;
     }
 
-    void PhysicsWorld2D::OnContactBegin(PhysicsContact2D* Contact)
+    void PhysicsWorld2D::OnContactBegin(const PhysicsContact2D* Contact)
     {
-        if(Contact->BodyA->IsSensor() || Contact->BodyB->IsSensor()) return;
+        PhysicsBody2D* BodyA = Contact->BodyA;
+        PhysicsBody2D* BodyB = Contact->BodyB;
+        if(BodyA->IsSensor() || BodyB->IsSensor()) return;
             
         b2WorldManifold WorldManifold;
         Contact->Handle->GetWorldManifold(&WorldManifold);
 
+        PhysicsContactInfo2D ContactInfoA;
+        ContactInfoA.Point = (Vector2)WorldManifold.points[0];
+        ContactInfoA.Normal = (Vector2)-WorldManifold.normal;
+        ContactInfoA.OtherBody = BodyB;
+        BodyA->m_IsColliding = true;
+        BodyA->OnContactBeginEvent.Broadcast(ContactInfoA);
+        
+        PhysicsContactInfo2D ContactInfoB;
+        ContactInfoB.Point = (Vector2)WorldManifold.points[1];
+        ContactInfoB.Normal = (Vector2)WorldManifold.normal;
+        ContactInfoB.OtherBody = BodyA;
+        BodyB->m_IsColliding = true;
+        BodyB->OnContactBeginEvent.Broadcast(ContactInfoB);
+    }
+
+    void PhysicsWorld2D::OnContactStay(const PhysicsContact2D* Contact)
+    {
         PhysicsBody2D* BodyA = Contact->BodyA;
         PhysicsBody2D* BodyB = Contact->BodyB;
-                
-        Collision2D Collision2DA{};
-        Collision2DA.ImpactPoint = WorldManifold.points[0];
-        Collision2DA.Normal = WorldManifold.normal;
-        if(!BodyA->m_IsColliding)
-        {
-            ColliderA->OnCollisionEnterEvent.Broadcast(Collision2DA);
-            BodyA->m_IsColliding = true;
-        } else
-        {
-            ColliderA->OnCollisionStayEvent.Broadcast(Collision2DA);
-        }
+        if(BodyA->IsSensor() || BodyB->IsSensor()) return;
+            
+        b2WorldManifold WorldManifold;
+        Contact->Handle->GetWorldManifold(&WorldManifold);
 
-        Collision2D Collision2DB{};
-        Collision2DB.ImpactPoint = WorldManifold.points[1];
-        Collision2DB.Normal = -WorldManifold.normal;
-        if(!ColliderB->IsColliding)
-        {
-            ColliderB->OnCollisionEnterEvent.Broadcast(Collision2DB);
-            ColliderB->IsColliding = true;
-        } else
-        {
-            ColliderB->OnCollisionStayEvent.Broadcast(Collision2DB);
-        }
-    }
-
-    void PhysicsWorld2D::OnContactEnd(PhysicsContact2D* Contact)
-    {
-    }
-
-    /*void PhysicsWorld2D::OnContactBegin(PhysicsBody2D* BodyA, PhysicsBody2D* BodyB)
-    {
-        HYDRO_LOG(Physics2D, Verbosity::Info, "Contact between two bodies started!");
-
+        PhysicsContactInfo2D ContactInfoA;
+        ContactInfoA.Point = (Vector2)WorldManifold.points[0];
+        ContactInfoA.Normal = (Vector2)-WorldManifold.normal;
+        ContactInfoA.OtherBody = BodyB;
+        BodyA->m_IsColliding = true;
+        BodyA->OnContactStayEvent.Broadcast(ContactInfoA);
         
+        PhysicsContactInfo2D ContactInfoB;
+        ContactInfoB.Point = (Vector2)WorldManifold.points[1];
+        ContactInfoB.Normal = (Vector2)WorldManifold.normal;
+        ContactInfoB.OtherBody = BodyA;
+        BodyB->m_IsColliding = true;
+        BodyB->OnContactStayEvent.Broadcast(ContactInfoB);
     }
 
-    void PhysicsWorld2D::OnContactEnd(PhysicsBody2D* BodyA, PhysicsBody2D* BodyB)
+    void PhysicsWorld2D::OnContactEnd(const PhysicsContact2D* Contact)
     {
-        HYDRO_LOG(Physics2D, Verbosity::Info, "Contact between two bodies ended!");
-    }
-    */
+        PhysicsBody2D* BodyA = Contact->BodyA;
+        PhysicsBody2D* BodyB = Contact->BodyB;
+        if(BodyA->IsSensor() || BodyB->IsSensor()) return;
+            
+        b2WorldManifold WorldManifold;
+        Contact->Handle->GetWorldManifold(&WorldManifold);
+                
+        PhysicsContactInfo2D ContactInfoA;
+        ContactInfoA.Point = (Vector2)WorldManifold.points[0];
+        ContactInfoA.Normal = (Vector2)-WorldManifold.normal;
+        ContactInfoA.OtherBody = BodyB;
+        BodyA->m_IsColliding = false;
+        BodyA->OnContactEndEvent.Broadcast(ContactInfoA);
 
+        PhysicsContactInfo2D ContactInfoB;
+        ContactInfoB.Point = (Vector2)WorldManifold.points[1];
+        ContactInfoB.Normal = (Vector2)WorldManifold.normal;
+        ContactInfoB.OtherBody = BodyA;
+        BodyB->m_IsColliding = false;
+        BodyB->OnContactEndEvent.Broadcast(ContactInfoB);
+    }
+
+    
     PhysicsBody2D* PhysicsWorld2D::CreateBody(const PhysicsBodyDefinition& Definition, const PhysicsMaterial& Material)
     {
-        b2BodyDef BodyDefinition{};
+        b2BodyDef BodyDefinition = {};
         BodyDefinition.position = (Vector2)Definition.Position;
         BodyDefinition.angle = Math::Radians(Definition.Rotation.z);
         BodyDefinition.type = (b2BodyType)Definition.Type;
         
         b2Body* BodyHandle = m_World->CreateBody(&BodyDefinition);
         PhysicsBody2D* CreatedBody = new PhysicsBody2D(BodyHandle, *this);
+        BodyHandle->GetUserData().pointer = (uintptr_t)CreatedBody;
         m_Bodies.Add(CreatedBody);
         return CreatedBody;
     }

@@ -40,7 +40,7 @@ namespace Hydro
 		{
 			m_Subscribers.RemoveAll(Subscriber);
 		}
-
+		
 		void operator-=(DelegateType Subscriber)
 		{
 			Unbind(Subscriber);

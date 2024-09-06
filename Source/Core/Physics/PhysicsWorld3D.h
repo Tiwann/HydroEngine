@@ -10,6 +10,8 @@ namespace Hydro
 {
     class PhysicsBody3D;
     class PhysicsShape3D;
+    struct PhysicsContact3D;
+    class PhysicsWorld3DContactListener;
 
     class TempAllocator : public JPH::TempAllocator
     {
@@ -19,13 +21,17 @@ namespace Hydro
         void Free(void* inAddress, JPH::uint inSize) override;
     };
     
-    class PhysicsWorld3D : public PhysicsWorld<PhysicsBody3D, PhysicsShape3D>
+    class PhysicsWorld3D : public PhysicsWorld<PhysicsBody3D, PhysicsShape3D, PhysicsContact3D>
     {
     public:
         PhysicsWorld3D();
         void OnInit() override;
         void Step(f32 TimeStep) override;
         void OnDestroy() override;
+
+        void OnContactBegin(const PhysicsContact3D* Contact) override;
+        void OnContactStay(const PhysicsContact3D* Contact) override;
+        void OnContactEnd(const PhysicsContact3D* Contact) override;
 
         PhysicsBody3D* CreateBody(const PhysicsBodyDefinition& Definition, const PhysicsMaterial& Material) override;
         void DestroyBody(PhysicsBody3D* Body) override;
@@ -38,5 +44,7 @@ namespace Hydro
         JPH::TempAllocatorImpl m_TempAllocator;
         JPH::JobSystemThreadPool m_JobSystem;
         JPH::PhysicsSystem m_System;
+
+        PhysicsWorld3DContactListener* m_ContactListener = nullptr;
     };
 }

@@ -6,6 +6,7 @@
 
 #include <initializer_list>
 #include <algorithm>
+#include <functional>
 
 namespace Hydro
 {
@@ -22,6 +23,9 @@ namespace Hydro
         using ForwardType = T&&;
         using Iterator = Iterator<T>;
         using ConstIterator = ConstIterator<T>;
+        using Predicate = std::function<bool(ConstReferenceType)>;
+        template<typename Out>
+        using Selector = std::function<Out*(ReferenceType)>;
         
         Array()
         {
@@ -254,6 +258,43 @@ namespace Hydro
         void Clear()
         {
             m_Count = 0;
+        }
+
+        // Return an array of pointer to elements of type T, inside m_Data, where each element satisfy Predicate
+        Array<T*> Where(const Predicate& Predicate) const
+        {
+            if(!Predicate) return {};
+            Array<T*> Result;
+            for(SizeType i = 0; i < m_Count; ++i)
+            {
+                if(Predicate(m_Data[i]))
+                    Result.Add(&m_Data[i]);
+            }
+            return Result;
+        }
+
+        // Return a pointer to first elements of type T, inside m_Data, which satisfy Predicate
+        T* Single(const Predicate& Predicate) const
+        {
+            if(!Predicate) return nullptr;
+            for(SizeType i = 0; i < m_Count; ++i)
+            {
+                if(Predicate(m_Data[i]))
+                    return &m_Data[i];
+            }
+            return nullptr;
+        }
+
+        template<typename Out>
+        Array<Out*> Select(const Selector<Out>& Selector) const
+        {
+            if(!Selector) return {};
+            Array<Out*> Result;
+            for(SizeType i = 0; i < m_Count; ++i)
+            {
+                Result.Add(Selector(m_Data[i]));
+            }
+            return Result;
         }
 
         bool IsEmpty() const { return m_Count == 0; }
