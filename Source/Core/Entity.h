@@ -39,6 +39,18 @@ namespace Hydro
             return nullptr;
         }
 
+        template<typename T>
+        Array<Ref<T>> GetAllComponents() const
+        {
+            Array<Ref<T>> Result;
+            for(Ref<Component> Component : m_Components)
+            {
+                if(Ref<T> CastedComponent = Cast<T>(Component))
+                    Result.Add(CastedComponent);
+            }
+            return Result;
+        }
+
         template<typename T, typename Traits = std::enable_if_t<std::is_base_of_v<Component, T>>>
         Ref<T> GetComponentInChildren() const
         {
