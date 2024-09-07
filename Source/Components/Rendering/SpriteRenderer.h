@@ -17,7 +17,7 @@ namespace Hydro
     class Shader;
     class Texture2D;
 
-    enum class SpriteRendererFlagBit
+    enum class SpriteRendererFlagBit : u8
     {
         None,
         HYDRO_FLAG_BIT(TileWithScale, 1),
