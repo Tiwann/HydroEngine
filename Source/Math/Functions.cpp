@@ -181,4 +181,9 @@ namespace Hydro
     {
         return Val - IntegerPart(Val);
     }
+
+    bool Math::IsBetween(f32 Val, f32 Min, f32 Max)
+    {
+        return Val >= Min && Val <= Max;
+    }
 }

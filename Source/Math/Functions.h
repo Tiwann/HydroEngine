@@ -81,6 +81,7 @@ namespace Hydro
         static f32 SmoothDamp(f32 Current, f32 Target, f32& CurrentVelocity, f32 SmoothTime,  f32 Delta, f32 MaxSpeed = Infinity);
         static i32 IntegerPart(f32 Val);
         static f32 DecimalPart(f32 Val);
+        static bool IsBetween(f32 Val, f32 Min, f32 Max);
         
         static class Matrix2 Rotate(const Matrix2& Mat, f32 Radians);
         static Matrix2 RotateDegrees(const Matrix2& Mat, f32 Degrees);
