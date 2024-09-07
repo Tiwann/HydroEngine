@@ -26,6 +26,9 @@ namespace Hydro
         f32* ValuePtr();
         f32 Dot(const Vector2& Vec) const;
 
+        static f32 Dot(const Vector2& VecA, const Vector2& VecB);
+        static f32 Angle(const Vector2& VecA, const Vector2& VecB);
+
         Vector2 WithX(f32 X) const;
         Vector2 WithY(f32 Y) const;
         Vector2 Normalized() const;

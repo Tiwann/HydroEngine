@@ -52,6 +52,16 @@ namespace Hydro
         return x * Vec.x + y * Vec.y;
     }
 
+    f32 Vector2::Dot(const Vector2& VecA, const Vector2& VecB)
+    {
+        return VecA.Dot(VecB);
+    }
+
+    f32 Vector2::Angle(const Vector2& VecA, const Vector2& VecB)
+    {
+        return Math::Acos(VecA.Dot(VecB) / (VecA.Magnitude() * VecB.Magnitude()));
+    }
+
     Vector2 Vector2::WithX(f32 X) const
     {
         return {X, y};
