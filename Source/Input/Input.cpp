@@ -3,8 +3,13 @@
 #include "Core/Window.h"
 #include "Math/Vector2.h"
 
+#include <GLFW/glfw3.h>
+
 namespace Hydro
 {
+    StaticArray<GLFWgamepadstate, HYDRO_MAX_GAMEPADS> Input::s_GamepadStates;
+    StaticArray<GLFWgamepadstate, HYDRO_MAX_GAMEPADS> Input::s_LastGamepadStates;
+    
     bool Input::GetKeyDown(const KeyCode KeyCode)
     {
         return s_KeyStates[KeyCode] == InputState::Pressed;

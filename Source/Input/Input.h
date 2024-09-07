@@ -7,15 +7,15 @@
 #include "Core/Buffer.h"
 #include "Core/Containers/String.h"
 #include "Core/Containers/Map.h"
-#include "Core/Buffer.h"
 #include "Core/LogCategory.h"
-#include <GLFW/glfw3.h>
 
 
-constexpr int HYDRO_MAX_GAMEPADS = 16;
+
+constexpr i32 HYDRO_MAX_GAMEPADS = 16;
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(Input, "INPUT")
 
+struct GLFWgamepadstate;
 
 namespace Hydro
 {
@@ -50,8 +50,8 @@ namespace Hydro
         inline static Map<KeyCode, InputState> s_KeyStates;
         inline static Map<MouseButton, InputState> s_MouseButtonStates;
 
-        inline static StaticArray<GLFWgamepadstate, HYDRO_MAX_GAMEPADS> s_GamepadStates;
-        inline static StaticArray<GLFWgamepadstate, HYDRO_MAX_GAMEPADS> s_LastGamepadStates;
+        static StaticArray<GLFWgamepadstate, HYDRO_MAX_GAMEPADS> s_GamepadStates;
+        static StaticArray<GLFWgamepadstate, HYDRO_MAX_GAMEPADS> s_LastGamepadStates;
         inline static StaticArray<StaticArray<InputState, 15>, HYDRO_MAX_GAMEPADS> s_GamepadButtons;
         inline static StaticArray<StaticArray<float, 6>, HYDRO_MAX_GAMEPADS> s_GamepadAxes;
         
