@@ -13,8 +13,7 @@
 #include "Core/VertexBufferLayout.h"
 #include "Editor/EditorGUI.h"
 #include "ResourceManager/TextureManager.h"
-
-
+#include "Core/Utility.h"
 namespace Hydro
 {
     SpriteRenderer::SpriteRenderer(Entity* Owner)
@@ -43,6 +42,7 @@ namespace Hydro
         m_VertexArray.reset();
     }
 
+    
     void SpriteRenderer::OnRender(const Ref<RendererBackend>& Renderer)
     {
         Renderer::OnRender(Renderer);
@@ -54,11 +54,22 @@ namespace Hydro
         const f32 Width = m_Sprite.GetTexture()->GetSize().x;
         const f32 Height = m_Sprite.GetTexture()->GetSize().y;
         
-        const Vector2 Uv0 = {Position.x / Width, (Position.y + Size.y) / Height};
-        const Vector2 Uv1 = {(Position.x + Size.x) / Width, (Position.y + Size.y) / Height};
-        const Vector2 Uv2 = {(Position.x + Size.x) / Width, Position.y / Height};
-        const Vector2 Uv3 = {Position.x / Width, Position.y / Height};
+        Vector2 Uv0 = {Position.x / Width, (Position.y + Size.y) / Height};
+        Vector2 Uv1 = {(Position.x + Size.x) / Width, (Position.y + Size.y) / Height};
+        Vector2 Uv2 = {(Position.x + Size.x) / Width, Position.y / Height};
+        Vector2 Uv3 = {Position.x / Width, Position.y / Height};
 
+        if(Flags.Contains(SpriteRendererFlagBit::FlipHorizontal))
+        {
+            Swap(Uv0, Uv1);
+            Swap(Uv2, Uv3); 
+        }
+
+        if(Flags.Contains(SpriteRendererFlagBit::FlipVertical))
+        {
+            Swap(Uv0, Uv2);
+            Swap(Uv1, Uv3);
+        }
          
         StaticArray<Vertex, 4> SpriteVertices = {
             {{-0.5f, +0.5f, 0.0f}, Uv0, Vector3::Zero, Color::White},
@@ -71,33 +82,19 @@ namespace Hydro
         m_VertexBuffer->SendData(SpriteVertices.Data(), SpriteVertices.Count());
         m_VertexArray->SetBufferLayout(VertexBufferLayout::Default);
         
-        
         m_Shader->Bind();
         m_Shader->SetUniformMat4("uModel", GetTransform()->GetWorldSpaceMatrix());
 
         if(m_Sprite.GetTexture())
         {
-            const Vector2 TextureSize = m_Sprite.GetTexture()->GetSize();
-            const f32 AspectRatio = TextureSize.x / TextureSize.y;
-            
-            const Vector2 NewSize = TextureSize.x < TextureSize.y
-                ? Vector2(1.0f, AspectRatio)
-                : Vector2(AspectRatio, 1.0f);
-
-            const Matrix3 SpriteScale = Flags.Contains(SpriteRendererFlagBit::NormalizeSize)
-            ? Math::Scale(Matrix3::Identity, NewSize)
-            : Math::Scale(Matrix3::Identity, m_Sprite.GetSize() / (f32)m_PixelsPerUnit);
-            
+            const Matrix3 SpriteScale = Math::Scale(Matrix3::Identity, m_Sprite.GetSize() / (f32)m_PixelsPerUnit);
             m_Shader->SetUniformMat3("uSpriteScale", SpriteScale);
             m_Shader->SetUniformTexture("uTexture", m_Sprite.GetTexture());
         }
         
         
         const Vector2 Tiling = Flags.Contains(SpriteRendererFlagBit::TileWithScale) ? (Vector2)GetTransform()->GetScale() : m_Tiling;
-        const Vector2 HorizontalTiling = Flags.Contains(SpriteRendererFlagBit::FlipHorizontal) ? Vector2(-1.0f, 1.0f) : Vector2(1.0f, 1.0f);
-        const Vector2 VerticalTiling = Flags.Contains(SpriteRendererFlagBit::FlipVertical) ? Vector2(1.0f, -1.0f) : Vector2(1.0f, 1.0f);
-        const Vector2 FinalTiling = Tiling * HorizontalTiling * VerticalTiling;
-        m_Shader->SetUniformFloat2("uTiling", FinalTiling);
+        m_Shader->SetUniformFloat2("uTiling", Tiling);
         m_Shader->SetUniformFloat4("uColorTint", m_ColorTint);
         
         Renderer->DrawIndexed(DrawMode::Triangles, m_VertexArray, m_VertexBuffer, m_IndexBuffer, m_Shader);

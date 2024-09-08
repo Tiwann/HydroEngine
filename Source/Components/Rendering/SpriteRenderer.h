@@ -23,8 +23,7 @@ namespace Hydro
         HYDRO_FLAG_BIT(TileWithScale, 1),
         HYDRO_FLAG_BIT(FlipHorizontal, 2),
         HYDRO_FLAG_BIT(FlipVertical, 3),
-        HYDRO_FLAG_BIT(NormalizeSize, 4),
-        All = TileWithScale | FlipHorizontal | FlipVertical | NormalizeSize
+        All = TileWithScale | FlipHorizontal | FlipVertical
     };
 
     HYDRO_DECLARE_FLAGS(SpriteRendererFlagBit, SpriteRendererFlags);
