@@ -34,7 +34,7 @@ namespace Hydro
     public:
         using CallableBaseType = CallableBase<Ret, Args...>;
         using PointerType = Ret(*)(Args...);
-        template<class Class> using MemberPointer = Ret(Class::*)(Args...);
+        template<class Class> using MemberPointerType = Ret(Class::*)(Args...);
         
         Function() = default;
         
@@ -42,13 +42,18 @@ namespace Hydro
         Function(FunctionType&& Func) : m_Callable(std::make_shared<Callable<FunctionType, Ret, Args...>>(std::forward<FunctionType>(Func))) {}
 
         
-        Ret Call(Args&&... Arguments)
+        Ret Call(Args&&... Arguments) const
+        {
+            return m_Callable->Invoke(std::forward<Args>(Arguments)...);
+        }
+
+        Ret operator()(Args&&... Arguments) const
         {
             return m_Callable->Invoke(std::forward<Args>(Arguments)...);
         }
 
         template<class Class>
-        void BindMember(Class* Instance, MemberPointer<Class> Member)
+        void BindMember(Class* Instance, MemberPointerType<Class> Member)
         {
             const auto Lambda = [Instance, Member](Args... Arguments) -> Ret
             {
