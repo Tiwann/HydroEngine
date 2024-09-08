@@ -220,12 +220,13 @@ namespace Hydro
 
     Vector2 Input::GetGamepadStick(size_t ID, GamepadThumbstick Thumbstick)
     {
+        Vector2 Axis;
         switch (Thumbstick)
         {
-        case GamepadThumbstick::Left: return {s_GamepadAxes[ID][0], -s_GamepadAxes[ID][1]};
-        case GamepadThumbstick::Right: return {s_GamepadAxes[ID][2], -s_GamepadAxes[ID][3]};
+        case GamepadThumbstick::Left: Axis = {s_GamepadAxes[ID][0], -s_GamepadAxes[ID][1]}; break;
+        case GamepadThumbstick::Right: Axis = {s_GamepadAxes[ID][2], -s_GamepadAxes[ID][3]}; break;
         }
-        return Vector2::Zero;
+        return Axis.Magnitude() < HYDRO_GAMEPAD_DEADZONE ? Vector2::Zero : Axis;
     }
 
     float Input::GetGamepadLeftShoulder(size_t ID)

@@ -10,8 +10,8 @@
 #include "Core/LogCategory.h"
 
 
-
 constexpr i32 HYDRO_MAX_GAMEPADS = 16;
+constexpr f32 HYDRO_GAMEPAD_DEADZONE = 0.05f;
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(Input, "INPUT")
 
