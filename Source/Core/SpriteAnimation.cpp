@@ -30,17 +30,17 @@ namespace Hydro
 
     void SpriteAnimation::ClearSprites()
     {
-        m_Sprites.clear();
+        m_Sprites.Clear();
     }
 
     void SpriteAnimation::AddSprite(const Sprite& Sprite)
     {
-        m_Sprites.push_back(Sprite);
+        m_Sprites.Add(Sprite);
     }
 
-    size_t SpriteAnimation::Count()
+    size_t SpriteAnimation::Count() const
     {
-        return m_Sprites.size();
+        return m_Sprites.Count();
     }
 
     Sprite& SpriteAnimation::GetSprite(size_t Index)

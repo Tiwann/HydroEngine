@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Filesystem.h"
 #include "SharedPointer.h"
+#include "Core/Containers/DynamicArray.h"
 
 namespace Hydro
 {
@@ -9,6 +10,7 @@ namespace Hydro
     class SpriteAnimation
     {
     public:
+        using SpriteArray = Array<Sprite>;
         SpriteAnimation() = default;
 
         static Ref<SpriteAnimation> Create();
@@ -16,10 +18,10 @@ namespace Hydro
         static Ref<SpriteAnimation> CreateFromDirectory(const Path& Directory);
         void ClearSprites();
         void AddSprite(const Sprite& Sprite);
-        size_t Count();
+        SpriteArray::SizeType Count() const;
         Sprite& GetSprite(size_t Index);
         
     private:
-        std::vector<Sprite> m_Sprites;
+        SpriteArray m_Sprites;
     };
 }
