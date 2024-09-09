@@ -1,11 +1,11 @@
 #pragma once
 #include "Core/Iterator.h"
 #include "Core/Assertion.h"
-#include "Core/NumericTypes.h"
+#include "Core/Containers/Function.h"
+
 
 #include <initializer_list>
 #include <algorithm>
-#include <functional>
 
 #include "DynamicArray.h"
 
@@ -23,9 +23,9 @@ namespace Hydro
         using Iterator = Iterator<T>;
         using ConstIterator = ConstIterator<T>;
         using SizeType = size_t;
-        using Predicate = std::function<bool(ConstReferenceType)>;
+        using Predicate = Function<bool(ConstReferenceType)>;
         template<typename Out>
-        using Selector = std::function<Out*(ReferenceType)>;
+        using Selector = Function<Out*(ReferenceType)>;
         
         StaticArray()
         {

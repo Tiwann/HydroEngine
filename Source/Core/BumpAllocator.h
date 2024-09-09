@@ -1,8 +1,8 @@
 ﻿#pragma once
 #include "Containers/StaticArray.h"
+#include "Containers/Function.h"
 #include "Assertion.h"
 #include "Macros.h"
-#include <functional>
 
 namespace Hydro
 {
@@ -17,6 +17,7 @@ namespace Hydro
         using ConstPointerType = typename ArrayType::ConstPointerType;
         using ReferenceType = typename ArrayType::ReferenceType;
         using ConstReferenceType = typename ArrayType::ConstReferenceType;
+        using Predicate = Function<bool(ConstReferenceType)>;
         static constexpr u32 UninitializedValue = HYDRO_UNINITIALIZED;
 
         BumpAllocator()
@@ -27,7 +28,7 @@ namespace Hydro
 
         ~BumpAllocator()
         {
-            for (const Array<T*> All = GetAllValid(); T* Element : All)
+            for (const Array<PointerType> All = GetAllValid(); PointerType Element : All)
             {
                 Free(Element);
             }
@@ -62,9 +63,9 @@ namespace Hydro
             return m_Count;
         }
 
-        Array<T*> GetAllValid()
+        Array<PointerType> GetAllValid()
         {
-            Array<T*> Result;
+            Array<PointerType> Result;
             for(SizeType i = 0; i < Size; ++i)
             {
                 if(!m_AvailableFlags[i])
@@ -73,25 +74,25 @@ namespace Hydro
             return Result;
         }
 
-        T* Single(const std::function<bool(const T*)>& Predicate)
+        PointerType Single(const Predicate& Predicate)
         {
             for(SizeType i = 0; i < Size; ++i)
             {
                 if(!m_AvailableFlags[i])
                 {
-                    if(Predicate(&m_Data[i]))
+                    if(Predicate(m_Data[i]))
                         return &m_Data[i];
                 }
             }
             return nullptr;
         }
 
-        Array<T*> Where(const std::function<bool(const T*)>& Predicate)
+        Array<PointerType> Where(const Predicate& Predicate)
         {
-            Array<T*> Result;
+            Array<PointerType> Result;
             for(SizeType i = 0; i < Size; ++i)
             {
-                if(!m_AvailableFlags[i] && Predicate(&m_Data[i]))
+                if(!m_AvailableFlags[i] && Predicate(m_Data[i]))
                     Result.Add(&m_Data[i]);
             }
             return Result;

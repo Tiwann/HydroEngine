@@ -2,6 +2,8 @@
 #include "Core/SharedPointer.h"
 #include <utility>
 
+#include "Core/NumericTypes.h"
+
 namespace Hydro
 {
     template<typename Ret, typename... Args>
@@ -37,17 +39,18 @@ namespace Hydro
         template<class Class> using MemberPointerType = Ret(Class::*)(Args...);
         
         Function() = default;
+        Function(nulltype Null) : m_Callable(Null) {}
         
         template<typename FunctionType>
         Function(FunctionType&& Func) : m_Callable(std::make_shared<Callable<FunctionType, Ret, Args...>>(std::forward<FunctionType>(Func))) {}
 
         
-        Ret Call(Args&&... Arguments) const
+        Ret Call(Args... Arguments) const
         {
             return m_Callable->Invoke(std::forward<Args>(Arguments)...);
         }
 
-        Ret operator()(Args&&... Arguments) const
+        Ret operator()(Args... Arguments) const
         {
             return m_Callable->Invoke(std::forward<Args>(Arguments)...);
         }

@@ -3,10 +3,13 @@
 #include "Core/Assertion.h"
 #include "Core/Memory.h"
 #include "Math/Functions.h"
+#include "Function.h"
 
 #include <initializer_list>
 #include <algorithm>
-#include <functional>
+
+
+
 
 namespace Hydro
 {
@@ -23,9 +26,9 @@ namespace Hydro
         using ForwardType = T&&;
         using Iterator = Iterator<T>;
         using ConstIterator = ConstIterator<T>;
-        using Predicate = std::function<bool(ConstReferenceType)>;
+        using Predicate = Function<bool(ConstReferenceType)>;
         template<typename Out>
-        using Selector = std::function<Out*(ReferenceType)>;
+        using Selector = Function<Out*(ReferenceType)>;
         
         Array()
         {

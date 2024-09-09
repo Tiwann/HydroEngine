@@ -70,7 +70,7 @@ namespace Hydro
         m_Elements.Pop();
     }
 
-    void XmlWriter::Element(const String& Name, const AttributeType& Attributes, const std::function<void()>& Content)
+    void XmlWriter::Element(const String& Name, const AttributeType& Attributes, const Function<void()>& Content)
     {
         if(!Content)
         {

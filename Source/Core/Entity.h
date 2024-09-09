@@ -6,6 +6,7 @@
 #include "LogCategory.h"
 #include "LogVerbosity.h"
 #include "MulticastDelegate.h"
+#include "Core/Containers/Function.h"
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(Entity, "Entity")
 
@@ -18,9 +19,11 @@ namespace Hydro
     
     class Entity : public std::enable_shared_from_this<Entity>
     {
-        using Iterator = Array<Ref<Component>>::Iterator;
-        using ConstIterator = Array<Ref<Component>>::ConstIterator;
     public:
+        using ComponentArray = Array<Ref<Component>>;
+        using Iterator = ComponentArray::Iterator;
+        using ConstIterator = ComponentArray::ConstIterator;
+        
         friend class Scene;
         friend class Application;
         Entity(std::string Name, Scene* Owner);
@@ -116,7 +119,7 @@ namespace Hydro
         ConstIterator begin() const { return m_Components.begin(); }
         ConstIterator end() const { return m_Components.end(); }
 
-        void ForEach(const std::function<void(Ref<Component>)>& Delegate) const
+        void ForEach(const Function<void(Ref<Component>)>& Delegate) const
         {
             for(const auto& Component : m_Components)
             {

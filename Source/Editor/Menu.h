@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Containers/String.h"
-#include <functional>
+#include "Core/Containers/Function.h"
 
 namespace Hydro
 {
@@ -8,7 +8,7 @@ namespace Hydro
     {
         String Name;
         bool* Selected = nullptr;
-        std::function<void()> Callback = nullptr;
+        Function<void()> Callback = nullptr;
         bool Enabled = true;
     };
 }

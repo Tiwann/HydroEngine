@@ -2,7 +2,7 @@
 #include "Stream.h"
 #include "Core/Containers/String.h"
 #include "Core/Containers/Map.h"
-#include <functional>
+#include "Core/Containers/Function.h"
 
 namespace Hydro
 {
@@ -14,7 +14,7 @@ namespace Hydro
         static XmlSettings Default;
     };
     
-    class XmlWriter final
+    class XmlWriter
     {
     public:
         using AttributeType = Map<String, String>;
@@ -26,7 +26,7 @@ namespace Hydro
         void BeginElement(const String& Name, const AttributeType& Attributes);
         void ElementInline(const String& Name, const AttributeType& Attributes) const;
         void EndElement();
-        void Element(const String& Name, const AttributeType& Attributes, const std::function<void()>& Content = nullptr);
+        void Element(const String& Name, const AttributeType& Attributes, const Function<void()>& Content = nullptr);
         void Write(const String& Value) const;
     private:
         Stream* m_Stream;

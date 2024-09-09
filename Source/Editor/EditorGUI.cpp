@@ -12,7 +12,7 @@
 
 namespace Hydro::UI
 {
-    void NewWindow(const StringView Label, bool& Opened, WindowFlags Flags, const std::function<void()>& Content)
+    void NewWindow(const StringView Label, bool& Opened, WindowFlags Flags, const Function<void()>& Content)
     {
         if(!Opened) return;
         if(ImGui::Begin(Label, &Opened, Flags.As<ImGuiWindowFlags>()))

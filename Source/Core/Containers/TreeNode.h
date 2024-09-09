@@ -1,7 +1,6 @@
 #pragma once
-#include "Core/Iterator.h"
-#include <functional>
-#include <vector>
+#include "Core/Containers/Function.h"
+#include "Core/Containers/DynamicArray.h"
 #include <optional>
 
 namespace Hydro
@@ -10,43 +9,44 @@ namespace Hydro
     class TreeNode
     {
     public:
-        using TreeNodeIterator = Iterator<TreeNode>;
-        using TreeNodeConstIterator = ConstIterator<TreeNode>;
+        using TreeNodeArray = Array<TreeNode>;
+        using TreeNodeIterator = typename TreeNodeArray::Iterator;
+        using TreeNodeConstIterator = typename TreeNodeArray::ConstIterator;
         
         TreeNode() = default;
         TreeNode(const TreeNodeType& Value) : m_Value(Value){}
 
         TreeNode& AddChild(const TreeNodeType& Child)
         {
-            m_Children.push_back({Child});
-            TreeNode& ChildNode = m_Children[m_Children.size() - 1];
+            m_Children.Add({Child});
+            TreeNode& ChildNode = m_Children.Last();
             ChildNode.m_Parent = this;
             return ChildNode;
         }
 
-        void ForEach(std::function<void(const TreeNode& Node)> Delegate) const
+        void ForEach(Function<void(const TreeNode& Node)> Delegate) const
         {
             for (const auto & Child : m_Children)
                 Delegate(Child);
         }
         
-        bool HasChildren() const { return !m_Children.empty(); }
+        bool HasChildren() const { return !m_Children.IsEmpty(); }
         bool HasParent() const { return m_Parent; }
         TreeNode& GetParent() const { return *m_Parent; }
-        std::vector<TreeNode>& GetChildren() const { return m_Children; }
+        TreeNodeArray& GetChildren() const { return m_Children; }
 
         bool IsRoot() const { return !HasParent() && !m_Value.has_value(); }
 
         const TreeNodeType& GetValue() const { return m_Value.value(); }
         
-        TreeNodeIterator begin() { return TreeNodeIterator(m_Children.data()); }
-        TreeNodeIterator end() { return TreeNodeIterator(m_Children.data() + m_Children.size()); }
-        TreeNodeConstIterator begin() const { return TreeNodeConstIterator(const_cast<TreeNode*>(m_Children.data())); }
-        TreeNodeConstIterator end() const { return TreeNodeConstIterator(const_cast<TreeNode*>(m_Children.data()) + m_Children.size()); }
+        TreeNodeIterator begin() { return m_Children.begin(); }
+        TreeNodeIterator end() { return m_Children.end(); }
+        TreeNodeConstIterator begin() const { return m_Children.begin(); }
+        TreeNodeConstIterator end() const { return m_Children.end(); }
 
     private:
         std::optional<TreeNodeType> m_Value;
         TreeNode* m_Parent = nullptr;
-        std::vector<TreeNode> m_Children;
+        TreeNodeArray m_Children;
     };
 }

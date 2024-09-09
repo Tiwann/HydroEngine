@@ -7,7 +7,7 @@
 #include "Core/Containers/StringView.h"
 #include "Input/MouseButton.h"
 #include "Math/LinearAlgebra.h"
-#include <functional>
+#include "Core/Containers/Function.h"
 
 
 namespace Hydro
@@ -111,7 +111,7 @@ namespace Hydro
     namespace UI
     {
         /* Window */
-        void NewWindow(StringView Label, bool& Opened, WindowFlags Flags, const std::function<void()>& Content);
+        void NewWindow(StringView Label, bool& Opened, WindowFlags Flags, const Function<void()>& Content);
         
         /* Text */
         void Text(const StringView Str);

@@ -4,6 +4,7 @@
 #include "Core/Log.h"
 #include "GUID.h"
 #include "Entity.h"
+#include "Containers/Function.h"
 
 #include "Core/Physics/PhysicsWorld2D.h"
 #include "Core/Physics/PhysicsWorld3D.h"
@@ -39,11 +40,11 @@ namespace Hydro
             return Cast<T>(Entity);
         }
 
-        void ForEach(const std::function<void(Ref<Entity>)>& Delegate) const
+        void ForEach(const Function<void(Ref<Entity>)>& Delegate)
         {
             for(const auto& Entity : m_Entities)
             {
-                Delegate(Entity);
+                Delegate.Call(Entity);
             }
         }
         Iterator begin() { return m_Entities.begin(); }
