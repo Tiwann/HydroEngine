@@ -133,6 +133,7 @@ namespace Hydro
             return true;
         }
 
+        bool IsEmpty() const { return m_Count == 0; }
 
         CharacterType* Data() { return m_Data; }
         const CharacterType* Data() const { return m_Data; }
@@ -244,27 +245,6 @@ namespace Hydro
     using String32 = StringBase<char32_t>;
     using WideString = StringBase<wchar_t>;
 }
-
-#include <spdlog/fmt/bundled/core.h>
-#include <spdlog/fmt/bundled/format.h>
-
-namespace Hydro
-{
-    template <typename... Args>
-    String Format(fmt::format_string<Args...> Fmt, Args&&... Arguments)
-    {
-        return fmt::vformat(Fmt, fmt::make_format_args(Arguments...)).c_str();
-    }
-}
-
-template<>
-struct fmt::formatter<Hydro::String> : formatter<string_view>
-{
-    fmt::format_context::iterator format(const Hydro::String& Str, format_context& Context) const
-    {
-        return fmt::formatter<string_view>::format(string_view(Str.Data(), Str.Count()), Context);
-    }
-};
 
 
 

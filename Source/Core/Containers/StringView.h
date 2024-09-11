@@ -46,16 +46,3 @@ namespace Hydro
     using StringView32 = StringViewBase<char32_t>;
     using WideStringView = StringViewBase<wchar_t>;
 }
-
-
-#include <spdlog/fmt/bundled/core.h>
-#include <spdlog/fmt/bundled/format.h>
-
-template<>
-struct fmt::formatter<Hydro::StringView> : formatter<string_view>
-{
-    fmt::format_context::iterator format(const Hydro::StringView& Str, format_context& Context) const
-    {
-        return fmt::formatter<string_view>::format(string_view(Str.Data(), Str.Count()), Context);
-    }
-};

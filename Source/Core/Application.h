@@ -12,6 +12,7 @@
 #include "Input/InputState.h"
 #include "Input/KeyCode.h"
 #include "Input/MouseButton.h"
+#include "Core/Containers/String.h"
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(Application, "APPLICATION");
 
@@ -100,7 +101,7 @@ namespace Hydro
         void SetCursorVisible(bool Visible) const;
         
         template<typename T = Entity, typename = std::enable_if_t<std::is_base_of_v<Entity, T>>>
-        Ref<T> CreateEntity(const std::string& Name) const
+        Ref<T> CreateEntity(const String& Name) const
         {
             return m_Scene->CreateEntity<T>(Name);
         }

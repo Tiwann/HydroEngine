@@ -33,8 +33,8 @@ namespace Hydro
         return m_Values;
     }
 
-    /* From ChatGPT */ 
-    std::string GUID::GetString() const
+    /* From ChatGPT */
+    String GUID::GetString() const
     {
         std::stringstream ss;
         ss << std::hex << std::setfill('0');
@@ -45,6 +45,6 @@ namespace Hydro
         ss << std::setw(12) << (m_Values[1] & 0xFFFFFFFFFFFF);
         std::string Result = ss.str();
         std::ranges::transform(Result, Result.begin(), [](const char c) -> char { return (char)std::toupper(c); });
-        return Result;
+        return Result.data();
     }
 }

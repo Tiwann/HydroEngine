@@ -1,8 +1,4 @@
 #include "SoundEmitter.h"
-
-#include <fmod/fmod.hpp>
-#include <miniaudio/miniaudio.h>
-
 #include "Components/Transform.h"
 #include "Audio/AudioSystem.h"
 #include "Audio/Sound.h"
@@ -10,6 +6,11 @@
 #include "Core/PopupMessage.h"
 #include "Components/Physics/PhysicsComponent.h"
 #include "Editor/EditorGUI.h"
+#include "Core/Containers/String.h"
+#include "Core/Containers/StringFormat.h"
+
+#include <fmod/fmod.hpp>
+#include <miniaudio/miniaudio.h>
 
 
 static constexpr char ComponentName[14] = "Sound Emitter";
@@ -90,7 +91,7 @@ namespace Hydro
 
         if (ImGui::TreeNode("Sound"))
         {
-            const std::string GUID = m_Sound ? m_Sound->GetGuid().GetString() : "None";
+            const String GUID = m_Sound ? m_Sound->GetGuid().GetString() : "None";
             UI::Text(Format("GUID: {}", GUID));
             if(m_Sound)
             {

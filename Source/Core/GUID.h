@@ -1,7 +1,6 @@
 #pragma once
 #include "Core/NumericTypes.h"
-#include <string>
-
+#include "Containers/String.h"
 namespace Hydro
 {
     class GUID
@@ -11,7 +10,7 @@ namespace Hydro
         GUID(const GUID& Guid);
         GUID(u64 Low, u64 High);
         const u64* GetValues() const;
-        std::string GetString() const;
+        String GetString() const;
     private:
         u64 m_Values[2] = {};
     };

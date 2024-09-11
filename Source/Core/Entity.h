@@ -5,8 +5,8 @@
 #include "Log.h"
 #include "LogCategory.h"
 #include "LogVerbosity.h"
-#include "MulticastDelegate.h"
 #include "Core/Containers/Function.h"
+#include "Core/Containers/String.h"
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(Entity, "Entity")
 
@@ -26,10 +26,10 @@ namespace Hydro
         
         friend class Scene;
         friend class Application;
-        Entity(std::string Name, Scene* Owner);
+        Entity(String Name, Scene* Owner);
         virtual ~Entity() = default;
 
-        void SetName(const std::string& Name);
+        
 
         template<typename T>
         Ref<T> GetComponent() const
@@ -111,7 +111,9 @@ namespace Hydro
 
         const Scene& GetScene() const;
         Scene& GetScene();
-        const std::string& GetName() const { return m_Name; }
+
+        void SetName(const String& Name);
+        const String& GetName() const { return m_Name; }
 
         
         Iterator begin() { return m_Components.begin(); }
@@ -138,7 +140,7 @@ namespace Hydro
         void SetEnabled(bool Enabled);
 
         GUID m_Guid;
-        std::string m_Name;
+        String m_Name;
         Array<Ref<Component>> m_Components;
         bool m_Enabled;
         Array<Ref<Entity>> m_Children;

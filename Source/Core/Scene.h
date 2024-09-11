@@ -5,6 +5,7 @@
 #include "GUID.h"
 #include "Entity.h"
 #include "Containers/Function.h"
+#include "Containers/String.h"
 
 #include "Core/Physics/PhysicsWorld2D.h"
 #include "Core/Physics/PhysicsWorld3D.h"
@@ -32,7 +33,7 @@ namespace Hydro
         void OnDestroy();
         
         template<typename T = Entity, typename = std::enable_if_t<std::is_base_of_v<Entity, T>>>
-        Ref<T> CreateEntity(const std::string& Name)
+        Ref<T> CreateEntity(const String& Name)
         {
             const Ref<Entity> Entity = CreateRef<T>(Name, this);
             Entity->OnInit();

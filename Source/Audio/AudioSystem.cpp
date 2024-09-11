@@ -2,11 +2,10 @@
 #include "Core/Flags.h"
 #include "Core/Log.h"
 #include "Core/LogVerbosity.h"
+#include "Core/Containers/String.h"
 
 #include <fmod/fmod.hpp>
 #include <fmod/fmod_errors.h>
-
-#include "Core/Containers/String.h"
 
 
 #define FMOD_FAILED(Result) (Result) != FMOD_RESULT::FMOD_OK
@@ -14,7 +13,7 @@
 #define FMOD_CHECK(Result) \
     if(FMOD_FAILED((Result))) \
     { \
-        std::string Error = FMOD_ErrorString((Result)); \
+        String Error = FMOD_ErrorString((Result)); \
         HYDRO_LOG(AudioEngine, Verbosity::Error, "Failed to create audio engine: {}", Error); \
         return false; \
     }((void)0)

@@ -1,8 +1,8 @@
 #include "DetailsPanel.h"
-
 #include "EditorGUI.h"
 #include "Selection.h"
 #include "Core/Scene.h"
+#include "Core/Containers/StringFormat.h"
 
 namespace Hydro
 {
@@ -20,7 +20,7 @@ namespace Hydro
             if (!SelectedEntity) return;
 
             char Buffer[256] = {};
-            std::ranges::copy(SelectedEntity->GetName(), Buffer);
+            std::copy(SelectedEntity->GetName().begin(), SelectedEntity->GetName().end(), Buffer);
 
             ImGui::PushID(SelectedEntity->GetGuid());
             ImGui::PushItemWidth(200);

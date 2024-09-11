@@ -1,9 +1,8 @@
 #include "Log.h"
-
-#include "spdlog/logger.h"
-#include "spdlog/pattern_formatter.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
 #include "LogCategoryFormatter.h"
+#include <spdlog/logger.h>
+#include <spdlog/pattern_formatter.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace Hydro
 {

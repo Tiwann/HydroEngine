@@ -27,7 +27,6 @@
 #include "Editor/EditorGUI.h"
 #include "Editor/Selection.h"
 #include "Serialization/ApplicationConfigurationSerializer.h"
-#include "Serialization/SceneSerializer.h"
 
 #include <GLFW/glfw3.h>
 #include <glad/gl.h>
@@ -268,8 +267,7 @@ namespace Hydro
 
     bool Application::SaveSceneAs(const Path& Filepath)
     {
-        SceneSerializer Serializer;
-        return Serializer.Serialize(m_Scene, Filepath);
+        return false;
     }
 
     bool Application::OpenScene(const Path& Filepath)

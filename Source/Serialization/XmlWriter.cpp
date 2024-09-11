@@ -1,5 +1,6 @@
 ﻿#include "XmlWriter.h"
 #include "Core/Assertion.h"
+#include "Core/Containers/StringFormat.h"
 
 namespace Hydro
 {

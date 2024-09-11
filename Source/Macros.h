@@ -79,7 +79,7 @@
 
 #define HYDRO_ENUM_FMT(EnumClass, FormatFunc)\
 template<> \
-struct fmt::formatter<EnumClass> : formatter<string_view> \
+struct fmt::formatter<EnumClass> : fmt::formatter<string_view> \
 { \
     fmt::format_context::iterator format(const EnumClass& Enum, format_context& Context) const \
     { \

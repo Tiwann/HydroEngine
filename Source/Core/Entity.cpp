@@ -1,18 +1,16 @@
 ﻿#include "Entity.h"
-
 #include "Application.h"
 #include "Scene.h"
 #include "Components/Transform.h"
-#include "Components/Rendering/Renderer.h"
 
 namespace Hydro
 {
-    Entity::Entity(std::string Name, Scene* Owner) : m_Name(std::move(Name)), m_Scene(Owner)
+    Entity::Entity(String Name, Scene* Owner) : m_Name(std::move(Name)), m_Scene(Owner)
     {
         m_Transform = AddComponent<Transform>();
     }
 
-    void Entity::SetName(const std::string& Name)
+    void Entity::SetName(const String& Name)
     {
         m_Name = Name;
     }

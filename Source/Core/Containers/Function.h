@@ -1,8 +1,8 @@
 ﻿#pragma once
 #include "Core/SharedPointer.h"
+#include "Core/NumericTypes.h"
 #include <utility>
 
-#include "Core/NumericTypes.h"
 
 namespace Hydro
 {
@@ -39,7 +39,7 @@ namespace Hydro
         template<class Class> using MemberPointerType = Ret(Class::*)(Args...);
         
         Function() = default;
-        Function(nulltype Null) : m_Callable(Null) {}
+        Function(decltype(nullptr)&& Null) : m_Callable(Null) {}
         
         template<typename FunctionType>
         Function(FunctionType&& Func) : m_Callable(std::make_shared<Callable<FunctionType, Ret, Args...>>(std::forward<FunctionType>(Func))) {}

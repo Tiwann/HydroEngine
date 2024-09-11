@@ -20,7 +20,7 @@ namespace Hydro
 
     static void DrawEntity(const Ref<Entity>& Entity)
     {
-        const char* Name = Entity->GetName().empty() ? "##" : Entity->GetName().c_str();
+        const char* Name = Entity->GetName().IsEmpty() ? "##" : *Entity->GetName();
         
         if(ImGui::TreeNode(Name))
         {
@@ -52,7 +52,7 @@ namespace Hydro
                 DrawEntity(Entity);
                 if(UI::ItemClicked(MouseButton::Left))
                 {
-                    HYDRO_LOG(SceneHierarchyPanel, Verbosity::Warning, "Item Cliked: {}", Entity->GetName().c_str());
+                    HYDRO_LOG(SceneHierarchyPanel, Verbosity::Warning, "Item Clicked: {}", Entity->GetName());
                     Selection::SetEntity(Entity);
                 }
 

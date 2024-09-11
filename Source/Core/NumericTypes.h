@@ -13,8 +13,6 @@ using u64 = unsigned long long;
 using f32 = float;
 using f64 = double;
 
-using nulltype = decltype(nullptr);
-
 
 constexpr i8  I8_MAX = 0x7Fi8;
 constexpr i8  I8_MIN = -I8_MAX - 1;

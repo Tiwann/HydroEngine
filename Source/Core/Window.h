@@ -22,8 +22,6 @@ namespace Hydro
         Window(const std::string& name, u32 width, u32 height, bool resizable);
         ~Window();
         
-
-
         static Ref<Window> Create(const std::string& name, u32 width, u32 height, bool resizable);
         const GLFWwindow* GetNativeWindow() const;
         GLFWwindow* GetNativeWindow();

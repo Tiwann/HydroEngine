@@ -1,7 +1,7 @@
 #pragma once
 #include "SharedPointer.h"
+
 #include <spdlog/logger.h>
-#include "Macros.h"
 #include <string>
 
 #if defined(HYDRO_CORE)
@@ -32,6 +32,7 @@
     #endif
 #endif
 
+
 namespace Hydro
 {
     class Log
@@ -47,6 +48,4 @@ namespace Hydro
         static Ref<spdlog::logger> s_CoreLogger;
         static Ref<spdlog::logger> s_ClientLogger;
     };
-    
-    
 }
