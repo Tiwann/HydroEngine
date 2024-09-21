@@ -22,7 +22,7 @@ namespace Hydro
 
     i32 Random::Integer(i32 Min, i32 Max)
     {
-        std::uniform_int_distribution Distribution(Min, Max);
+        std::uniform_int_distribution Distribution(Min, Max - 1);
         return Distribution(s_RandomDevice);
     }
 
