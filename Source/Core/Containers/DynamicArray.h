@@ -8,9 +8,6 @@
 #include <initializer_list>
 #include <algorithm>
 
-
-
-
 namespace Hydro
 {
     template<typename T>
@@ -29,6 +26,9 @@ namespace Hydro
         using Predicate = Function<bool(ConstReferenceType)>;
         template<typename Out>
         using Selector = Function<Out*(ReferenceType)>;
+
+        template<typename Out>
+        using ConstSelector = Function<const Out*(ReferenceType)>;
         
         Array()
         {
@@ -264,10 +264,10 @@ namespace Hydro
         }
 
         // Return an array of pointer to elements of type T, inside m_Data, where each element satisfy Predicate
-        Array<T*> Where(const Predicate& Predicate) const
+        Array<PointerType> Where(const Predicate& Predicate) const
         {
             if(!Predicate) return {};
-            Array<T*> Result;
+            Array<PointerType> Result;
             for(SizeType i = 0; i < m_Count; ++i)
             {
                 if(Predicate(m_Data[i]))
@@ -277,7 +277,7 @@ namespace Hydro
         }
 
         // Return a pointer to first elements of type T, inside m_Data, which satisfy Predicate
-        T* Single(const Predicate& Predicate) const
+        PointerType Single(const Predicate& Predicate) const
         {
             if(!Predicate) return nullptr;
             for(SizeType i = 0; i < m_Count; ++i)

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "DynamicArray.h"
+#include <initializer_list>
 
 namespace Hydro
 {
@@ -12,9 +13,16 @@ namespace Hydro
         using ConstReferenceType = typename ArrayType::ConstReferenceType;
         using SizeType = typename ArrayType::SizeType;
         using ConstIterator = typename ArrayType::ConstIterator;
+        
+        using Predicate = typename ArrayType::Predicate;
+        
+        template<typename Out>
+        using ConstSelector = typename ArrayType::template ConstSelector<Out>;
+        
     public:
         ArrayView() : m_Data(nullptr), m_Count(0) {}
         ArrayView(const ArrayType& Arr) : m_Data(Arr.Data()), m_Count(Arr.Count()){}
+        explicit ArrayView(const std::initializer_list<T>& List) : m_Data(List.begin()), m_Count(List.size()){}
         ArrayView(const ArrayView&) = default;
         ArrayView(ArrayView&&) noexcept = default;
         ArrayView& operator=(const ArrayView&) = default;
@@ -26,12 +34,46 @@ namespace Hydro
 
         ConstIterator begin() const { return m_Data; }
         ConstIterator end() const { return m_Data + m_Count; }
-
         ConstReferenceType operator[](SizeType Index) const { return m_Data[Index]; }
 
         bool operator==(const ArrayView& other) const
         {
             return m_Data == other.m_Data && m_Count == other.m_Count;
+        }
+
+        Array<ConstPointerType> Where(const Predicate& Predicate) const
+        {
+            if(!Predicate) return {};
+            Array<ConstReferenceType> Result;
+            for(SizeType i = 0; i < m_Count; ++i)
+            {
+                if(Predicate(m_Data[i]))
+                    Result.Add(&m_Data[i]);
+            }
+            return Result;
+        }
+
+        ConstPointerType Single(const Predicate& Predicate) const
+        {
+            if(!Predicate) return nullptr;
+            for(SizeType i = 0; i < m_Count; ++i)
+            {
+                if(Predicate(m_Data[i]))
+                    return &m_Data[i];
+            }
+            return nullptr;
+        }
+
+        template<typename Out>
+        Array<const Out*> Select(const ConstSelector<Out>& Selector) const
+        {
+            if(!Selector) return {};
+            Array<const Out*> Result;
+            for(SizeType i = 0; i < m_Count; ++i)
+            {
+                Result.Add(Selector(m_Data[i]));
+            }
+            return Result;
         }
     private:
         ConstPointerType m_Data = nullptr;
