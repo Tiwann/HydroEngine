@@ -41,6 +41,8 @@ namespace Hydro
         static inline MulticastDelegate<void()> OnExit;
         static inline MulticastDelegate<void()> OnFrameBegin;
         static inline MulticastDelegate<void()> OnFrameEnd;
+        static inline MulticastDelegate<void(Path const&)> OnSceneSaveEvent;
+        static inline MulticastDelegate<void(Path const&)> OnSceneLoadEvent;
 
         using KeyDelegate = MulticastDelegate<void(KeyCode, InputState)>;
         static inline KeyDelegate OnKeyEvent;
@@ -75,9 +77,6 @@ namespace Hydro
         virtual void OnRender(const Ref<RendererBackend>& Renderer);
         virtual void OnUpdate(f32 Delta);
         virtual void OnGui();
-
-        bool SaveSceneAs(const Path& Filepath);
-        bool OpenScene(const Path& Filepath);
 
         virtual ApplicationConfiguration CreateConfiguration(ApplicationConfigurationSerializer& Serializer) const = 0;
         
