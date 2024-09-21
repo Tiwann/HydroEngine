@@ -42,6 +42,16 @@
         </Expand>
     </Type>
 
+    <Type Name="Hydro::StringViewBase&lt;*,*&gt;">
+        <DisplayString>{m_Data}</DisplayString>
+        <Expand>
+            <ArrayItems>
+                <Size>m_Count</Size>
+                <ValuePointer>m_Data</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>
+
     <!-- Hydro::BufferView<T> -->
     <Type Name="Hydro::BufferView&lt;*&gt;">
         <DisplayString>{{Count = {m_Count}}}</DisplayString>
