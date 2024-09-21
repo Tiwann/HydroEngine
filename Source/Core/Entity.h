@@ -7,6 +7,7 @@
 #include "LogVerbosity.h"
 #include "Core/Containers/Function.h"
 #include "Core/Containers/String.h"
+#include "Core/Containers/StringFormat.h"
 
 HYDRO_DECLARE_LOG_CATEGORY_STATIC(Entity, "Entity")
 
@@ -28,9 +29,7 @@ namespace Hydro
         friend class Application;
         Entity(String Name, Scene* Owner);
         virtual ~Entity() = default;
-
         
-
         template<typename T>
         Ref<T> GetComponent() const
         {
