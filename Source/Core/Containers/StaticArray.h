@@ -2,12 +2,11 @@
 #include "Core/Iterator.h"
 #include "Core/Assertion.h"
 #include "Core/Containers/Function.h"
-
+#include "DynamicArray.h"
 
 #include <initializer_list>
 #include <algorithm>
 
-#include "DynamicArray.h"
 
 namespace Hydro
 {
@@ -63,31 +62,31 @@ namespace Hydro
 
         ReferenceType operator[](SizeType Index)
         {
-            HYDRO_ASSERT(Index <= N, "Index out of bounds");
+            HYDRO_ASSERT(Index < N, "Index out of bounds");
             return m_Data[Index];
         }
 
         ConstReferenceType operator[](SizeType Index) const
         {
-            HYDRO_ASSERT(Index <= N, "Index out of bounds");
+            HYDRO_ASSERT(Index < N, "Index out of bounds");
             return m_Data[Index];
         }
 
         void SetAt(SizeType Index, ConstReferenceType Element)
         {
-            HYDRO_ASSERT(Index <= N, "Index out of bounds");
+            HYDRO_ASSERT(Index < N, "Index out of bounds");
             m_Data[Index] = Element;
         }
 
         ReferenceType GetAt(SizeType Index)
         {
-            HYDRO_ASSERT(Index <= N, "Index out of bounds");
+            HYDRO_ASSERT(Index < N, "Index out of bounds");
             return m_Data[Index];
         }
 
         ConstReferenceType GetAt(SizeType Index) const
         {
-            HYDRO_ASSERT(Index <= N, "Index out of bounds");
+            HYDRO_ASSERT(Index < N, "Index out of bounds");
             return m_Data[Index];
         }
 
@@ -114,10 +113,10 @@ namespace Hydro
                 m_Data[i] = Value;
         }
         
-        Array<T*> Where(const Predicate& Predicate) const
+        Array<PointerType> Where(const Predicate& Predicate) const
         {
             if(!Predicate) return {};
-            Array<T*> Result;
+            Array<PointerType> Result;
             for(SizeType i = 0; i < N; ++i)
             {
                 if(Predicate(m_Data[i]))
@@ -126,7 +125,7 @@ namespace Hydro
             return Result;
         }
 
-        T* Single(const Predicate& Predicate) const
+        PointerType Single(const Predicate& Predicate) const
         {
             if(!Predicate) return nullptr;
             for(SizeType i = 0; i < N; ++i)
@@ -159,6 +158,7 @@ namespace Hydro
         PointerType Data() { return m_Data; }
 
         constexpr SizeType Count() const { return N; }
+        constexpr SizeType Size() const { return N * sizeof(T); }
 
         operator PointerType() { return m_Data; }
         operator ConstPointerType() const { return m_Data; }
