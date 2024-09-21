@@ -73,7 +73,7 @@ namespace Hydro
         Contact2D Contact;
         Contact.ImpactPoint = ContactInfo.Point;
         Contact.Normal = ContactInfo.Normal;
-        OnContactBeginEvent.Broadcast(Contact);
+        !m_PhysicsBody->IsSensor() ? OnContactBeginEvent.Broadcast(Contact) : OnTriggerBeginEvent.Broadcast(Contact);
     }
 
     void RigidBody2D::OnContactStay(const PhysicsContactInfo2D& ContactInfo)
@@ -81,7 +81,7 @@ namespace Hydro
         Contact2D Contact;
         Contact.ImpactPoint = ContactInfo.Point;
         Contact.Normal = ContactInfo.Normal;
-        OnContactStayEvent.Broadcast(Contact);
+        !m_PhysicsBody->IsSensor() ? OnContactStayEvent.Broadcast(Contact) : OnTriggerStayEvent.Broadcast(Contact);
     }
 
     void RigidBody2D::OnContactEnd(const PhysicsContactInfo2D& ContactInfo)
@@ -89,7 +89,7 @@ namespace Hydro
         Contact2D Contact;
         Contact.ImpactPoint = ContactInfo.Point;
         Contact.Normal = ContactInfo.Normal;
-        OnContactEndEvent.Broadcast(Contact);
+        !m_PhysicsBody->IsSensor() ? OnContactEndEvent.Broadcast(Contact) : OnTriggerEndEvent.Broadcast(Contact);
     }
 
     f32 RigidBody2D::GetGravityScale() const
