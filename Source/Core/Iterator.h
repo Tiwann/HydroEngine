@@ -15,7 +15,6 @@ namespace Hydro
         Iterator(PointerType Ptr) : m_Data(Ptr) {}
 
         Iterator& operator+(SizeType Count) { m_Data += Count; return *this; }
-        Iterator& operator-(SizeType Count) { m_Data -= Count; return *this; }
         
         Iterator& operator++() {  ++m_Data; return *this; }
         Iterator& operator--() {  ++m_Data; return *this; }
