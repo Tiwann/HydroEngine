@@ -48,9 +48,14 @@ namespace Hydro
     {
     public:
         using ContactDelegate = MulticastDelegate<void(const CollisionType&)>;
+        using TriggerDelegate = MulticastDelegate<void(const CollisionType&)>;
         ContactDelegate OnContactBeginEvent;
         ContactDelegate OnContactStayEvent;
         ContactDelegate OnContactEndEvent;
+
+        TriggerDelegate OnTriggerBeginEvent;
+        TriggerDelegate OnTriggerStayEvent;
+        TriggerDelegate OnTriggerEndEvent;
     protected:
         PhysicsComponentInterface(Entity* Owner, const std::string& Name = "Physics Component") : PhysicsComponent(Owner, Name){}
         virtual ShapeBase* CreateShape(Ref<Transform> EntityTransform) = 0;
