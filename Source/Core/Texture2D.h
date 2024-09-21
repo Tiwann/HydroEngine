@@ -52,9 +52,11 @@ namespace Hydro
         Texture2D(std::string Name, u32 Width, u32 Height, const TextureParams& Params, u32 Slot = 0);
         virtual ~Texture2D() = default;
 
+
         
         static Ref<Texture2D> Create(const std::string& Name, u32 Width, u32 Height, const TextureParams& Params, u32 Slot = 0);
         static Ref<Texture2D> CreateFromFile(const std::string& Name, const Path& Filepath, const TextureParams& Params, u32 Slot = 0);
+        static Ref<Texture2D> CreateWhiteTexture(u32 Width, u32 Height);
 
         virtual void SetTextureParameters(const TextureParams& Params) = 0;
         virtual void SetData(u8* Data, u32 Width, u32 Height, ImageFormat Format) = 0;

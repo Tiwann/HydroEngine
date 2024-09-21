@@ -29,10 +29,22 @@ namespace Hydro
     Ref<Texture2D> Texture2D::CreateFromFile(const std::string& Name, const Path& Filepath, const TextureParams& Params, u32 Slot)
     {
         Ref<Texture2D> Texture = Create(Name, 0, 0, Params, Slot);
-        ScopedBuffer RawImageData = File::ReadToBuffer(Filepath);
+        Buffer RawImageData = File::ReadToBuffer(Filepath);
         
-        const Ref<Image> ImageData = CreateRef<Image>(RawImageData.AsBuffer(), ImageFormat::RGBA8);
+        const Ref<Image> ImageData = Image::Create(BufferView(RawImageData), ImageFormat::RGBA8);
         Texture->SetData(ImageData);
+        return Texture;
+    }
+
+    Ref<Texture2D> Texture2D::CreateWhiteTexture(u32 Width, u32 Height)
+    {
+        constexpr auto Params = TextureParams(TextureFilter::Nearest, TextureWrap::Clamp);
+        Ref<Texture2D> Texture = Create("WhiteTexture", Width, Height, Params);
+        const size_t Size = (size_t)(Width * Height * 4);
+        u8* Data = new u8[Size]{};
+        memset(Data, 0xffui8, Size);
+        Texture->SetData(Data, Width, Height, ImageFormat::RGBA8);
+        delete[] Data;
         return Texture;
     }
 
