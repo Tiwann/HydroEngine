@@ -16,9 +16,8 @@ namespace Hydro
         using ConstIterator = typename StringType::ConstIterator;
     public:
         StringViewBase() = default;
-        StringViewBase(const StringType& Str) : m_Data(const_cast<PointerType>(Str.Data())), m_Count(Str.Count()){}
-        StringViewBase(ConstPointerType Data) : m_Data(const_cast<PointerType>(Data)), m_Count(StringLength(Data)){}
-        StringViewBase(PointerType Data) : m_Data(Data), m_Count(StringLength(Data)){}
+        StringViewBase(const StringType& Str) : m_Data(Str.Data()), m_Count(Str.Count()){}
+        StringViewBase(ConstPointerType Data) : m_Data(Data), m_Count(StringLength(Data)){}
         StringViewBase(const StringViewBase&) = default;
         StringViewBase(StringViewBase&&) noexcept = default;
         StringViewBase& operator=(const StringViewBase&) = default;
@@ -37,7 +36,7 @@ namespace Hydro
 
         operator const CharacterType*() const { return m_Data; }
     private:
-        PointerType m_Data = nullptr;
+        ConstPointerType m_Data = nullptr;
         SizeType m_Count = 0;
     };
 
