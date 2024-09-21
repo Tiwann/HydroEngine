@@ -76,7 +76,7 @@ namespace Hydro
     template<typename T>
     static constexpr bool IsVectorValue = IsVector<T>::Value;
     
-    template <bool Condition, typename T = void>
+    template <bool Condition, typename T>
     struct EnableIf {};
     
     template <typename T>
