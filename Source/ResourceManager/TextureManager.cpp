@@ -3,6 +3,7 @@
 #include "Core/Log.h"
 #include "Core/LogVerbosity.h"
 #include "Core/Texture2D.h"
+#include "Core/Containers/StringFormat.h"
 
 namespace Hydro
 {

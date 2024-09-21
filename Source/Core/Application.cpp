@@ -27,7 +27,7 @@
 #include "Editor/EditorGUI.h"
 #include "Editor/Selection.h"
 #include "Serialization/ApplicationConfigurationSerializer.h"
-
+#include "Core/Containers/StringFormat.h"
 #include <GLFW/glfw3.h>
 #include <glad/gl.h>
 
@@ -64,13 +64,13 @@ namespace Hydro
         File.AddChild({ "Open Scene" , nullptr, [this]
         {
             const Path Filepath = File::OpenFileDialog("Open Scene", "", HydroSceneFilter);
-            OpenScene(Filepath);
+            ApplicationDelegates::OnSceneLoadEvent.Broadcast(Filepath);
         }});
         File.AddChild({ "Save Scene" });
         File.AddChild({ "Save Scene As", nullptr, [this]
         {
             const Path Filepath = File::SaveFileDialog("Save scene as...", "", HydroSceneFilter);
-            SaveSceneAs(Filepath);
+            ApplicationDelegates::OnSceneSaveEvent.Broadcast(Filepath);
         }});
         File.AddChild({ "Exit", nullptr, [this]{ RequireExit(); } });
 
@@ -265,17 +265,7 @@ namespace Hydro
         ApplicationDelegates::OnExit.Broadcast();
     }
 
-    bool Application::SaveSceneAs(const Path& Filepath)
-    {
-        return false;
-    }
-
-    bool Application::OpenScene(const Path& Filepath)
-    {
-        return false;
-    }
-
-
+    
     const ApplicationConfiguration& Application::GetConfiguration() const
     {
         return m_Configuration;
@@ -480,7 +470,6 @@ namespace Hydro
         
         glfwSetKeyCallback(m_Window->GetNativeWindow(), [](GLFWwindow* window, int key, int, int action, int)
         {
-            const Application* App = (Application*)glfwGetWindowUserPointer(window);
             switch (action)
             {
             case GLFW_PRESS:
@@ -496,7 +485,6 @@ namespace Hydro
 
         glfwSetMouseButtonCallback(m_Window->GetNativeWindow(), [](GLFWwindow *window, int button, int action, int)
         {
-            const Application* App = (Application*)glfwGetWindowUserPointer(window);
             switch (action)
             {
             case GLFW_PRESS:

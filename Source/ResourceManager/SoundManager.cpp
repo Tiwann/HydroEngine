@@ -1,6 +1,7 @@
 #include "SoundManager.h"
 #include "Core/Application.h"
 #include "Audio/AudioSystem.h"
+#include "Core/Containers/StringFormat.h"
 
 
 namespace Hydro

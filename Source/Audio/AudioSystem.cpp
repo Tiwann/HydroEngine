@@ -3,6 +3,7 @@
 #include "Core/Log.h"
 #include "Core/LogVerbosity.h"
 #include "Core/Containers/String.h"
+#include "Core/Containers/StringFormat.h"
 
 #include <fmod/fmod.hpp>
 #include <fmod/fmod_errors.h>

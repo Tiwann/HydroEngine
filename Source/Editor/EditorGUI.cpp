@@ -1,13 +1,14 @@
 #include "EditorGUI.h"
 #include "StyleVar.h"
 #include "Core/Sprite.h"
+#include "Core/Containers/StringFormat.h"
+#include "Core/Application.h"
 #include "Components/Camera.h"
 #include "Components/Audio/SoundEmitter.h"
 #include "Components/Audio/SoundListener.h"
 #include "Components/Physics/Box2D.h"
 #include "Components/Physics/Circle2D.h"
 #include "Components/Rendering/SpriteRenderer.h"
-#include "Core/Application.h"
 #include "ResourceManager/TextureManager.h"
 
 namespace Hydro::UI

@@ -1,6 +1,7 @@
 ﻿#include "ShaderManager.h"
 #include "Core/LogVerbosity.h"
 #include "Core/Log.h"
+#include "Core/Containers/StringFormat.h"
 
 namespace Hydro
 {
