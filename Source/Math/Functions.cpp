@@ -1,43 +1,49 @@
 #include "Functions.h"
 #include "Vector2.h"
 #include "Vector3.h"
-#include <cmath>
+#include <math.h>
 
 namespace Hydro
 {
     f32 Math::Cos(f32 Val)
     {
-        return std::cos(Val);
+        return cosf(Val);
     }
 
     f32 Math::Sin(f32 Val)
     {
-        return std::sin(Val);
+        return sinf(Val);
     }
 
     f32 Math::Tan(f32 Val)
     {
-        return std::tan(Val);
+        return tanf(Val);
     }
 
     f32 Math::Acos(f32 Val)
     {
-        return std::acos(Val);
+        return acosf(Val);
     }
 
     f32 Math::Asin(f32 Val)
     {
-        return std::asin(Val);
+        return asinf(Val);
     }
 
     f32 Math::Atan(f32 Val)
     {
-        return std::atan(Val);
+        return atanf(Val);
     }
 
     f32 Math::Abs(f32 Value)
     {
         return Value > 0 ? Value : -Value;
+    }
+
+    u32 Math::Fact(u32 Value)
+    {
+        if(Value == 0) return 1;
+        return Value * Fact(Value - 1);
     }
 
     f32 Math::Clamp(f32 Value, f32 Min, f32 Max)
@@ -47,7 +53,7 @@ namespace Hydro
 
     f32 Math::Lerp(f32 A, f32 B, f32 Alpha)
     {
-        return A + (B - A) * Alpha;
+        return A + Alpha * (B - A);
     }
 
     f32 Math::Map(f32 Value, f32 MinA, f32 MaxA, f32 MinB, f32 MaxB)
@@ -57,12 +63,27 @@ namespace Hydro
 
     f32 Math::Floor(f32 Value)
     {
-        return std::floor(Value);
+        return floorf(Value);
     }
 
     f32 Math::Ceil(f32 Value)
     {
-        return std::ceil(Value);
+        return ceilf(Value);
+    }
+
+    f32 Math::Log2(f32 Value)
+    {
+        return log2f(Value);
+    }
+
+    f32 Math::Log10(f32 Value)
+    {
+        return log10f(Value);
+    }
+
+    f32 Math::Exp(f32 Value)
+    {
+        return Pow(E, Value);
     }
 
     f32 Math::Smoothstep(f32 Value, f32 Min, f32 Max)
@@ -81,16 +102,6 @@ namespace Hydro
         return Map(Cos(Val), -1.0f, 1.0f, Min, Max);
     }
 
-    f32 Math::Min(f32 A, f32 B)
-    {
-        return A < B ? A : B;
-    }
-    
-    f32 Math::Max(f32 A, f32 B)
-    {
-        return A > B ? A : B;
-    }
-
     f32 Math::Sign(f32 Val)
     {
         return Val > 0.0f ? 1.0f : Val < 0.0f ? -1.0f : 0.0f;
@@ -105,11 +116,16 @@ namespace Hydro
     {
         return Sqrt(Pow(VecB.x - VecA.x, 2) + Pow(VecB.y - VecA.y, 2) + Pow(VecB.z - VecA.z, 2));
     }
-
+    
     
     bool Math::AreSame(f32 Lhs, f32 Rhs)
     {
         return Abs(Lhs - Rhs) <= std::numeric_limits<f32>::epsilon();
+    }
+
+    bool Math::AreDifferent(f32 Lhs, f32 Rhs)
+    {
+        return !AreSame(Lhs, Rhs);
     }
 
     bool Math::IsZero(f32 Val)
@@ -119,12 +135,12 @@ namespace Hydro
 
     f32 Math::Sqrt(f32 Val)
     {
-        return std::sqrt(Val);
+        return sqrtf(Val);
     }
 
     f32 Math::Pow(f32 Val, f32 Exp)
     {
-        return std::pow(Val, Exp);
+        return powf(Val, Exp);
     }
 
     f32 Math::Radians(f32 Degrees)

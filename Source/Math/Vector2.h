@@ -28,6 +28,9 @@ namespace Hydro
 
         static f32 Dot(const Vector2& VecA, const Vector2& VecB);
         static f32 Angle(const Vector2& VecA, const Vector2& VecB);
+        static Vector2 Lerp(const Vector2& A, const Vector2& B, f32 Alpha);
+        static Vector2 QuadraticBezier(const Vector2& A, const Vector2& B, const Vector2& C, f32 Alpha);
+        static Vector2 CubicBezier(const Vector2& A, const Vector2& B, const Vector2& C, const Vector2& D, f32 Alpha);
 
         Vector2 WithX(f32 X) const;
         Vector2 WithY(f32 Y) const;

@@ -62,6 +62,25 @@ namespace Hydro
         return Math::Acos(VecA.Dot(VecB) / (VecA.Magnitude() * VecB.Magnitude()));
     }
 
+    Vector2 Vector2::Lerp(const Vector2& A, const Vector2& B, f32 Alpha)
+    {
+        return A + B * Alpha - A * Alpha;
+    }
+
+    Vector2 Vector2::QuadraticBezier(const Vector2& A, const Vector2& B, const Vector2& C, f32 Alpha)
+    {
+        const Vector2 P0 = Lerp(A, B, Alpha);
+        const Vector2 P1 = Lerp(B, C, Alpha);
+        return Lerp(P0, P1, Alpha);
+    }
+
+    Vector2 Vector2::CubicBezier(const Vector2& A, const Vector2& B, const Vector2& C, const Vector2& D, f32 Alpha)
+    {
+        const Vector2 P0 = QuadraticBezier(A, B, C, Alpha);
+        const Vector2 P1 = QuadraticBezier(B, C, D, Alpha);
+        return Lerp(P0, P1, Alpha);
+    }
+
     Vector2 Vector2::WithX(f32 X) const
     {
         return {X, y};
