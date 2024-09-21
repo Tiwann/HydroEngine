@@ -12,6 +12,7 @@
         </Expand>
     </Type>
 
+    <!-- Hydro::Array<T> -->
     <Type Name="Hydro::Array&lt;*&gt;">
         <DisplayString>{{Count = {m_Count}}}</DisplayString>
         <Expand>
@@ -22,6 +23,7 @@
         </Expand>
     </Type>
 
+    <!-- Hydro::Map<T> -->
     <Type Name="Hydro::Map&lt;*&gt;">
         <DisplayString>{{Count = {m_Count}}}</DisplayString>
         <Expand>
