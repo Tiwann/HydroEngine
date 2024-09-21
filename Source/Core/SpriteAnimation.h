@@ -1,7 +1,9 @@
 ﻿#pragma once
 #include "Filesystem.h"
 #include "SharedPointer.h"
-#include "Core/Containers/DynamicArray.h"
+#include "Containers/DynamicArray.h"
+#include "AnimationNotify.h"
+#include "Containers/ArrayView.h"
 
 namespace Hydro
 {
@@ -10,7 +12,6 @@ namespace Hydro
     class SpriteAnimation
     {
     public:
-        using SpriteArray = Array<Sprite>;
         SpriteAnimation() = default;
 
         static Ref<SpriteAnimation> Create();
@@ -18,10 +19,15 @@ namespace Hydro
         static Ref<SpriteAnimation> CreateFromDirectory(const Path& Directory);
         void ClearSprites();
         void AddSprite(const Sprite& Sprite);
-        SpriteArray::SizeType Count() const;
-        Sprite& GetSprite(size_t Index);
         
+        Array<Sprite>::SizeType Count() const;
+        Sprite& GetSprite(size_t Index);
+
+
+        void AddNotify(const AnimationNotify& Notify);
+        const Array<AnimationNotify>& GetNotifies() const;
     private:
-        SpriteArray m_Sprites;
+        Array<Sprite> m_Sprites;
+        Array<AnimationNotify> m_Notifies;
     };
 }

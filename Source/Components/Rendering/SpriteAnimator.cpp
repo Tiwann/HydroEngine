@@ -30,6 +30,7 @@ namespace Hydro
         
         m_Timer.SetDuration(1.0f / (f32)m_Speed);
         m_Timer.Update(Delta);
+        
     }
 
     void SpriteAnimator::OnInspectorGUI(const ImGuiIO& IO)
@@ -75,5 +76,19 @@ namespace Hydro
         m_Index = (m_Index + 1) % m_Animation->Count();
         const Sprite& NewSprite = m_Animation->GetSprite(m_Index);
         m_SpriteRenderer->SetSprite(NewSprite);
+        
+        const Array<AnimationNotify>& NotifiesView = m_Animation->GetNotifies();
+        Array<AnimationNotify*> FiringNotifies = NotifiesView.Where([this](const AnimationNotify& Notify)
+        {
+            return Notify.Frame == m_Index;
+        });
+        
+        for(AnimationNotify* Notify : FiringNotifies)
+        {
+            if(Notify->Event.IsBound())
+            {
+                Notify->Event.Broadcast();
+            }
+        }
     }
 }

@@ -47,4 +47,14 @@ namespace Hydro
     {
         return m_Sprites[Index];
     }
+
+    void SpriteAnimation::AddNotify(const AnimationNotify& Notify)
+    {
+        m_Notifies.Add(Notify);
+    }
+
+    const Array<AnimationNotify>& SpriteAnimation::GetNotifies() const
+    {
+        return m_Notifies;
+    }
 }
