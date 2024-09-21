@@ -44,6 +44,16 @@ namespace Hydro
         template<typename FunctionType>
         Function(FunctionType&& Func) : m_Callable(std::make_shared<Callable<FunctionType, Ret, Args...>>(std::forward<FunctionType>(Func))) {}
 
+        template<class Class>
+        Function(Class* Instance, MemberPointerType<Class> Member)
+        {
+            const auto Lambda = [Instance, Member](Args... Arguments) -> Ret
+            {
+                return (Instance->*Member)(std::forward<Args>(Arguments)...);
+            };
+            m_Callable = std::make_shared<Callable<decltype(Lambda), Ret, Args...>>(std::forward<decltype(Lambda)>(Lambda));
+        }
+
         
         Ret Call(Args... Arguments) const
         {
