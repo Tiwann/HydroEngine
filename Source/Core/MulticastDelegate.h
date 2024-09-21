@@ -55,7 +55,7 @@ namespace Hydro
 		}
 
 		template<typename... Params>
-		void Broadcast(Params... Parameters)
+		void Broadcast(Params&&... Parameters)
 		{
 			for (const DelegateType& Delegate : m_Subscribers)
 			{
@@ -64,7 +64,7 @@ namespace Hydro
 		}
 
 		template<typename... Params>
-		void BroadcastChecked(Params... Parameters)
+		void BroadcastChecked(Params&&... Parameters)
 		{
 			for(const auto& Delegate : m_Subscribers)
 			{
